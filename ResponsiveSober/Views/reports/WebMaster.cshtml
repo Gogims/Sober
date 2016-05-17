@@ -1,0 +1,26 @@
+﻿@model IEnumerable<SoberModel.Webmaster>
+
+@{
+    ViewBag.Title = "WebMaster";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li><a href="@Url.Action("insurance-companies-covering-rehab", "directory")">Insurance Companies</a></li>
+            <li class="active">WebMaster Report</li>
+        </ol>
+
+        <h2>WebMaster Report</h2>
+
+        <div class="row">
+
+        </div>
+
+    </div>
+</div>

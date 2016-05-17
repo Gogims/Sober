@@ -1,0 +1,94 @@
+﻿@model SoberModel.SoberDateResults
+
+@{
+    ViewBag.Title = "Sober Date Calculator";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb col-md-6">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li class="active">Sober Date Calculator</li>
+        </ol>
+        <div style="float: right;" class="col-md-6">
+            @Html.Partial("_AdShareaholic", 16287771)
+        </div>
+        @using (Html.BeginForm("sober_calculator", "resources", FormMethod.Post))
+        {
+            <div class="row aic">
+                <div class="col-md-12">
+                    <h2>Sober Date Calculator</h2>
+                </div>            
+                <div class="col-md-12 form-group has-feedback">
+                    <label>Enter your sober date</label>
+                    @Html.TextBoxFor(model => model.SoberDate, new { @class = "form-control datepicker" })
+                </div>
+                <div class="col-md-12">                    
+                    <button type="submit" class="btn btn-primary col-md-2">Submit</button>
+                    <a href="" class="col-md-2" style="margin-top:10px;">Reset</a>
+                </div>                    
+            </div>
+            
+            <div class="row" style="margin-top:20px;">
+                <div class="col-md-12 panel-group">
+                    <h4 class="panel blue-bg box">You've been sober for</h4>
+                </div>
+                <div class="col-md-12 panel-group">
+                    <div class="row">
+                        <div class="col-md-2 form-group">
+                            <label>Years</label>
+                            @Html.TextBoxFor(x => x.Years, new { @class = "form-control numbersOnly" })
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label>Months</label>
+                            @Html.TextBoxFor(x => x.Months, new { @class = "form-control numbersOnly" })
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label>Days</label>
+                            @Html.TextBoxFor(x => x.Days, new { @class = "form-control numbersOnly" })
+                        </div>
+                        <div class="col-md-12 soc">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <img src="~/Images/SoberCalc/eatable-icon.png" class="col-xs-2" />
+                                    <div class="form-group soc-cont col-xs-6">
+                                        <label>Total Calories Avoided</label>
+                                        @Html.TextBoxFor(x => x.CaloriesAvoided, new { @class = "form-control numbersOnly" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <img src="~/Images/SoberCalc/glass-img.png" class="col-xs-2" />
+                                    <div class="form-group col-xs-6">
+                                        <label>Number of people who had died from alcoholism since your sobriety date</label>
+                                        @Html.TextBoxFor(x => x.PeopleDied, new { @class = "form-control numbersOnly" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <img src="~/Images/SoberCalc/moneybag.png" class="col-xs-2" />
+                                    <div class="form-group col-xs-6">
+                                        <label>TMoney you have saved by not drinking</label>
+                                        @Html.TextBoxFor(x => x.MoneySaved, new { @class = "form-control numbersOnly" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <img src="~/Images/SoberCalc/heartbeat.gif" class="col-xs-2" />
+                                    <div class="form-group col-xs-6">
+                                        <label>Sober Heartbeats</label>
+                                        @Html.TextBoxFor(x => x.HeartBeats, new { @class = "form-control numbersOnly" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

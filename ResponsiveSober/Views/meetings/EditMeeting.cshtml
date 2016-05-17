@@ -1,0 +1,356 @@
+﻿@model SoberBLL.NA.NaManager
+
+@{
+    ViewBag.Title = "Edit NA Meeting";
+    Layout = "~/Views/Shared/_Master.cshtml";
+
+    List<string> AmPm = new List<string>();
+    AmPm.Add("AM");
+    AmPm.Add("PM");
+
+    string newList = "";
+    
+    foreach (var item in Model.MeetingFormat)
+    {
+        newList += item + ",";
+    }
+    
+    newList = newList.Remove(newList.Length -1);
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/PhoneMask.js"></script>
+
+<div class="white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li><a href="@Url.Action("na_pending_meeting", "meetings")">NA Pending Meeting</a></li>
+        </ol>
+
+        <h1>Edit NA Meeting</h1>
+
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(x => x.Id)            
+            @Html.HiddenFor(x => x.Status)
+            @Html.HiddenFor(x => x.IP)
+            
+            if (Model.IdMeeting.HasValue)
+            {
+                long idmeeting = Model.IdMeeting.Value;
+                
+                <input type="hidden" id="IdMeeting" name="IdMeeting" value="@idmeeting" />
+            }
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">Basic Information</h4>
+                </div>                
+
+                <div class="col-md-6 form-group required">
+                    <label>Place (Location of meeting, e.g, "St. John's Church, Starbucks)<span>*</span>:</label>
+
+                    @if (Model.Name == Model.OriginalMeeting.Name)
+                    {
+                        @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.Name, new { @class = "form-control bg-azure", @title= "Original: " + Model.OriginalMeeting.Name })   
+                    }
+                    
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Name)</span>
+                </div>
+
+                @if (Model.DayId == Model.OriginalMeeting.DayId)
+                {
+                    <div class="col-md-6 form-group required">
+                        <label>Day<span>*</span>:</label>                    
+                        @Html.DropDownListFor(model => model.DayId, new SelectList(Model.GetDays(), "Key", "Value", Model.DayId), new { @class = "selectpicker" })
+                    
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.DayId)</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-6 form-group required bg-azure" title="Original: @Model.GetDay(Model.OriginalMeeting.DayId)">
+                        <label>Day<span>*</span>:</label>
+                        @Html.DropDownListFor(model => model.DayId, new SelectList(Model.GetDays(), "Key", "Value", Model.DayId), new { @class = "selectpicker" })
+                    
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.DayId)</span>
+                    </div>
+                }
+
+                <div class="col-md-6 form-group required">
+                    <label>Time<span>*</span>:</label>
+
+                    @if (Model.MeetingTime == Model.OriginalMeeting.MeetingTime)
+                    {
+                        <div class="row">
+                            <div class="col-md-1">Hour: </div>
+                            <div class="col-md-2">                            
+                                @Html.TextBoxFor(x => x.Hour, new { @class = "form-control numbersOnly" })
+                                <span class="err-msg">@Html.ValidationMessageFor(model => model.Hour)</span>
+                            </div>
+                            <div class="col-md-1">Min: </div>
+                            <div class="col-md-2">
+                                @Html.TextBoxFor(x => x.Minutes, new { @class = "form-control numbersOnly" })
+                                <span class="err-msg">@Html.ValidationMessageFor(model => model.Minutes)</span>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.AmPM, new SelectList(AmPm), new { @class = "selectpicker" })
+                                <span class="err-msg">@Html.ValidationMessageFor(model => model.AmPM)</span>
+                            </div>
+                        </div>
+                    }
+                    else
+	                {
+                        <div class="row bg-azure" title="Original: @Model.OriginalMeeting.MeetingTime.Value.TimeOfDay">
+                            <div class="col-md-1">Hour: </div>
+                            <div class="col-md-2">                            
+                                @Html.TextBoxFor(x => x.Hour, new { @class = "form-control numbersOnly" })
+                                <span class="err-msg">@Html.ValidationMessageFor(model => model.Hour)</span>
+                            </div>
+                            <div class="col-md-1">Min: </div>
+                            <div class="col-md-2">
+                                @Html.TextBoxFor(x => x.Minutes, new { @class = "form-control numbersOnly" })
+                                <span class="err-msg">@Html.ValidationMessageFor(model => model.Minutes)</span>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.AmPM, new SelectList(AmPm), new { @class = "selectpicker" })
+                                <span class="err-msg">@Html.ValidationMessageFor(model => model.AmPM)</span>
+                            </div>
+                        </div>
+	                }                    
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">Meeting Format</h4>
+                </div>
+
+                <div class="col-md-4 form-group">
+
+                    @if (Model.ClosedToPublic == Model.OriginalMeeting.ClosedToPublic)
+                    {
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(x => x.ClosedToPublic)                            
+                                <label for="ClosedToPublic">Closed to public</label>
+                            </label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="checkbox bg-azure" title="Changed">
+                            <label>
+                                @Html.CheckBoxFor(x => x.ClosedToPublic)                            
+                                <label for="ClosedToPublic">Closed to public</label>
+                            </label>
+                        </div>
+                    }
+
+                    @if (Model.WheelChair == Model.OriginalMeeting.WheelChair)
+	                {
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(x => x.WheelChair)
+                                <label for="WheelChair">Accept wheelchair</label>
+                            </label>
+                        </div>		 
+	                }
+                    else
+	                {
+                        <div class="checkbox bg-azure" title="Changed">
+                            <label>
+                                @Html.CheckBoxFor(x => x.WheelChair)
+                                <label for="WheelChair">Accept wheelchair</label>
+                            </label>
+                        </div>	
+	                }
+                </div>
+
+                <div class="col-md-8 form-group">
+                    <label>Formats Accepted:</label>
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            @Html.ListBox("leftvalues", new MultiSelectList(Model.GetFormats()), new { @class = "form-control", @selected = "", @style = "height:200px;" })
+                        </div>
+                        <div class="mselect-btns-cont col-md-2">
+                            <br />
+                            <br />
+                            <div class="btn btn-primary" id="right">&raquo;</div>
+                            <br />
+                            <br />
+                            <div class="btn btn-primary" id="left">&laquo;</div>
+                        </div>
+                        <div class="col-md-5">
+                            @if (newList == Model.originalList)
+                            {
+                                @Html.ListBoxFor(x => x.MeetingFormat, new MultiSelectList(Model.MeetingFormat), new { @id = "rightvalues", @class = "form-control", @style = "height:200px;" })                                
+                            }
+                            else
+                            {                               
+                                @Html.ListBoxFor(x => x.MeetingFormat, new MultiSelectList(Model.MeetingFormat), new { @id = "rightvalues", @class = "form-control bg-azure", @title = "Original:" + Model.originalList, @style = "height:200px;" })                                
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">Location</h4>
+                </div>
+
+                @if (Model.State == Model.OriginalMeeting.State)
+                {
+                    <div class="col-md-6 form-group required">
+                        <label>State<span>*</span>:</label>
+                        @Html.DropDownListFor(model => model.State, new SelectList(Model.GetStates(), "Key", "Value", Model.State), new { @class = "selectpicker" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.State)</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-6 form-group required bg-azure" title="Original: @Model.OriginalMeeting.State">
+                        <label>State<span>*</span>:</label>
+                        @Html.DropDownListFor(model => model.State, new SelectList(Model.GetStates(), "Key", "Value", Model.State), new { @class = "selectpicker" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.State)</span>
+                    </div>
+                }                
+
+                <div class="col-md-6 form-group required">
+                    <label>City<span>*</span>:</label>
+                    @if (Model.City == Model.OriginalMeeting.City)
+                    {
+                        @Html.TextBoxFor(x => x.City, new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.City, new { @class = "form-control bg-azure", @title= "Original: " + Model.OriginalMeeting.City })
+                    }
+                    
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.City)</span>
+                </div>
+
+                <div class="col-md-6 form-group required">
+                    <label>Zip code<span>*</span>:</label>
+
+                    @if (Model.Zip == Model.OriginalMeeting.Zip)
+                    {
+                        @Html.TextBoxFor(x => x.Zip, new { @class = "form-control numbersOnly" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.Zip, new { @class = "form-control numbersOnly bg-azure", @title= "Original: " + Model.OriginalMeeting.Zip })
+                    }
+                    
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Zip)</span>
+                </div>
+
+                <div class="col-md-6 form-group required">
+                    <label>Street 1<span>*</span>:</label>
+
+                    @if (Model.Street1 == Model.OriginalMeeting.Street1)
+                    {
+                        @Html.TextBoxFor(x => x.Street1, new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.Street1, new { @class = "form-control bg-azure", @title= "Original: " + Model.OriginalMeeting.Street1 })
+                    }
+                    
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Street1)</span>
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Street 2:</label>
+
+                    @if (Model.Street2 == Model.OriginalMeeting.Street2)
+                    {
+                        @Html.TextBoxFor(x => x.Street2, new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.Street2, new { @class = "form-control bg-azure", @title= "Original: " + Model.OriginalMeeting.Street2 })
+                    }
+                    
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Street2)</span>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">User Contact Info</h4>
+                </div>
+
+                <div class="col-md-12">
+                    <p><strong>Note: We keep this information confidential. We may contact you if we have any questions about your submission but <span style="text-decoration: underline; color: green">we never share your information with outside parties</span>.</strong></p>
+                </div>               
+
+                <div class="col-md-6 form-group">
+                    <label>Your IP:</label>
+                    <label>@Model.IP @ViewBag.Address</label>
+                </div>
+
+                <div class="col-md-6 form-group required">
+                    <label>Name<span>*</span>:</label>
+                    @Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.UserName)</span>
+                </div>
+                
+                <div class="col-md-6 form-group required">
+                    <label>Email<span>*</span>:</label>
+                    @Html.TextBoxFor(x => x.UserEmail, new { @class = "form-control"})
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.UserEmail)</span>
+                </div>
+
+                <div class="col-md-12 form-group required">
+                    <label>How are you associated with this meeting?<span>*</span></label>
+                    @Html.TextAreaFor(x => x.UserAssociated, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.UserAssociated)</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">Reason</h4>
+
+                    <div class="row">
+                        <div class="col-md-12 required">
+                            <label for="Reason">Why do you want to modify this NA Meeting<span>*</span></label>
+                            <textarea class="form-control" name="Reason" id="Reason">@Model.Reason</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary" name="submit" value="Submit">Save</button>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary" name="submit" value="Approve">Approve</button>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary" name="submit" value="Reject">Reject</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('form').submit(function () {
+            $("#rightvalues option").prop('selected', true);
+        });
+    });
+</script>

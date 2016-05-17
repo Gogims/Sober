@@ -1,0 +1,348 @@
+﻿@model SoberBLL.AdvancedSearchListings
+
+@{   
+    SoberBLL.ListingCategories categoryTypes = new SoberBLL.ListingCategories();    
+    List<int> distanceList = new List<int>();
+    distanceList.Add(10);
+    distanceList.Add(25);
+    distanceList.Add(50);
+    distanceList.Add(100);
+    distanceList.Add(200);
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+
+
+@using (Html.BeginForm("AdvancedSearch", "directory", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(x => x.PageNumber)
+    @Html.HiddenFor(x => x.PageCount)
+        
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Advanced Search</h2>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12 panel-group">
+            <h4 class="panel grey-bg box">Search Criteria</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label>Looking for</label>
+            @Html.DropDownListFor(model => model.MyAdvancedSearchForm.FacilityType, new SelectList(categoryTypes.GetListingCategory(), "Key", "Value", Model.MyAdvancedSearchForm.FacilityType), "All Types", new { @class = "selectpicker" })
+        </div>
+
+
+        <div id="InsuranceDdl" class="col-md-6 form-group">
+            <label>Insurance Providers</label>
+            @Html.DropDownListFor(model => model.MyAdvancedSearchForm.SelectedInsurance, new SelectList(Model.MyAdvancedSearchForm.InsuranceProvidersList,
+                                            "Ins_ProviderName", "Ins_ProviderName", Model.MyAdvancedSearchForm.SelectedInsurance), new { @class = "selectpicker" })
+        </div>
+
+        <div class="col-md-6 form-group">
+            <label>Location</label>
+            @Html.TextBoxFor(model => model.MyAdvancedSearchForm.Location, new { @class = "form-control pin", @placeholder = "Enter state, city or zip code..." })
+        </div>
+
+        <div class="col-md-6 form-group">
+            <label>Distance</label>
+            @Html.DropDownListFor(model => model.MyAdvancedSearchForm.Distance, new SelectList(distanceList, Model.MyAdvancedSearchForm.Distance), "Entire State", new { @class = "selectpicker" })
+        </div>
+
+        <div class="col-md-6 form-group">
+            <label>Keyword Search</label>
+            @Html.TextBoxFor(model => model.MyAdvancedSearchForm.Keyword, new { @class = "form-control", @placeholder = "Keyword" })
+        </div>
+
+
+        <div id="TreatmentDdl" class="col-md-6 form-group">
+            <label>Residential Treatment Cost</label>
+            @Html.DropDownListFor(model => model.MyAdvancedSearchForm.selectedTreatmentCost, new SelectList(Model.MyAdvancedSearchForm.rdTreatmentCost, "Value", "Text", Model.MyAdvancedSearchForm.selectedTreatmentCost), new { @class = "selectpicker" })
+        </div>
+
+        <div id="SoberDdl" class="col-md-6 form-group">
+            <label>Sober Living Cost Options</label>
+            @Html.DropDownListFor(model => model.MyAdvancedSearchForm.selectedSoberLivingCost, new SelectList(Model.MyAdvancedSearchForm.rdSoberLivingCost, "Value", "Text", Model.MyAdvancedSearchForm.selectedSoberLivingCost), new { @class = "selectpicker" })
+        </div>
+
+        <div class="col-md-6 form-group aic">
+            <div class="col-md-3">
+                <label>Type of Service</label>
+            </div>
+            @foreach (var rdbtn in Model.MyAdvancedSearchForm.rdServiceType)
+            {
+                <div class="col-md-4">
+                    <div class="radio">
+                        <label class="service">
+                            @Html.RadioButtonFor(model => model.MyAdvancedSearchForm.ServiceType, rdbtn.Value)
+                            <label>@rdbtn.Text</label>
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 panel-group">
+            <h4 class="panel box expander">Even more search options</h4>
+        </div>
+    </div>
+    <div class="panel-cont row aic">
+        <div class="col-md-12">
+            <label>Primary focus of provider</label>
+            <div class="row">
+                @for (int i = 0; i < Model.MyAdvancedSearchForm.List_chckBox_PrimayFocus.Count; i++)
+                {
+                    <div class="col-md-3">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(x => x.MyAdvancedSearchForm.List_chckBox_PrimayFocus[i].IsSelected)
+                                @Html.LabelFor(x => x.MyAdvancedSearchForm.List_chckBox_PrimayFocus[i].IsSelected, Model.MyAdvancedSearchForm.List_chckBox_PrimayFocus[i].Value)
+                                @Html.HiddenFor(x => x.MyAdvancedSearchForm.List_chckBox_PrimayFocus[i].Value)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <span class="err-msg">@Html.ValidationMessageFor(x => x.MyAdvancedSearchForm.PrimaryFocus)</span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label>Services provider</label>
+            <div class="row">
+                @for (int i = 0; i < Model.MyAdvancedSearchForm.List_chckBox_ServicesProvided.Count; i++)
+                {
+                    <div class="col-md-3">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(x => x.MyAdvancedSearchForm.List_chckBox_ServicesProvided[i].IsSelected)
+                                @Html.LabelFor(x => x.MyAdvancedSearchForm.List_chckBox_ServicesProvided[i].IsSelected, Model.MyAdvancedSearchForm.List_chckBox_ServicesProvided[i].Value)
+                                @Html.HiddenFor(x => x.MyAdvancedSearchForm.List_chckBox_ServicesProvided[i].Value)
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label>Type of care</label>
+            <div class="row">
+                @for (int i = 0; i < Model.MyAdvancedSearchForm.List_chckBox_TypeOfCare.Count; i++)
+                {
+                    <div class="col-md-3">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(x => x.MyAdvancedSearchForm.List_chckBox_TypeOfCare[i].IsSelected)
+                                @Html.LabelFor(x => x.MyAdvancedSearchForm.List_chckBox_TypeOfCare[i].IsSelected, Model.MyAdvancedSearchForm.List_chckBox_TypeOfCare[i].Value)
+                                @Html.HiddenFor(x => x.MyAdvancedSearchForm.List_chckBox_TypeOfCare[i].Value)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <span class="err-msg">@Html.ValidationMessageFor(x => x.MyAdvancedSearchForm.TypeOfCare)</span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label>Special programs/groups offered</label>
+            <div class="row">
+                @for (int i = 0; i < Model.MyAdvancedSearchForm.List_chckBox_Specialprograms.Count; i++)
+                {
+                    <div class="col-md-3">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(x => x.MyAdvancedSearchForm.List_chckBox_Specialprograms[i].IsSelected)
+                                @Html.LabelFor(x => x.MyAdvancedSearchForm.List_chckBox_Specialprograms[i].IsSelected, Model.MyAdvancedSearchForm.List_chckBox_Specialprograms[i].Value)
+                                @Html.HiddenFor(x => x.MyAdvancedSearchForm.List_chckBox_Specialprograms[i].Value)
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label>Forms of payment accepted</label>
+            <div class="row">
+                @for (int i = 0; i < Model.MyAdvancedSearchForm.List_chckBox_FormsOfPaymentAccepted.Count; i++)
+                {
+                    <div class="col-md-3">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(x => x.MyAdvancedSearchForm.List_chckBox_FormsOfPaymentAccepted[i].IsSelected)
+                                @Html.LabelFor(x => x.MyAdvancedSearchForm.List_chckBox_FormsOfPaymentAccepted[i].IsSelected, Model.MyAdvancedSearchForm.List_chckBox_FormsOfPaymentAccepted[i].Value)
+                                @Html.HiddenFor(x => x.MyAdvancedSearchForm.List_chckBox_FormsOfPaymentAccepted[i].Value)
+                            </label>
+                        </div>
+                    </div>
+                }
+                <span class="err-msg">@Html.ValidationMessageFor(x => x.MyAdvancedSearchForm.FormsOfPaymentAccepted)</span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label>Payment assistance available</label>
+            <div class="row">
+                @for (int i = 0; i < Model.MyAdvancedSearchForm.List_chckBox_PaymentAssistance.Count; i++)
+                {
+                    <div class="col-md-3">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(x => x.MyAdvancedSearchForm.List_chckBox_PaymentAssistance[i].IsSelected)
+                                @Html.LabelFor(x => x.MyAdvancedSearchForm.List_chckBox_PaymentAssistance[i].IsSelected, Model.MyAdvancedSearchForm.List_chckBox_PaymentAssistance[i].Value)
+                                @Html.HiddenFor(x => x.MyAdvancedSearchForm.List_chckBox_PaymentAssistance[i].Value)
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label>Special language services</label>
+            <div class="row">
+                @for (int i = 0; i < Model.MyAdvancedSearchForm.List_chckBox_LanguageServices.Count; i++)
+                {
+                    <div class="col-md-3">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(x => x.MyAdvancedSearchForm.List_chckBox_LanguageServices[i].IsSelected)
+                                @Html.LabelFor(x => x.MyAdvancedSearchForm.List_chckBox_LanguageServices[i].IsSelected, Model.MyAdvancedSearchForm.List_chckBox_LanguageServices[i].Value)
+                                @Html.HiddenFor(x => x.MyAdvancedSearchForm.List_chckBox_LanguageServices[i].Value)
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-3"> <button type="submit" class="btn btn-primary">Search</button></div>
+        <div class="col-md-3"><button type="button" class="btn btn-secondary">Cancel</button></div>
+    </div>
+
+    <br /><br />
+
+    <div class="col-md-12">
+        @if (Model.FreeListingsCount > 0)
+        {
+            <ul class="listings">
+                @foreach (var FreeListings in Model.FreeListings)
+                {
+                    @Html.Partial("_FreeListing", @FreeListings)
+                }
+            </ul>
+        }
+        @if (Model.FreeListingsCount <= 0 && ViewBag.PostBack != null && ViewBag.PostBack == true)
+        {
+            <h1>We are sorry. Your advanced search lead to no results for the criteria you've selected. Please modify your criteria above or try reducing the number of filters.</h1>
+        }
+    </div>
+
+    <div class="col-md-12">
+        @if (Model.PageCount > 0)
+        {
+            <div class="col-md-8">
+                <label> Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount </label>
+            </div>
+
+            <div class="col-md-4">
+                @if (Model.HasPreviousPage)
+                {
+                    <div class="col-md-3">
+                        <input name="submit" type="submit" class="btn" value="<<" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <input name="submit" type="submit" class="btn" value="< Prev" />
+                    </div>
+
+                }
+                else
+                {
+                    <div class="col-md-3">
+                        <label><<</label>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>< Prev</label>
+                    </div>                            
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    <div class="col-md-3">
+                        <input name="submit" type="submit" class="btn" value="Next >" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <input name="submit" type="submit" class="btn" value=">>" />
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-3">
+                        <label>Next ></label>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>>></label>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <div class="col-md-12">
+        @Html.Partial("_AdResponsive")
+    </div>
+    
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.service').click(function () {
+            var radio_button_value = jQuery('input[name="MyAdvancedSearchForm.ServiceType"]:radio:checked').val();
+
+            if (radio_button_value == 0) {
+                $("#SoberDdl").hide();
+                $("#TreatmentDdl").show();
+                $("#InsuranceDdl").show();
+
+            }
+            else {
+                $("#TreatmentDdl").hide();
+                $("#InsuranceDdl").hide();
+                $("#SoberDdl").show();
+            }
+        });
+
+        $('.service').first().trigger('click');
+    });
+</script>
+
+@*For autocomplete*@
+<script type="text/javascript">
+    function autocomplete() {
+        var autocomplete;
+        var input = document.getElementById('MyAdvancedSearchForm_Location');
+        var options = {
+            componentRestrictions: { country: 'us' }
+        };
+        autocomplete = new google.maps.places.Autocomplete(input, options);
+    }
+
+    function loadScript() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places&callback=autocomplete';
+        document.body.appendChild(script);
+    }
+
+    window.onload = loadScript;
+
+</script>

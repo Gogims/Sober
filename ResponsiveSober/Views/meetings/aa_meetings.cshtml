@@ -1,0 +1,319 @@
+﻿@model SoberModel.Meeting
+
+<script src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+
+@{
+    string statelowercase = "";
+    string stateCapitalization = "";
+    if (!string.IsNullOrEmpty(Model.State))
+    {
+        Model.State = Model.State.ToUpper();
+        statelowercase = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToLower(ViewBag.StateName);
+        stateCapitalization = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(statelowercase);
+    }
+    if (!string.IsNullOrEmpty(Model.City))
+    {
+        Model.City = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Model.City);
+    }
+    else
+    {
+        Model.City = "";
+    }
+
+    string day = "";
+    switch (@Model.DayId)
+    {
+        case 0:
+            day = "ALL";
+            break;
+        case 1:
+            day = "Monday";
+            break;
+        case 2:
+            day = "Tuesday";
+            break;
+        case 3:
+            day = "Wednesday";
+            break;
+        case 4:
+            day = "Thursday";
+            break;
+        case 5:
+            day = "Friday";
+            break;
+        case 6:
+            day = "Saturday";
+            break;
+        case 7:
+            day = "Sunday";
+            break;
+    }
+
+    ViewBag.Title = "AA Meetings in " + Model.City + " " + Model.State + " at " + Model.Street1 + " on " + day;
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<style type="text/css">
+    header {
+        padding-bottom: 0px;
+    }
+</style>
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li><a href="@Url.Action("aa", "meetings")">AA Meetings</a></li>
+            <li><a href="@Url.Action("aa", "meetings", new { state = statelowercase })">@stateCapitalization</a></li>
+            <li><a href="@Url.Action("aa", "meetings", new { city = Model.City.ToLower(), state = statelowercase })">@Model.City</a></li>
+            <li class="active">@Model.Name</li>
+        </ol>
+        
+        <p>
+            @Model.Name has @ViewBag.TotalMeetings Alcoholic Anonymous (AA) meetings each week.
+            There are a total of @ViewBag.TotalCity
+            @Html.ActionLink(Model.City.Trim() + " AA meetings", "aa", "meetings", new { city = Model.City.ToLower(), state = statelowercase }, null) and @ViewBag.TotalByRange meetings
+            within 25 miles of @Model.City, @ViewBag.StateName@Html.Raw("&#46") In addition, there are @ViewBag.RehabCity
+            <a href="@Url.Action("listings", "directory", new { @address = Model.City.ToLower(), @rehab = "drug and alcohol treatment centers" })">@Model.City treatment centers</a> within 25 miles of @Model.City
+            and @ViewBag.RehabState
+            <a href="@Url.Action("listings", "directory", new { @address = @ViewBag.StateName.ToLower(), @rehab = "drug and alcohol treatment centers" })">@stateCapitalization drug and alcohol treatment centers</a>.
+        </p>
+
+        @Html.HiddenFor(model => model.Place)
+        @Html.HiddenFor(model => model.Street1)
+        @Html.HiddenFor(model => model.City)
+        @Html.HiddenFor(model => model.State)
+        @Html.HiddenFor(model => model.Zip)
+        @Html.Hidden("Lat")
+        @Html.Hidden("Lng")
+
+        <div class="row">
+            <div id="overview" class="col-md-6">
+                <div class="col-md-6">
+                    <h1>@Model.Name</h1>
+                </div>
+                <div class="col-md-6">
+                    @Html.Partial("_AdShareaholic", 16287771)
+                </div>
+
+                <div class="col-md-12">
+                    <br />
+                </div>
+
+                <div class="col-md-6">
+                    <label>Address</label>
+                </div>
+                <div class="col-md-6">
+                    <ul>
+                        <li>@Model.Street1 @Model.Street2</li>
+                        <li>@Model.City @Model.State @Model.Zip</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <label>Time</label>
+                </div>
+                <div class="col-md-6">
+                    @if (@Model.MeetingTime != null)
+                    {
+                        DateTime dt = (DateTime)@Model.MeetingTime;
+                        <label>@dt.ToShortTimeString()</label>
+                    }
+                </div>
+                <div class="col-md-6">
+                    <label>Day</label>
+                </div>
+                <div class="col-md-6">
+                    <label>@day</label>
+                </div>
+                <div class="col-md-6">
+                    <label>WheelChair Access</label>
+                </div>
+                <div class="col-md-6">
+                    @if (@Model.WheelChair != null && @Model.WheelChair == true)
+                    {
+                        <label>Yes</label>
+                    }
+                    else
+                    {
+                        <label>No </label>
+                    }
+                </div>
+                <div class="col-md-6">
+                    <label>Closed To Public<span style="color: red;">*</span></label>
+                </div>
+                <div class="col-md-6">
+                    @if (@Model.ClosedToPublic != null && @Model.ClosedToPublic == true)
+                    {
+                        <label>Yes</label>
+                    }
+                    else
+                    {
+                        <label>No</label>
+                    }
+                </div>
+
+
+
+                @if (Model.MeetingFormatTypes.Count > 0)
+                {
+                    <div class="col-md-6">
+                        <label>Formats</label>
+                    </div>
+                    <div class="col-md-6">
+                        <ul>
+                            @foreach (var item in Model.MeetingFormatTypes)
+                            {
+                                <li>@item.FormatTypeFullName</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <div class="col-md-12">
+                    <h4>
+                        Is this information correct? Click to @Html.ActionLink("modify", "ModifyMeeting", "Meetings", new { @idMeeting = Model.Id }, null) /
+                        @Html.ActionLink("delete", "DeleteMeeting", "Meetings", new { @idMeeting = Model.Id }, null) yourself.
+                    </h4>
+
+                    <p>
+                        <span style="color:red">*</span>Note regarding the difference between open and closed meeting...
+                    </p>
+                    <p>
+                        <span style="font-weight: bold">Closed to public</span> - These meetings are for addicts/alcoholics only.
+                        To attend a closed meeting just show up if you have a substance abuse problem.
+                        No invitation is needed. If this is your first meeting, we recommend arriving a few minutes early.
+                        Closed meetings are closed to those who are not addicts/alcoholics.
+                    </p>
+                    <p>
+                        <span style="font-weight: bold">Open to public</span> - These meetings are open to anyone - addicts/alcoholics, their loved ones, anyone in the community, etc.
+                        Just like closed meetings, open meetings do not require an invitation to join.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="map" style="width: 100%; height: 600px"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="map-canvas2" style="width: 100%; height: 400px"></div>
+            <br />
+        </div>
+
+        <div class="row">
+            @Html.Partial("_AdResponsive")
+            <br />
+        </div>
+    </div>
+</div>
+
+@*Google Maps*@
+<script>
+    function SetLatLng() {
+        var lat = document.getElementById('Lat').value;
+        var lng = document.getElementById('Lng').value;
+        if (lat == "" || lng == "") {
+            var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + document.getElementById('Place').value + document.getElementById('Street1').value + "+" + document.getElementById('City').value + "+" + document.getElementById('State').value + "+" + document.getElementById('Zip').value + "+USA" + "&sensor=false";
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: 'json',
+                success: function (result) {
+                    if (result.status != null && result.status == "OK") {
+                        var lat = result.results[0].geometry.location.lat;
+                        var lng = result.results[0].geometry.location.lng;
+                        document.getElementById('Lat').value = lat;
+                        document.getElementById('Lng').value = lng;
+                        //     var myLatlng = new google.maps.LatLng(lat, lng);
+                        //     return myLatlng;
+                    }
+                    else {
+
+                    }
+                },
+                data: {},
+                async: false
+            });
+        }
+    }
+
+    var map = null;
+
+    function ShowMap() {
+        SetLatLng();
+        // Creating a MapOptions object with the required properties
+        var lat = document.getElementById('Lat').value;
+        var lng = document.getElementById('Lng').value;
+        var myLatlng = new google.maps.LatLng(lat, lng);
+        var options = {
+            zoom: 15,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        // Creating the map
+        map = new google.maps.Map(document.getElementById('map'), options);
+
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: 'NA Meeting Location'
+        });
+
+        initialize3();
+    }
+
+    function loadScript() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places&callback=ShowMap';
+        document.body.appendChild(script);
+    }
+
+    window.onload = loadScript;
+</script>
+
+@*Street View*@
+<script>
+    function initialize3() {
+        var geocoder = new google.maps.Geocoder();
+        var address = "@Model.Street1" + "," + "@Model.City" + "," + "@Model.State" + ",USA";
+
+        geocoder.geocode({ 'address': address }, function (results, status) {
+
+            if (status == google.maps.GeocoderStatus.OK) {
+
+                var sv = new google.maps.StreetViewService();
+
+                sv.getPanoramaByLocation(results[0].geometry.location, 100, processSVData);
+            }
+        });
+    }
+
+    function processSVData(data, status) {
+        if (status == google.maps.StreetViewStatus.OK) {
+
+            var panoramaOptions = {
+                position: data.location.latLng,
+                pov: {
+                    heading: 165,
+                    pitch: 0
+                },
+                zoom: 1
+            };
+            myPano = new google.maps.StreetViewPanorama(
+                document.getElementById('map-canvas2'),
+                panoramaOptions);
+
+            myPano.setVisible(true);
+
+            window.setInterval(function () {
+                var pov = myPano.getPov();
+                pov.heading += 0.2;
+                myPano.setPov(pov);
+                myPano.setVisible(true);
+            }, 10);
+        }
+    }
+</script>

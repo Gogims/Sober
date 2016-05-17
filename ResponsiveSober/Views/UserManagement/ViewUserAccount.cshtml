@@ -1,0 +1,47 @@
+﻿@model List<SoberModel.AccountModel>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Search User Accounts";
+    Layout = "~/Views/Shared/_Master.cshtml";
+    WebGrid userAccountsGrid = new WebGrid(Model, rowsPerPage: 15);
+}
+
+@using (Ajax.BeginForm("ViewUserAccount", "UserManagement", new AjaxOptions()))
+{
+    <div id="manageuserdiv" class="content white-bg">
+        <div class="container">
+            <h2 class="panel box blue-bg">Manage Users</h2>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label>User/Display Name: </label>
+                    @Html.TextBox("username", ViewBag.UserName as string, new { @class = "form-control" })
+                </div>
+                <div class="col-md-12">
+                    <label>Email: </label>
+                    @Html.TextBox("email", ViewBag.Email as string, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    <button id="srchUsers" value="Search" type="submit" class="btn btn-primary">Search Users</button>
+                </div>
+            </div>
+
+            @if (Model.Count > 0)
+            {
+                <div class="row">
+                    <div id="gridContent" class="table-responsive">
+                        @userAccountsGrid.GetHtml(columns: new[]{
+                        userAccountsGrid.Column("UserProfile.DisplayName", "Display Name"),
+                        userAccountsGrid.Column("UserProfile.UserLoginEmail", "Login Email"),
+                        userAccountsGrid.Column("User.IsEmailConfirmed", "Email Confirmation"),
+                        userAccountsGrid.Column("User.CreateDate", "Created On"),
+                        userAccountsGrid.Column("","EDIT",format: (item) => Html.ActionLink("Edit", "manageuser","usermanagement", new { email = item.UserProfile.UserLoginEmail }, new { @class = "btn", @style="float:right;", target = "_blank" })),
+                        userAccountsGrid.Column("","DELETE",format: (item) => @Html.ActionLink("Delete", "deleteuser", new { Id = item.UserProfile.UserId }, new { @class = "btn", @style="float:right;", @onclick="return confirm('Are you sure you want to Delete this User?')"}))
+                        }, htmlAttributes: new { @class = "table table-bordered table-listing" })
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

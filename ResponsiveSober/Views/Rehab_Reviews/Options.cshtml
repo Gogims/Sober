@@ -1,0 +1,58 @@
+﻿@model SoberModel.Reviews.ReviewOptions
+
+@{
+    ViewBag.Title = "Options";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li class="active">Options</li>
+        </ol>
+
+        <div class="row">
+            <h2>Please Choose From the Below Options</h2>
+
+            @if (!Model.HasReview)
+            {
+                @Html.ActionLink("Add a Review", "addreview", "rehab_reviews", new { pagename = @Model.PageName, surveytype = @Model.SurveyType }, new { @class = "btn btn-primary" })
+            }
+            else
+            {
+
+                @Html.ActionLink("Edit Review", "editreview", "rehab_reviews", new { pagename = @Model.PageName, surveytype = @Model.SurveyType }, new { @class = "btn btn-primary" })
+                <br />
+                <br />
+                
+                using (Html.BeginForm("DeleteReview", "rehab_reviews", FormMethod.Post, new { @id = "deleteReview" }))
+                {
+                    @Html.HiddenFor(x => x.PageName)
+                    @Html.HiddenFor(x => x.SurveyType)
+                
+                    <button type="submit" class="btn btn-primary">Delete Review</button>
+                }
+
+                <h2>Has @Model.RatingsCount Rating so far</h2>
+                @Html.ActionLink("Add Rating", "addrating", "rehab_reviews", new { pagename = @Model.PageName, surveytype = @Model.SurveyType }, new { @class = "btn btn-primary" })
+            }
+        </div>
+
+        @if (Model.RatingsCount > 0)
+        {
+            <div class="row">
+                <br />
+                @Html.ActionLink("Edit Ratings", "editratings", "rehab_reviews", new { pagename = @Model.PageName, surveytype = @Model.SurveyType }, new { @class = "btn btn-primary" })
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#deleteReview').submit(function () {
+            return confirm("Are you certain you want to delete this review?\nNote: It will also delete all the user reviews.");
+        });
+    });
+</script>

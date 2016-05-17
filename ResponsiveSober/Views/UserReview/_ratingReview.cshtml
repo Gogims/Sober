@@ -1,0 +1,27 @@
+﻿@model double
+
+<ul class="rating">
+    @for (int i = 0; i < (int)Model; i++)
+    {
+        <li class="star"></li>
+    }
+    @{
+        int decimalPart = (int)((Model - (int)Model) * 100);
+    }
+    @if (decimalPart > 0 && decimalPart < 25)
+    {
+        <li class="star-x"></li>
+    }
+    @if (decimalPart >= 25 && decimalPart < 75)
+    {
+        <li class="halfstar"></li>
+    }
+    @if (decimalPart > 75 && decimalPart < 100)
+    {
+        <li class="star"></li>
+    }
+    @for (int i = (int)Math.Ceiling(Model); i < 5; i++)
+    {
+        <li class="star-x"></li>
+    }
+</ul>

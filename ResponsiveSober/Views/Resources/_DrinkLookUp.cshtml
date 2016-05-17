@@ -1,0 +1,40 @@
+﻿@model IEnumerable<SoberModel.Drink>
+
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+
+<table id="DrinkTable">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Brand</th>
+            <th>Alc %</th>
+            <th>Calories</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="anchor">
+                <td>@item.Type</td>
+                <td>@item.Brand</td>
+                <td>@item.PercentAlcohol</td>
+                <td>@item.Calories</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>        
+        <tr>
+            <th>Type</th>
+            <th>Brand</th>
+            <th>Alc %</th>
+            <th>Calories</th>
+        </tr>
+    </tfoot>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DrinkTable').dataTable();
+    });
+</script>

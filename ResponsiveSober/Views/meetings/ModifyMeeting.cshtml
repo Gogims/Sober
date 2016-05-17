@@ -1,0 +1,285 @@
+﻿@model SoberBLL.NA.NaManager
+
+@{
+    ViewBag.Title = "Modify NA Meeting";
+    Layout = "~/Views/Shared/_Master.cshtml";
+
+    List<string> AmPm = new List<string>();
+    AmPm.Add("AM");
+    AmPm.Add("PM");
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/PhoneMask.js"></script>
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+
+<div class="white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li><a href="@Url.Action("na", "meetings")">NA Meetings</a></li>
+        </ol>
+
+        <h1>Modify Existing NA Meeting</h1>
+
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.Status)
+            @Html.HiddenFor(x => x.IP)
+
+            if (Model.IdMeeting.HasValue)
+            {
+                @Html.HiddenFor(x => x.IdMeeting.Value)
+            }
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">Basic Information</h4>
+                </div>
+
+                <div class="col-md-6 form-group required">
+                    <label>Place (Location of meeting, e.g, "St. John's Church, Starbucks)<span>*</span>:</label>
+                    @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Name)</span>
+                </div>
+
+                <div class="col-md-6 form-group required">
+                    <label>Day<span>*</span>:</label>
+                    @Html.DropDownListFor(model => model.DayId, new SelectList(Model.GetDays(), "Key", "Value", Model.DayId), new { @class = "selectpicker" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.DayId)</span>
+                </div>
+
+                <div class="col-md-6 form-group required">
+                    <label>Time<span>*</span>:</label>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(x => x.Hour, new SelectList(Model.GetHours(), Model.Hour), "Hour", new { @class = "selectpicker" })
+                            <span id="err-msg3" class="err-msg">The Hour field is required</span>
+                        </div>
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(x => x.Minutes, new SelectList(Model.GetMinutes(), Model.Minutes), "Minute", new { @class = "selectpicker" })
+                            <span id="err-msg4" class="err-msg">The Minutes field is required</span>
+                        </div>
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(x => x.AmPM, new SelectList(AmPm), "Period", new { @class = "selectpicker" })
+                            <span id="err-msg5" class="err-msg">The Period field is required</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">Meeting Format</h4>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBoxFor(x => x.ClosedToPublic)
+                            <label for="ClosedToPublic">Closed to public</label>
+                        </label>
+                    </div>
+
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBoxFor(x => x.WheelChair)
+                            <label for="WheelChair">Accept wheelchair</label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-8 form-group required">
+                    <label>Formats Accepted <span>*</span>:</label>
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            @Html.ListBox("leftvalues", new MultiSelectList(Model.GetFormats()), new { @class = "form-control", @selected = "", @style = "height:200px;" })
+                        </div>
+                        <div class="mselect-btns-cont col-md-2">
+                            <br />
+                            <br />
+                            <div class="btn btn-primary" id="right">&raquo;</div>
+                            <br />
+                            <br />
+                            <div class="btn btn-primary" id="left">&laquo;</div>
+                        </div>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.MeetingFormat, new MultiSelectList(Model.MeetingFormat), new { @id = "rightvalues", @class = "form-control", @style = "height:200px;" })
+                        </div>
+
+                        <span id="err-msg2" class="err-msg">You need to choose at least one format</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">Location</h4>
+                </div>
+
+                <div class="col-md-6 form-group required">
+                    <label>State<span>*</span>:</label>
+                    @Html.DropDownListFor(model => model.State, new SelectList(Model.GetStates(), "Key", "Value", Model.State), "Choose One", new { @class = "selectpicker" })
+                    <span id="err-msg6" class="err-msg">State field is required</span>
+                </div>
+
+                <div class="col-md-6 form-group required">
+                    <label>City<span>*</span>:</label>
+                    @Html.TextBoxFor(x => x.City, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.City)</span>
+                </div>
+
+                <div class="col-md-6 form-group required">
+                    <label>Zip code<span>*</span>:</label>
+                    @Html.TextBoxFor(x => x.Zip, new { @class = "form-control numbersOnly" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Zip)</span>
+                </div>
+
+                <div class="col-md-6 form-group required">
+                    <label>Street 1<span>*</span>:</label>
+                    @Html.TextBoxFor(x => x.Street1, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Street1)</span>
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Street 2:</label>
+                    @Html.TextBoxFor(x => x.Street2, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Street2)</span>
+                </div>
+
+                @*<div class="col-md-6 form-group">
+                    <label>Place:</label>
+                    @Html.TextBoxFor(x => x.Place, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Place)</span>
+                </div>*@
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">User Contact Info</h4>
+                </div>
+
+                <div class="col-md-12">
+                    <p><strong>Note: We keep this information confidential. We may contact you if we have any questions about your submission but <span style="text-decoration: underline; color: green">we never share your information with outside parties</span>.</strong></p>
+                </div>
+                
+                <div class="col-md-6 form-group required">
+                    <label>Name<span>*</span>:</label>
+                    @Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.UserName)</span>
+                </div>
+                
+                <div class="col-md-6 form-group required">
+                    <label>Email<span>*</span>:</label>
+                    @Html.TextBoxFor(x => x.UserEmail, new { @class = "form-control"})
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.UserEmail)</span>
+                </div>
+
+                <div class="col-md-12 form-group required">
+                    <label>How are you associated with this meeting?<span>*</span></label>
+                    @Html.TextAreaFor(x => x.UserAssociated, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.UserAssociated)</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">Reason</h4>
+
+                    <div class="row">
+                        <div class="col-md-12 required">
+                            <label for="Reason">Why do you want to modify this NA Meeting<span>*</span></label>
+                            <textarea class="form-control" name="Reason" id="Reason">@Model.Reason</textarea>
+                            <span id="err-msg" class="err-msg">This field is required</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div id="meeting_recaptcha_box" class="col-md-12"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary" name="submit" value="Submit">Submit</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#err-msg, #err-msg2, #err-msg3, #err-msg4, #err-msg5, #err-msg6').hide();
+        $('form').validate();
+        Recaptcha.create("6LeKU-kSAAAAAI-fjV99Gn18MFa6n_wW9VP8Tosg", "meeting_recaptcha_box", "");
+
+        if ($('#Zip').val() == '0') {
+            $('#Zip').val('');
+        }
+
+        $('form').submit(function () {
+            $("#rightvalues option").prop('selected', true);
+            var ret = true;
+
+            if ($('#Hour').val() == "" ) {
+                ret = false;
+                $("#err-msg3").show();
+            }
+            else {
+                $("#err-msg3").hide();
+            }
+
+            if ($('#Minutes').val() == "") {
+                ret = false;
+                $("#err-msg4").show();
+            }
+            else {
+                $("#err-msg4").hide();
+            }
+
+            if ($('#AmPM').val() == "") {
+                ret = false;
+                $("#err-msg5").show();
+            }
+            else {
+                $("#err-msg5").hide();
+            }
+
+            if ($('#State').val() == "") {
+                ret = false;
+                $("#err-msg6").show();
+            }
+            else {
+                $("#err-msg6").hide();
+            }
+
+            if (ret == false) {
+                return false;
+            }
+
+            if ($("#rightvalues option").length == 0) {
+                $("#err-msg2").show();
+                $("#rightvalues").focus();
+                return false;
+            }
+            else {
+                $("#err-msg2").hide();
+            }
+
+            if ($(this).valid()) {
+                $('#err-msg').hide();
+            }
+            else {
+                $('#err-msg').show();
+            }
+
+        });
+    });
+</script>

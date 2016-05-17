@@ -1,0 +1,271 @@
+﻿@model PagedList.IPagedList<SoberModel.User_ReviewRatings>
+
+@{
+    SoberBLL.UserReview.UserReviewForm form = new SoberBLL.UserReview.UserReviewForm();
+    var rdlist = form.rdList_RatingList;
+
+    string facility = ViewBag.facility;
+
+    if (!string.IsNullOrEmpty(facility))
+    {
+        facility = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(facility.ToLower());
+    }    
+}
+
+@if (Model.Count > 0)
+{
+    <div class="row">
+        <div class="review-number col-xs-6 col-md-3">
+            <p>@Model.Count Reviews</p>
+        </div>
+        <div class="col-xs-6 col-md-9">
+            @{
+                double totalRating = 0;
+                double totalOverall = 0;
+                double totalTreatment = 0;
+                double totalAccomodation = 0;
+                double totalStaff = 0;
+                double totalValue = 0;
+                double totalFood = 0;
+                
+                foreach (var item in Model)
+                {
+                    totalOverall += item.Rating_Overall;
+                    totalTreatment += item.Rating_Treatment;
+                    totalAccomodation +=  item.Rating_Accomodation;
+                    totalStaff += item.Rating_Staff;
+                    totalValue += item.Rating_Value;
+                    totalFood += item.Rating_Food;
+                }
+
+                totalOverall /= Model.Count;
+                totalTreatment /= Model.Count;
+                totalAccomodation /= Model.Count;
+                totalStaff /= Model.Count;
+                totalValue /= Model.Count;
+                totalFood /= Model.Count;                
+                totalRating = (totalOverall + totalTreatment + totalAccomodation + totalStaff + totalValue + totalFood) / 6;
+                var totalavgRating = Math.Round(totalRating, 1);
+            }
+
+            @Html.Partial("_ratingReview", totalavgRating)
+        </div>
+    </div>
+
+    <div class="row review-summary">
+        <div class="summary col-xs-12 col-md-3">
+            <p>Summary</p>
+        </div>
+        <div class="col-xs-12 col-md-9">
+            <div class="review-required col-xs-12 col-sm-3">
+                <p>Overall</p>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+                @Html.Partial("_ratingReview", totalOverall)
+            </div>
+            <div class="review-required col-xs-12 col-sm-3">
+                <p> Accomodation</p>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+                @Html.Partial("_ratingReview", totalAccomodation)
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-3"></div>
+        <div class="col-xs-12 col-md-9">
+            <div class="review-required col-xs-12 col-sm-3">
+                <p>Value</p>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+                @Html.Partial("_ratingReview", totalValue)
+            </div>
+            <div class="review-required col-xs-12 col-sm-3">
+                <p>Treatment</p>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+                @Html.Partial("_ratingReview", totalTreatment)
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-3"></div>
+
+        <div class="col-xs-12 col-md-9">
+            <div class="review-required col-xs-12 col-sm-3">
+                <p>Staff</p>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+                @Html.Partial("_ratingReview", totalStaff)
+            </div>
+            <div class="review-required col-xs-12 col-sm-3">
+                <p> Food</p>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+                @Html.Partial("_ratingReview", totalFood)
+            </div>
+        </div>
+    </div>
+    
+    <div class="clear-both"></div>
+    
+    <div class="row">
+        @foreach (var rev in Model)
+        {
+            <div class="review-user-name col-xs-12 col-md-3">
+                    <img src="~/Images/user.svg" />
+                    <div class="user-name"><p>@rev.CreatedBy</p></div>
+                </div>
+            
+                <div class="comment-user-margin col-xs-12 col-md-9">
+                    <div class="row">
+                        <div class="col-xs-12 comment-more">
+                            <p class="more">@Html.Raw(@rev.Summary)</p>
+                        </div>
+                    </div>
+                    <div class="row comment-info">
+                        <div class="posted-info col-xs-4"><p>Posted on</p></div>
+                        <div class="posted-info col-xs-4"><p>Received Treatment:</p></div>
+                        <div class="posted-info col-xs-4"><p>Rating (hover for detail):</p></div>
+                    </div>
+                    <div class="row comment-info">
+                        <div class="posted-info col-xs-4"><p>@rev.CreatedOn.ToString("MM/dd/yyyy")</p></div>
+                        <div class="posted-info col-xs-4"><p>@rev.Stay</p></div>
+                        <div class="posted-info col-xs-4">
+                            @{
+                                var Rating = (double)(rev.Rating_Overall + rev.Rating_Treatment + rev.Rating_Accomodation + rev.Rating_Staff + rev.Rating_Value + rev.Rating_Food) / 6;
+                                var avgRating = Math.Round(Rating, 1);
+                            }
+
+                            @Html.Partial("_ratingReview", avgRating)
+
+                            <div class="pop-up">
+                                Overall:
+                                <ul class="rating">
+                                    @for (int i = 0; i < (int)rev.Rating_Overall; i++)
+                                    {
+                                        <li class="star"></li>
+                                    }
+                                    @for (int i = (int)(rev.Rating_Overall); i < 5; i++)
+                                    {
+                                        <li class="star-x"></li>
+                                    }
+                                </ul>
+                                Accomodation:
+                                <ul class="rating">
+                                    @for (int i = 0; i < (int)rev.Rating_Accomodation; i++)
+                                    {
+                                        <li class="star"></li>
+                                    }
+                                    @for (int i = (int)(rev.Rating_Accomodation); i < 5; i++)
+                                    {
+                                        <li class="star-x"></li>
+                                    }
+                                </ul>
+                                Food:
+                                <ul class="rating">
+                                    @for (int i = 0; i < (int)rev.Rating_Food; i++)
+                                    {
+                                        <li class="star"></li>
+                                    }
+                                    @for (int i = (int)(rev.Rating_Food); i < 5; i++)
+                                    {
+                                        <li class="star-x"></li>
+                                    }
+                                </ul>
+                                Staff:
+                                <ul class="rating">
+                                    @for (int i = 0; i < (int)rev.Rating_Staff; i++)
+                                    {
+                                        <li class="star"></li>
+                                    }
+                                    @for (int i = (int)(rev.Rating_Staff); i < 5; i++)
+                                    {
+                                        <li class="star-x"></li>
+                                    }
+                                </ul>
+                                Treatment:
+                                <ul class="rating">
+                                    @for (int i = 0; i < (int)rev.Rating_Treatment; i++)
+                                    {
+                                        <li class="star"></li>
+                                    }
+                                    @for (int i = (int)(rev.Rating_Treatment); i < 5; i++)
+                                    {
+                                        <li class="star-x"></li>
+                                    }
+                                </ul>
+                                Value:
+                                <ul class="rating">
+                                    @for (int i = 0; i < (int)rev.Rating_Value; i++)
+                                    {
+                                        <li class="star"></li>
+                                    }
+                                    @for (int i = (int)(rev.Rating_Value); i < 5; i++)
+                                    {
+                                        <li class="star-x"></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        }
+
+        @if (Model.PageCount > 1)
+        {
+            <div id="paginationDiv" style="float: right">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+                @if (Model.HasPreviousPage)
+                {                                    
+                    @Ajax.ActionLink("<<", "ViewUserReview", new { facility = ViewBag.facility, page = 1 }, new AjaxOptions { UpdateTargetId = "useRevewsDiv" })
+                    @Html.Raw(" ");                                  
+                    @Ajax.ActionLink("Prev", "ViewUserReview", new { facility = ViewBag.facility, page = Model.PageNumber - 1 }, new AjaxOptions { UpdateTargetId = "useRevewsDiv" })
+                }
+                else
+                {
+                    <text><<</text>
+                    @Html.Raw(" ")
+                    <text>< Prev</text>
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    @Ajax.ActionLink("Next >", "ViewUserReview", new { facility = ViewBag.facility, page = Model.PageNumber + 1 }, new AjaxOptions { UpdateTargetId = "useRevewsDiv" })
+                    @Html.Raw(" ");                                  
+                    @Ajax.ActionLink(">>", "ViewUserReview", new { facility = ViewBag.facility, page = Model.PageCount }, new AjaxOptions { UpdateTargetId = "useRevewsDiv" })
+
+                }
+                else
+                {
+                    <text>Next ></text>
+                    @Html.Raw(" ")
+                    <text>>></text>
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div id="noresultsDiv">
+        Looking to read or write a rehab review of @facility&#63 <span id="ctus" class="anchor" style="margin:0px;">Contact us</span> about participating in a treatment center rehab review of @facility - 
+        you can either write a quick review yourself or if you work for this treatment center we can coordinate a more comprehensive rehab review of numerous individuals.
+    </div>
+}
+
+
+<script type="text/javascript">
+    $('.rating').hover(function () {
+        if ($(this).next().hasClass('pop-up')) {
+            $(this).next().show();
+        }        
+    }, function () {
+        if ($(this).next().hasClass('pop-up')) {
+            $(this).next().hide();
+        }
+    });
+
+    $('#ctus').click(function () {
+        $('a[href="#contactus"]').click();
+        $('#Name').focus();
+    });
+</script>

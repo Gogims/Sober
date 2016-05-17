@@ -1,0 +1,122 @@
+﻿@model IEnumerable<SoberModel.FreeListing>
+
+@{
+
+    char[] splitOptions = { '|', ',' };
+    char[] splitOptionsPipeOnly = { '|' };
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <caption style="background: #d3d3d3; padding: 5px 0; font-size: larger; font-weight: bold">Alcohol treatment and drug rehabs in @ViewBag.State close to me </caption>
+        <thead>
+            <tr>
+                <th><b>Distance</b></th>
+                <th><b>Rehab Name</b></th>
+                <th><b>Location</b></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var listing in Model)
+            {
+
+                SoberModel.FreeListing FreeListings = listing;
+                string name1 = FreeListings.name1 == null ? "" : FreeListings.name1;
+
+                string city = FreeListings.location_city == null ? string.Empty : FreeListings.location_city + ",";
+                string address2 = city + " " + FreeListings.location_state + " " + FreeListings.location_zip;
+
+                string state = FreeListings.location_state.ToLower();
+                if (ViewBag.StateName != null)
+                {
+                    state = ViewBag.StateName;
+                    state = state.ToLower();
+                }
+                if (!string.IsNullOrWhiteSpace(state) && state.Length <= 2)
+                {
+                    state = MvcApplication4.utilities.GetStateNameFromAbbrevation(state).ToLower();
+                }
+                string link = Url.Action("samhsa", "directory", new { rehab = FreeListings.PageName.ToLower(), city = FreeListings.location_city.ToLower(), state = state });
+                string logo = "";
+                if (!string.IsNullOrWhiteSpace(FreeListings.logo) && !FreeListings.isPaid)
+                {
+                    logo = "http://www.sober.com/contents/logo/" + FreeListings.logo.Replace(" ", "%20").Replace("|", "").ToLower();
+                }
+                if (!string.IsNullOrWhiteSpace(FreeListings.logo) && FreeListings.isPaid)
+                {
+
+                    logo = @"http://www.sober.com/contents/premium_logo/compressed/" + FreeListings.logo.Replace(" ", "%20").Replace("|", "").ToLower();
+                    if (!File.Exists(@"C:\inetpub\SoberSurveyImagesAndVideos\Premium_Logo\compressed\" + FreeListings.logo.Trim()))
+                    {
+                        logo = @"http://www.sober.com/contents/premium_logo/" + FreeListings.logo.Trim().Replace(" ", "%20").Replace("|", "").ToLower(); ;
+                    }
+
+                }
+                if (FreeListings.isEnhanced && !FreeListings.IsProfileInactive)
+                {
+                    link = Url.Action("profile", "directory", new { rehab = FreeListings.PageName.ToLower(), city = FreeListings.location_city.ToLower(), state = state, facility_type = FreeListings.surveyTypeShort.ToLower() });
+
+                }
+                string profile = Url.Action("samhsa", "directory", new { rehab = FreeListings.PageName.ToLower(), city = FreeListings.location_city.ToLower(), state = state });
+
+                if (name1.Trim().ToUpper().Equals("NULL"))
+                {
+                    name1 = "";
+                }
+
+                if (FreeListings.isEnhanced && !FreeListings.IsProfileInactive)
+                {
+                    profile = Url.Action("profile", "directory", new { rehab = FreeListings.PageName.ToLower(), city = FreeListings.location_city.ToLower(), state = state.ToLower(), facility_type = FreeListings.surveyTypeShort.ToLower() });
+                }
+                if (string.IsNullOrWhiteSpace(FreeListings.PageName))
+                {
+                    link = "";
+                    profile = "";
+                }
+
+                <tr>
+                    @if (FreeListings.distance >= 0)
+                    {
+                        <td><span>@FreeListings.distance Miles</span></td>
+                    }
+
+                    @if (!FreeListings.isEnhanced && !string.IsNullOrWhiteSpace(logo))
+                    {
+
+                        <td>
+                            <img src="@logo" class="logo-s" alt="@FreeListings.name1" /><a href="@profile" target="_blank"><br />@name1</a>
+                        </td>
+                    }
+                    @if (!FreeListings.isEnhanced && string.IsNullOrWhiteSpace(logo))
+                    {
+
+                        <td>
+                            <a href="@profile" target="_blank">@name1</a>
+                        </td>
+                    }
+                    @if (FreeListings.isEnhanced && !string.IsNullOrWhiteSpace(logo))
+                    {
+                        <td>
+                            <a href="@link">
+                                <img src="@logo" class="logo-s" alt="@FreeListings.name1" />
+                            </a><a href="@profile" target="_blank"><br />@name1</a>
+                        </td>
+                    }
+
+                    @if (FreeListings.isEnhanced && string.IsNullOrWhiteSpace(logo))
+                    {
+                        <td>
+                            <a href="@link"></a><a href="@profile" target="_blank">@name1</a>
+                        </td>
+                    }
+                    <td>
+                        <span itemprop="addressLocality">@city</span>
+                        <span itemprop="addressRegion">@FreeListings.location_state</span>
+                        <span itemprop="postalCode">@FreeListings.location_zip</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

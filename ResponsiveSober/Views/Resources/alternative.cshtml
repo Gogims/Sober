@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "Alternative Rehab Information";
+    Layout = "~/Views/Shared/_MasterResources.cshtml";
+}
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")
+}
+<div class="section wrap-s">
+    <ul class="breadcrumbs-s">
+        <li class="first"><a href="@Url.Action("index", "home")">Home</a></li>
+        <li>@Html.ActionLink("Directory", "index", "directory")</li>
+        <li>@Html.ActionLink("Alternative Rehab", "alternative", "resources")</li>
+    </ul>
+    <div class="profile-page-cont-s">
+        <div class="title-cont-s">
+            <h1>Alternative Rehab</h1>
+        </div>
+        <div class="cont-s">
+            <div class="d-cont">
+                <div class="carousel-s">
+                    @Html.Partial("_AdResponsive")
+                    <div class="faq">
+                        <div class="head">Alternative Drug Rehab Programs - FAQs</div>
+                        <ul class="faqs">
+                            <li>
+                                <p class="ques">What is an Alternative Drug Rehab Programs? </p>
+                                <p>Alternative drug rehab programs refer to types of drug rehab treatment programs customized to meet the individual needs of people addicted to drugs outside typical 12 step programs (like AA or NA). Sometimes these programs are provided in natural and home-like settings. </p>
+                            </li>
+                            <li>
+                                <p class="ques">What is the difference between a traditional drug rehab program and alternative drug rehab programs?</p>
+                                <p>Traditional drug rehab programs use traditional therapies, address the physical conditions of the recovering addicts, and offer services in a hospital setting. On the other hand, alternative drug rehabilitation program provides multiple programs customized to meet the individual needs of the recovering addict. Aside from the physical aspects, other personal concerns of the patients are also considered. Programs are conducted in home-like settings complete with amenities the individuals need.</p>
+
+                            </li>
+                            <li>
+                                <p class="ques">What are the types of Alternative Drug Rehab Programs? </p>
+                                <p>There are two major types of Alternative Drug Rehab: Outpatient and Inpatient. Outpatient alternative drug rehab offers educational classes, support groups, personal therapy sessions, outside 12-step group meetings and random drug testing. These sessions are conducted through the day or at night. Inpatient alternative drug rehabs provide the same services the outpatient alternative program offers. The major difference is that the patient is living in a supportive setting away from the pressures of the outside world. There is also a 24-hour support from the staff and peers on recovery. In both cases, patients who finished the programs are encouraged to avail of the aftercare services like keeping in touch with the alternative drug rehab through phone calls, check- in appointments and the like. </p>
+                            </li>
+                            <li>
+                                <p class="ques">Who should enroll in alternative drug rehab programs? </p>
+                                <p>Alternative drug rehab programs are suited for people who have history of failed treatments or relapse and those who disagree with the traditional methods of drug or alcohol rehabilitation through 12 step programs. </p>
+                            </li>
+                            <li>
+                                <p class="ques">What are the services offered by alternative drug rehab programs? </p>
+                                <p>Most of the alternative drug rehabs have well-developed clinical programs and result-oriented strategies. Aside from the 12 steps, traditional group therapy, counseling, detox and other programs tailored for the individual, they also use the most up-to-date equipments like biofeedback and MDRE. </p>
+                                <p>Some of the natural therapies used by alternative drug rehabs include acupuncture, yoga, sweat lodges, meditation, and other stress reduction techniques. </p>
+                            </li>
+                              <div class="title">Sponsored ads</div>
+                            
+
+                                <li>@Html.Partial("_AdResponsive")</li>
+                        </ul>
+                    </div>
+                  
+                </div>
+            </div>
+            <div class="ads-cont-links-s">
+
+                <div class="section">
+                    <div class="title">Sponsored ads</div>
+                    <ul class="link-list">
+                         <li>@Html.Partial("_AdResponsive")</li>
+                        @*<li>@Html.Partial("_AdResponsive")</li>
+                        <li>@Html.Partial("_AdResponsive")</li>*@
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

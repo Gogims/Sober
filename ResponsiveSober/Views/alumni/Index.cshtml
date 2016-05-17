@@ -1,0 +1,58 @@
+﻿@model IEnumerable<SoberModel.FamousAlumni>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <h1>Manage Alumni</h1>
+        <div class="col-md-5">
+            @using (Html.BeginForm("create", "alumni", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                SoberModel.FamousAlumni alumniProvider = new SoberModel.FamousAlumni();
+
+                @Html.Partial("create", alumniProvider)
+            }
+        </div>
+        <div class="col-md-7">
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>ID</th>
+                        <th>Alumni Name</th>
+                        <th>Image</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AlumniID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @{
+                                    string insuranceImage = "http://www.sober.com/contents//alumni/" + item.Image;                        
+                                }
+                                <img class="originalWidth" src="@insuranceImage" />
+                            </td>
+                            <td>
+                                @Html.ActionLink("  Edit  ", "Edit", new { id = item.AlumniID })
+                            </td>
+                            <td>
+                                @Html.ActionLink("  Delete  ", "Delete", new { id = item.AlumniID })
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

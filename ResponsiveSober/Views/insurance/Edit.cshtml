@@ -1,0 +1,73 @@
+﻿@model SoberModel.Insurance
+@{
+    ViewBag.Title = "Add Insurance Provider";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+
+<div class="content white-bg">
+    <div class="container">
+        <h1>Edit an Insurance Provider:</h1>
+
+        @using (Html.BeginForm("edit", "insurance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.HiddenFor(model => model.Ins_ID)
+            <div class="row">
+                <div class="col-md-12 form-group required">
+                    <label>Provider Name<span>*</span>:</label>
+                    @Html.TextBoxFor(model => model.Ins_ProviderName, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Ins_ProviderName)</span>
+                </div>
+                <div class="col-md-12 form-group required">
+                    <label>Provider Logo (gif,jpg,png)<span class="asterix">*</span>:</label>
+                    @{
+                        string insuranceImage = "http://www.sober.com/contents//insurance/" + Model.Ins_ProviderLogo;
+                    }
+                    <div class="row">
+                        <div class="col-md-12">
+                            <img class="originalWidth" src="@insuranceImage" />
+                        </div>
+                        <div class="col-md-12">
+                            <input type="file" name="logo" accept="image/gif, image/jpeg, image/png" class="form-control" />
+                        </div>
+                    </div>
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.Ins_ProviderLogo)</span>
+                </div>
+                <div class="col-md-12 form-group">
+                    <label>About Us:</label>
+                    @Html.TextAreaFor(x => x.Ins_AboutUs, new { @class = "ckeditor" })
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <button id="addinsr" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('form').submit(function (e) {
+
+            for (var i in CKEDITOR.instances) {
+                (function (i) {
+                    var name = '#' + CKEDITOR.instances[i].name;
+                    var maxlength = parseInt($(name).attr('maxlength'));
+                    var length = CKEDITOR.instances[i].getData().trim().length;
+
+                    if (length > maxlength) {
+                        alert(CKEDITOR.instances[i].name + " surpassed the " + maxlength);
+                        CKEDITOR.instances[i].focus();
+                        e.preventDefault();
+                    }
+
+                    $(name).val(CKEDITOR.instances[i].getData().trim());
+
+                })(i);
+            }
+        });
+    });
+</script>

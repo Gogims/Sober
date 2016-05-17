@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<style type="text/css">
+    h2{
+         border-top: solid 2px #c8c8c8; 
+         padding-top: 5px;
+    }
+</style>
+
+<div class="content white-bg">
+    <div class="container">
+        <div class="col-md-6">
+            <h2>Pending Profiles</h2>
+            @Html.ActionLink("Pending Treatment houses", "pending_treatment_houses", "directory", null, new { target = "_blank" })
+            <br />
+            @Html.ActionLink("Pending Treatment Centers", "pending_treatment_centers", "directory", null, new { target = "_blank" })
+            <br />
+            @Html.ActionLink("Pending Sober Living", "pending_sober_living", "directory", null, new { target = "_blank" })
+
+            <h2>Insurance</h2>
+            @Html.ActionLink("Insurance", "index", "insurance", null, new { target = "_blank" })
+
+            <h2>Famous Alumni</h2>
+            @Html.ActionLink("Famous Alumni", "index", "alumni", null, new { target = "_blank" })
+
+            <h2>Reports</h2>
+            @Html.ActionLink("Admin Reports", "index", "adminreport", null, new { target = "_blank" })
+            <br />
+            @Html.ActionLink("Premium Listings", "PremiumListingView", "premiumlisting", null, new { target = "_blank" })
+            <br />
+            @Html.ActionLink("Error Log", "log", "error", null, new { target = "_blank" })
+            <br />
+            @Html.ActionLink("Profile Management", "ProfileResult", "usermanagement", null, new { target = "_blank" })
+        </div>
+        <div class="col-md-6">
+            <h2>Pending Meetings</h2>
+            @Html.ActionLink("Pending NA Meetings", "na_pending_meeting", "meetings", null, new { target = "_blank" })
+
+            <h2>Inquiry</h2>
+            @Html.ActionLink("Inquiry", "index", "inquiry", null, new { target = "_blank" })
+            http://www.sober.com/inquiry
+
+            <h2>Feedback from Contact Page</h2>
+            @Html.ActionLink("Feedback", "feedback", "home", null, new { target = "_blank" })
+
+            <h2>User Review</h2>
+            @Html.ActionLink("View/Approve User Reviews", "viewreviewsforapproval", "userreview", null, new { target = "_blank" })
+
+            <h2>User Management</h2>
+            @Html.ActionLink("Manage User Accounts", "viewuseraccount", "usermanagement", null, new { target = "_blank" })
+            <h2>Upload Meetings</h2>
+            @Html.ActionLink("AA Meetings", "uploadaa", "admin", null, new { target = "_blank" })
+        </div>
+    </div>
+</div>

@@ -1,0 +1,433 @@
+﻿@model IEnumerable<SoberModel.FreeListing>
+
+<style>
+    .listings td, .listings th
+    {
+        padding: 10px!important;
+        vertical-align: top;
+        border-bottom: 1px solid #ccc;
+        text-align: left;
+        width: auto !important;
+    }
+
+    .listings
+    {
+        border: 1px solid #ccc;
+        width: 100%;
+    }
+
+        .listings img
+        {
+            width: 120px;
+            height: 80px;
+        }
+
+    #map-canvas2 img
+    {
+        border: none !important;
+        max-width: none !important;
+    }
+</style>
+
+@{                
+    char[] splitOptions = { '|', ',' };
+    char[] splitOptionsPipeOnly = { '|' };
+    string currentName = "";
+    string currentCity = "";
+    string currentState = "";
+    string currentProfile = ViewBag.CurrentProfileName;
+}
+
+@foreach (var FreeListings in Model)
+{
+    string address = FreeListings.location_street1 + "," + FreeListings.location_city + "," + FreeListings.location_state + ",usa";
+
+    if (!string.IsNullOrWhiteSpace(currentProfile) && currentProfile.Equals(FreeListings.PageName))
+    {
+        currentName = FreeListings.name1;
+        currentCity = FreeListings.location_city;
+        currentState = FreeListings.location_state;
+        if (ViewBag.StateName != null)
+        {
+            currentState = ViewBag.StateName;
+            currentState = currentState.ToLower();
+        }
+        if (!string.IsNullOrWhiteSpace(currentState) && currentState.Length <= 2)
+        {
+            currentState = MvcApplication4.utilities.GetStateNameFromAbbrevation(currentState).ToLower();
+        }
+
+        currentState = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(currentState);
+    }
+}
+<div class="table-responsive">
+
+    <h4 class="panel box blue-bg">Drug and Alcohol Treatment Centers near @currentCity @currentState</h4>
+
+    <table class="table table-bordered">        
+        <thead>
+            <tr>
+                <th style="font-size: large; font-weight: bold"><b>Distance</b></th>
+                <th style="font-size: large; font-weight: bold"><b>Facility Name</b></th>
+                <th style="font-size: large; font-weight: bold"><b>Location</b></th>
+                <th style="font-size: large; font-weight: bold"><b>Payment Accepted</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var listing in Model)
+            {
+                SoberModel.FreeListing FreeListings = listing;
+                string name1 = FreeListings.name1 == null ? "" : FreeListings.name1;
+
+                string city = FreeListings.location_city == null ? string.Empty : FreeListings.location_city + ",";
+                string address2 = city + " " + FreeListings.location_state + " " + FreeListings.location_zip;
+
+                string state = FreeListings.location_state.ToLower();
+                if (ViewBag.StateName != null)
+                {
+                    state = ViewBag.StateName;
+                    state = state.ToLower();
+                }
+                if (!string.IsNullOrWhiteSpace(state) && state.Length <= 2)
+                {
+                    state = MvcApplication4.utilities.GetStateNameFromAbbrevation(state).ToLower();
+                }
+                string link = Url.Action("samhsa", "directory", new { rehab = FreeListings.PageName.ToLower(), city = FreeListings.location_city.ToLower(), state = state });
+                string logo = "";
+                if (!string.IsNullOrWhiteSpace(FreeListings.logo) && !FreeListings.isPaid)
+                {
+                    logo = "http://www.sober.com/contents/logo/" + FreeListings.logo.Replace(" ", "%20").Replace("|", "").ToLower();
+                }
+                if (!string.IsNullOrWhiteSpace(FreeListings.logo) && FreeListings.isPaid)
+                {
+
+                    logo = @"http://www.sober.com/contents/premium_logo/compressed/" + FreeListings.logo.Replace(" ", "%20").Replace("|", "").ToLower();
+                    if (!File.Exists(@"C:\inetpub\SoberSurveyImagesAndVideos\Premium_Logo\compressed\" + FreeListings.logo.Trim()))
+                    {
+                        logo = @"http://www.sober.com/contents/premium_logo/" + FreeListings.logo.Trim().Replace(" ", "%20").Replace("|", "").ToLower(); ;
+                    }
+
+                }
+                if (FreeListings.isEnhanced && !FreeListings.IsProfileInactive)
+                {
+                    link = Url.Action("profile", "directory", new { rehab = FreeListings.PageName.ToLower(), city = FreeListings.location_city.ToLower(), state = state, facility_type = FreeListings.surveyTypeShort.ToLower() });
+
+                }
+                string profile = Url.Action("samhsa", "directory", new { rehab = FreeListings.PageName.ToLower(), city = FreeListings.location_city.ToLower(), state = state });
+
+                if (name1.Trim().ToUpper().Equals("NULL"))
+                {
+                    name1 = "";
+                }
+
+                if (FreeListings.isEnhanced && !FreeListings.IsProfileInactive)
+                {
+                    profile = Url.Action("profile", "directory", new { rehab = FreeListings.PageName.ToLower(), city = FreeListings.location_city.ToLower(), state = state.ToLower(), facility_type = FreeListings.surveyTypeShort.ToLower() });
+                }
+                if (string.IsNullOrWhiteSpace(FreeListings.PageName))
+                {
+                    link = "";
+                    profile = "";
+                }
+
+                <text>
+                <tr>
+                    @if (FreeListings.distance >= 0)
+                    {
+                        <td><span>@FreeListings.distance Miles</span></td>
+                    }
+
+                    @if (!FreeListings.isEnhanced && !string.IsNullOrWhiteSpace(logo))
+                    {
+                     
+                        <td>
+                            <img src="@logo" class="logo-s" alt="@FreeListings.name1"/><a href="@profile" target="_blank"><br />@name1</a>
+                        </td>
+                    }
+                    @if (!FreeListings.isEnhanced && string.IsNullOrWhiteSpace(logo))
+                    {
+                     
+                        <td>
+                            <a href="@profile" target="_blank">@name1</a>
+                        </td>
+                    }
+                    @if (FreeListings.isEnhanced && !string.IsNullOrWhiteSpace(logo))
+                    {
+                        <td>
+                            <a href="@link">
+                                <img src="@logo" class="logo-s" alt="@FreeListings.name1"/>
+                            </a>                            
+                            <a href="@profile" target="_blank">
+                                @name1
+                            </a>
+                        </td>
+                    }
+
+                    @if (FreeListings.isEnhanced && string.IsNullOrWhiteSpace(logo))
+                    {
+                        <td>
+                            <a href="@link"></a><a href="@profile" target="_blank">@name1</a>
+                        </td>
+                    }
+                    <td>
+                        <span itemprop="addressLocality">@city</span>
+                        <span itemprop="addressRegion">@FreeListings.location_state</span>
+                        <span itemprop="postalCode">@FreeListings.location_zip</span>
+                    </td>
+
+                    <td>
+                        <ul>
+                            @{
+                                string formOfPayment = "None Listed";
+                                if (@FreeListings.Forms_of_Payment_Accepted != null)
+                                {
+                                    formOfPayment = @FreeListings.Forms_of_Payment_Accepted;
+                                }
+
+                                string[] paymentTypes = formOfPayment.Split(splitOptionsPipeOnly, StringSplitOptions.RemoveEmptyEntries);  
+                            }
+
+                            @foreach (string payment in paymentTypes)
+                            { 
+                                <li>@payment</li>
+                            }
+                        </ul>
+                    </td>
+
+                </tr>
+                </text>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<div id="map-canvas" style="width: 100%; height: 400px">
+</div>
+
+<div id="map-canvas2" style="width: 100%; height: 400px">
+</div>
+
+<script type="text/javascript">
+    var mapCanvas = null;
+    var geocoder = null;
+    var marker = null;
+    var map3 = null;
+    var myPano = null;
+    var markers = [];
+
+    @{
+        string firstAddress = "";
+
+        foreach (var item in Model)
+        {
+            firstAddress = item.location_street1 + "," + item.location_city + "," + item.location_state + ",usa";
+            break;
+        }
+    }
+    
+    function maploading() {
+        var latlng = new google.maps.LatLng(38.2541667, -85.7594444);
+        var mapOptions = {
+            zoom: 10,
+            center: latlng
+        }
+        var mapOptions2 = {
+            center: latlng,
+            zoom: 14
+        };
+
+        // map3 = new google.maps.Map(document.getElementById('map-canvas2'), mapOptions2);
+        mapCanvas = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        google.maps.event.trigger(mapCanvas, "resize");
+        mapcenter('@firstAddress');
+
+        @foreach (var FreeListings in Model)
+        {
+            string state = FreeListings.location_state.ToLower();
+            if (ViewBag.StateName != null)
+            {
+                state = ViewBag.StateName;
+                state = state.ToLower();
+            }
+            string profile = Url.Action("samhsa", "directory", new { rehab = FreeListings.PageName.ToLower(), city = FreeListings.location_city.ToLower(), state = state });
+            if (FreeListings.isEnhanced && !FreeListings.IsProfileInactive)
+            {
+                profile = Url.Action("profile", "directory", new { rehab = FreeListings.PageName.ToLower(), city = FreeListings.location_city.ToLower(), state = state.ToLower(), facility_type = FreeListings.surveyTypeShort.ToLower() });
+            }
+            string address = FreeListings.location_street1 + "," + FreeListings.location_city + "," + FreeListings.location_state + ",usa";
+
+            if (!string.IsNullOrWhiteSpace(currentProfile) && currentProfile.Equals(FreeListings.PageName))
+            {
+                <text>
+                    getLatLongCurrent('@address', '@FreeListings.name1', '@profile');       
+                </text> 
+            }
+            else
+            {
+                if (FreeListings.Latitude.HasValue && FreeListings.Longitude.HasValue)
+                {
+                    <text>
+                        setMarker(@FreeListings.Longitude, @FreeListings.Latitude, '@FreeListings.name1', '@profile');
+                    </text> 
+                }
+                else
+                {
+                    <text>
+                        getLatLong('@address', '@FreeListings.name1', '@profile', '@FreeListings.PageName');       
+                    </text> 
+                }
+            }            
+        }        
+
+        geocoder = new google.maps.Geocoder();
+        var address = "@ViewBag.AddressLocation";
+        geocoder.geocode({ 'address': address }, function (results, status) {            
+            if (status == google.maps.GeocoderStatus.OK) {
+                var sv = new google.maps.StreetViewService();
+                
+                sv.getPanoramaByLocation(results[0].geometry.location, 100, processSVData);
+            }
+        });
+    }
+
+    function mapcenter(address3) {
+        var result = "";
+        geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ 'address': address3, 'region': 'usa' }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                result = results[0].geometry.location;
+                mapCanvas.setCenter(result);
+
+
+            } else {
+                result = "Unable to find address: " + status;
+                console.log(result);
+            }
+        });
+        return result;
+    }
+
+    function getLatLong(address3, title, link, pagename) {
+        var result = "";
+        geocoder.geocode({ 'address': address3, 'region': 'usa' }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                result = results[0].geometry.location;
+
+                var marker = new google.maps.Marker({
+                    position: result,
+                    map: mapCanvas,
+                    title: title
+                });
+
+                var contentString = '<a href="' + link + '">' + title + '</a>';
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                google.maps.event.addListener(marker, 'click', function () {
+                    infowindow.open(mapCanvas, marker);
+                });
+
+                $.ajax({
+                    url: '@Url.Action("SetLongitudeLatitude", "directory")',
+                    type: "POST",
+                    data: { pagename: pagename, longitude: result.lng(), latitude: result.lat() }
+                });
+
+            } else {
+                result = "Unable to find address: " + status;
+                console.log(result);
+            }
+        });
+        return result;
+    }
+
+    function setMarker(longitude, latitude, title, link) {
+        var myLatlng = new google.maps.LatLng(latitude, longitude);
+
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: mapCanvas,
+            title: title
+        });
+
+        var contentString = '<a href="' + link + '">' + title + '</a>';
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+
+        google.maps.event.addListener(marker, 'click', function () {
+            infowindow.open(mapCanvas, marker);
+        });
+    }
+
+    function getLatLongCurrent(address3, title, link) {
+        var result = "";
+        geocoder.geocode({ 'address': address3, 'region': 'usa' }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                result = results[0].geometry.location;
+                var pinColor = "00FF00";
+                var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+                               new google.maps.Size(21, 34),
+                               new google.maps.Point(0, 0),
+                               new google.maps.Point(10, 34));
+                var marker = new google.maps.Marker({
+                    position: result,
+                    map: mapCanvas,
+                    icon: pinImage,
+                    title: title
+                });
+                var contentString = '<a href="' + link + '">' + title + '</a>';
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+
+                google.maps.event.addListener(marker, 'click', function () {
+                    infowindow.open(mapCanvas, marker);
+                });
+
+            } else {
+                result = "Unable to find address: " + status;
+                console.log(result);
+            }
+        });
+        return result;
+    }
+
+    function processSVData(data, status) {        
+        if (status == google.maps.StreetViewStatus.OK) {
+            var panoramaOptions = {
+                position: data.location.latLng,
+                pov: {
+                    heading: 165,
+                    pitch: 0
+                },
+                zoom: 1
+            };
+            myPano = new google.maps.StreetViewPanorama(
+                document.getElementById('map-canvas2'),
+                panoramaOptions);
+
+            myPano.setVisible(true);
+
+            window.setInterval(function () {
+                var pov = myPano.getPov();
+                pov.heading += 0.2;
+                myPano.setPov(pov);
+                myPano.setVisible(true);
+            }, 10);
+        }
+    }
+
+    function loadScript() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places&callback=maploading';
+        document.body.appendChild(script);
+    }
+
+    window.onload = loadScript;
+</script>

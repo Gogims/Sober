@@ -1,0 +1,101 @@
+﻿@model SoberModel.AlumniListing
+
+@{
+    ViewBag.Title = "alumni_assigned_to_listing";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<h2>Alumnis assigned to Listings</h2>
+
+
+<div style="width: 40%; float: left">
+
+    @{
+        SoberModel.FamousAlumni insuranceProvider = new SoberModel.FamousAlumni();
+    }
+    <table>
+        <tr>
+            <th>
+                <label style="float: left; font-style: initial; font-weight: bold;">ID</label>
+            </th>
+            <th>
+                <label style="float: left; font-style: initial; font-weight: bold;">Alumni Name</label>
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.FamousAlumniList)
+        {
+            if (!Model.AssignedAlumniIdsList.Contains(item.AlumniID.ToString()))
+            {
+                continue;
+            }
+            <tr>
+                <td style="width: 100px">
+                    @Html.DisplayFor(modelItem => item.AlumniID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @{
+            string insuranceImage = "http://www.sober.com/contents//alumni/" + item.Image;
+                        <img src="@insuranceImage" />
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink(" Un-Assign ", "delete_alumni_from_listing", new { id = item.AlumniID, pagename = Model.PageName })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+
+</div>
+<div style="width: 60%; float: right">
+
+
+    <table>
+        <tr>
+            <th>
+                <label style="float: left; font-style: initial; font-weight: bold;">ID</label>
+            </th>
+            <th>
+                <label style="float: left; font-style: initial; font-weight: bold;">Alumni Name</label>
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.FamousAlumniList)
+        {
+            if (Model.AssignedAlumniIdsList.Contains(item.AlumniID.ToString()))
+            {
+                continue;
+            }
+
+            <tr>
+                <td style="width: 100px">
+                    @Html.DisplayFor(modelItem => item.AlumniID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @{
+            string insuranceImage = "http://www.sober.com/contents//alumni/" + item.Image;
+                        <img src="@insuranceImage" />
+                    }
+                </td>
+                <td style="margin-right: 10px; padding-right: 10px">
+                    @Html.ActionLink(" Assign ", "assign_alumni_to_listing", new { id = item.AlumniID, pagename = Model.PageName })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</div>
+

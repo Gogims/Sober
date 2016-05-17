@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "Sex Addiction Info";
+    Layout = "~/Views/Shared/_MasterResources.cshtml";
+}
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")
+}
+<div class="section wrap-s">
+    <ul class="breadcrumbs-s">
+        <li class="first"><a href="@Url.Action("index", "home")">Home</a></li>
+        <li>@Html.ActionLink("Directory", "index", "directory")</li>
+        <li>@Html.ActionLink("Sex Addiction", "sex", "resources")</li>
+    </ul>
+    <div class="profile-page-cont-s">
+        <div class="title-cont-s">
+            <h1>Sex Addiction</h1>
+        </div>
+        <div class="cont-s">
+            <div class="d-cont">
+                <div class="carousel-s">
+                    @Html.Partial("_AdResponsive")
+                    <div class="faq">
+                        <div class="head">How to Overcome Sex Addiction</div>
+                        <ul class="faqs">
+                            <li>
+                                <p class="ques">by Stephany Alexander</p>
+                             
+                                <p>
+                                    Sexual addiction is described as a progressive intimacy disorder characterized by compulsive sexual thoughts and acts. Like all other addictions, its
+    negative impact on the addict and on family members increases as the disorder progresses. Over time, the addict has to intensify the addictive behavior to
+    achieve the same results.
+                                </p>
+                                <p>
+                                    For some sex addicts, behavior does not progress beyond compulsive masturbation or the widespread use of pornography or phone or computer sex services. For
+    others, addiction can involve illegal activities such as voyeurism, exhibitionism, obscene phone calls, child molestation or rape. Sex addicts do not
+    inevitably become sex offenders. Furthermore, not all sex offenders are sex addicts. According to psychcentral.com roughly 55% of convicted sex offenders
+    can be considered sex addicts. About 71% of child molesters are sex addicts. For many, their problems are so severe that imprisonment is only the way to
+    ensure society's safety against them.
+                                </p>
+                                <p>
+                                    Society has accepted that a sex offender's actions stems not from sexual fulfillment, but rather out of a disturbed need for power, dominance, control or
+    revenge, or a perverted expression of anger. More recently, however, an awareness of brain changes and brain reward related with sexual behavior has led us
+    to understand that there are also powerful sexual drives that motivate sex offenses.
+                                </p>
+                                <p>
+                                    Overcoming Sexual Addiction
+                                </p>
+                                <p>
+                                    The consequences of sexual addiction may be devastating to not only the addict but also those close to him/her. It can leave an addict isolated, immensely
+    anxious and depressed to the point of being suicidal. Low self-esteem, hopelessness, shame, and despair are also common feelings experienced by sex
+    addicts. The ramifications of sex addiction do not end on an emotional level but rather, continue onto medical, financial and legal ones too.
+                                </p>
+                                <p>
+                                    Medical consequences of sex addiction may include HIV and other sexually transmitted diseases (STDs) such as syphilis, genital herpes and gonorrhea. In
+    addition, genital injury may result from unnecessary sexual activity or the use of foreign objects for sexual stimulation.
+                                </p>
+                                <p>
+                                    Financial consequences of sex addiction may include the loss of one's job, getting sued over sexual harassment or sexual abuse charges resulting in legal
+    fees. Purchasing pornographic material, use of prostitutes, calling 900 phone numbers and traveling for the individual purpose of sexual contacts can
+    create enormous debt in credit card bills and exhaust the financial resources of an addict often many times to the point of bankruptcy.
+                                </p>
+                                <p>
+                                    Legal consequences of sexual addiction include the arrest and incarceration of sex addict. The addict's out of control lifestyle make him to engage in high
+    risk, illegal activities such as voyeurism, exhibitionism, inappropriate touching and the solicitation of prostitutes.
+                                </p>
+                                <p>
+                                    A basic approach in recognizing any addictive behavior is to assess whether it is creating irresistible trouble in your life and yet you choose to return
+    to it despite the problem.
+                                </p>
+                                <p>
+                                    If your sexual behavior is exhausting your time and energy and it causes you to compromise your core values and the beliefs that you hold dear to your
+    heart then there is cause for alarm.
+                                </p>
+                                <p>
+                                    <strong>About the Author</strong>
+                                </p>
+                                <p>
+                                    Stephany Alexander is the founder of <a href="http://www.WomanSavers.com" target="_new">http://www.WomanSavers.com</a> the World's Largest Database Rating
+Men. She has been quoted on CNN, Fox Nationwide, the New York Times, and more. She has created over 10 women's<a href="http://www.womansavers.com/adult-ecards.asp" target="_new">comedy cartoon ecards</a>, 6    <a href="http://www.womansavers.com/womens-games.asp" target="_new">women's online games</a>. She has been guest on hundreds of radio shows.
+                                </p>
+
+
+                            </li>
+                             <div class="title">Sponsored ads</div>
+                            
+
+                                <li>@Html.Partial("_AdResponsive")</li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="ads-cont-links-s">
+
+                <div class="section">
+                    <div class="title">Sponsored ads</div>
+                    <ul class="link-list">
+                         <li>@Html.Partial("_AdResponsive")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,115 @@
+﻿@model SoberModel.ReviewRating
+
+@{
+    ViewBag.Title = "_ReviewRating";
+   
+}
+@{
+    
+    int overall = (int)Math.Round(@Model.OverallRating);
+    int treatment = (int)Math.Round(@Model.TreatmentRating);
+    int accomodations = (int)Math.Round(@Model.AccomodationsRating);
+    int staff = (int)Math.Round(@Model.StaffRating);
+    int value = (int)Math.Round(@Model.ValueRating);
+    int food = (int)Math.Round(@Model.FoodRating);
+    
+}
+<div id="review" class="tabs-cont-s">
+    <div class="profile-review">
+        <div class="review-box">
+            <img src="@Model.DefaultPicture" />
+            <ul class="review-stars">
+                <li class="star-item">
+                    <label>Overall</label>
+
+                    <ul class="rating">
+                        @for (int i = 0; i < @overall; i++)
+                        {
+                            <li class="star"></li>
+                        }
+                        @for (int i = @overall; i < 5; i++)
+                        {
+                            <li class=""></li>
+                        }
+                    </ul>
+                </li>
+                <li class="star-item">
+                    <label>Treatment</label>
+                    <ul class="rating">
+                        @for (int i = 0; i < @treatment; i++)
+                        {
+                            <li class="star"></li>
+                        }
+                        @for (int i = @treatment; i < 5; i++)
+                        {
+                            <li class=""></li>
+                        }
+                    </ul>
+                </li>
+                <li class="star-item">
+                    <label>Accommodations </label>
+                   <ul class="rating">
+                        @for (int i = 0; i < @accomodations; i++)
+                        {
+                            <li class="star"></li>
+                        }
+                        @for (int i = @accomodations; i < 5; i++)
+                        {
+                            <li class=""></li>
+                        }
+                    </ul>
+                </li>
+                <li class="star-item">
+                    <label>Staff  </label>
+                   <ul class="rating">
+                        @for (int i = 0; i < @staff; i++)
+                        {
+                            <li class="star"></li>
+                        }
+                        @for (int i = @staff; i < 5; i++)
+                        {
+                            <li class=""></li>
+                        }
+                    </ul>
+                </li>
+                <li class="star-item">
+                    <label>Value  </label>
+                   <ul class="rating">
+                        @for (int i = 0; i < @value; i++)
+                        {
+                            <li class="star"></li>
+                        }
+                        @for (int i = @value; i < 5; i++)
+                        {
+                            <li class=""></li>
+                        }
+                    </ul>
+                </li>
+                <li class="star-item">
+                    <label>Food  </label>
+                    <ul class="rating">
+                        @for (int i = 0; i < @food; i++)
+                        {
+                            <li class="star"></li>
+                        }
+                        @for (int i = @food; i < 5; i++)
+                        {
+                            <li class=""></li>
+                        }
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="clear-both"></div>
+        <p><strong>@Model.Review.Title
+             <span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+    <span itemprop="ratingValue">@Model.OverallRating</span> stars -
+    based on <span itemprop="reviewCount">@Model.Review.Ratings.Count</span> reviews
+  </span>
+           </strong></p>
+        <div itemprop="review" itemscope itemtype="http://schema.org/Review">
+            <meta itemprop="datePublished" content="@Model.Review.Date" />@Model.Review.Date
+       <div itemprop="description">@Html.Raw(@Model.Review.Review1)</div> 
+       </div>
+    </div>
+</div>

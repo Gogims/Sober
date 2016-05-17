@@ -1,0 +1,93 @@
+﻿@model SoberModel.FeedBack
+
+@{
+    ViewBag.Title = "Contact Us";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+@using Recaptcha.Web.Mvc;
+
+<style type="text/css">
+    #recaptcha_response_field{
+        height: initial !important;
+    }
+</style>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li class="active">Contact Us</li>
+        </ol>
+        <div class="row">
+            <div class="col-md-12"><h2>Contact Us</h2><p>Please feel free to drop us some feedback</p></div>
+        </div>
+
+        <form id="contact" action="/home/contact" method="post">            
+            <div class="row">
+                <div class="col-md-6">                    
+                    <div class="col-md-12 form-group required">
+                        <label>Your Name <span>*</span></label>
+                        @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-12 form-group required">
+                        <label>Email <span>*</span></label>
+                        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-12 form-group ">
+                        <label>Telephone </label>
+                        @Html.TextBoxFor(x => x.Phone, new { @class = "form-control numbersOnly" })
+                    </div>
+                    <div class="col-md-12  form-group required">
+                        <label>Message <span>*</span></label>
+                        @Html.TextAreaFor(x => x.FeedBack1, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-12 form-group">
+                        @Html.Recaptcha()
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {        
+        $('#contact').validate({
+            rules: {
+                Name: {
+                    required: true
+                },
+                Email: {
+                    required: true
+                },
+                Phone: {
+                    required: true
+                },
+                FeedBack1: {
+                    required: true
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    });
+</script>

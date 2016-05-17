@@ -1,0 +1,102 @@
+﻿@model IEnumerable<SoberModel.UserProfile>
+
+@{
+    ViewBag.Title = "MapToSamhsaListing";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/jquery.dataTablesBootstrap.js"></script>
+<link href="~/Content/jquery.dataTablesBootstrap.css" rel="stylesheet" />
+
+<div class="content white-bg">
+    <div class="container">
+
+        <div class="row">
+            <h2 class="panel box blue-bg">Users Able to Edit</h2>
+
+            <table id="editusers" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.DisplayName</td>
+                            <td>@item.UserLoginEmail</td>
+                            <td>
+                                <button type="button" class="removeuser btn btn-primary">Remove</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+     
+
+        <div class="row">
+            <h2 class="panel box blue-bg">Available Users</h2>
+
+            <table id="users" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Map</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#users').dataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": "@Url.Action("GetUsers", "usermanagement", new { @pagename = Request["pagename"] })"
+        });
+
+        $('#users').on('click', '.allowuser', function () {
+            var email = $(this).val();
+            var name = $(this).parent().siblings().first().text();
+            var row = $(this).parents('tr');
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AllowUser", "UserManagement")',
+                data: { user: email, pagename: '@Request["pagename"]' },
+                async: false,
+                success: function (result) {
+                    $('#editusers tbody').append("<tr><td>" + name + "</td><td>" + email + "</td><td><button class='removeuser btn btn-primary' type='button'>Remove</button></td></tr>");
+                    $(row).remove();
+                }
+            })
+        });
+
+        $('#editusers').on('click', '.removeuser', function () {
+            var email = $(this).parent().siblings().last().text();
+            var row = $(this).parents('tr');
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("RemoveUser", "UserManagement")',
+                data: { user: email, pagename: '@Request["pagename"]' },
+                async: false,
+                success: function (result) {
+                    $(row).remove();
+                }
+            })
+        });
+    });
+</script>

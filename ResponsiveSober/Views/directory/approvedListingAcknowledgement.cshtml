@@ -1,0 +1,13 @@
+﻿@model SoberModel.EnhancedProfileList
+
+@{
+    ViewBag.Title = "approvedListingAcknowledgement";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <h2> Enhanced Profile</h2>
+        @Html.ActionLink(" Enhanced profile", "profile", "directory", new { rehab = Model.PageName.ToLower(), city = TempData["profilecity"], state = TempData["profilestate"], facility_type = Model.Survey.ToLower() }, null)
+    </div>
+</div>

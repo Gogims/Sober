@@ -1,0 +1,68 @@
+﻿@model SoberBLL.Reviews.ReviewProfile
+@{
+    string state = Model.StateName;
+    state = state.ToLower();
+    
+    string facilityType = Model.SurveyType;
+    if (facilityType.ToLower().Equals("soberlivingsurvey"))
+    {
+        facilityType = "sl";
+    }
+    else if (facilityType.ToLower().Equals("treatmentcentersurvey"))
+    {
+        facilityType = "tc";
+    }
+
+    string reviewLink = Url.Action("profile", "directory", new { rehab = Model.PageName.ToLower(), city = Model.City.ToLower(), state = state, facility_type = facilityType }) + "#editorsreview";
+}
+
+<li class="row">
+    <div class="col-xs-12 col-md-4">
+        <a href="@reviewLink">
+            <img src="@Model.ProfileImage" width="287" height="156" />
+        </a>
+    </div>
+    <div class="col-xs-12 col-md-8 listing-info">
+        <a href="@reviewLink">
+            <h5 itemprop="name" itemscope itemtype="http://schema.org/Organization">
+                @Model.Title
+            </h5>
+        </a>
+        <p itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+            <span itemprop="ratingValue">@Math.Round(Model.Stars, 2)</span> 
+            &nbsp; stars - based on &nbsp;
+            <span itemprop="reviewCount">@Model.NofReviews</span> reviews
+        </p>
+        <ul class="meta">
+            <li>
+                <ul class="rating">
+                    @for (int i = 0; i < (int)Model.Stars; i++)
+                    {
+                        <li class="star"></li>
+                    }
+                    @{
+                        int decimalPart = (int)((Model.Stars - (int)Model.Stars) * 100);
+                    }
+                    @if (decimalPart >= 25 && decimalPart < 75)
+                    {
+                        <li class="halfstar"></li>
+                    }
+                    @if (decimalPart > 75 && decimalPart < 100)
+                    {
+                        <li class="star"></li>
+                    }
+                    @for (int i = (int)Math.Ceiling(Model.Stars); i < 5; i++)
+                    {
+                        <li class=""></li>
+                    }
+                </ul>
+            </li>
+            <li>@string.Format("{0:C0}", Model.PriceFrom) - @string.Format("{0:C0}", Model.PriceTo)</li>
+            <li>@Model.City, @System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Model.StateName)</li>
+        </ul>
+        <div itemprop="description">
+            @Html.Raw(Model.Summary)
+        </div>
+        <a href="@reviewLink">Read more...</a>
+    </div>
+</li>

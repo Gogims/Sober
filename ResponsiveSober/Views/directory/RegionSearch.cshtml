@@ -1,0 +1,99 @@
+﻿@model SoberModel.Region
+
+@{
+    string address = !string.IsNullOrEmpty(Model.state) ? Model.city + ", " + Model.state : Model.city;
+    
+    ViewBag.Title = "Drug And Alcohol Rehabs in " + @address;
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<style type="text/css">
+    li{
+        margin-top: 10px;
+    }
+
+    .search{
+        width: 100%;
+        float: left;
+        background-color: #e7e7e7;
+        padding: 10px;
+    }
+    
+    .search li{
+        display: inline;
+    }
+</style>
+
+<div class="section wrap-s">
+    <ul class="breadcrumbs-s">
+        <li class="first"><a href="@Url.Action("index", "home")">Home</a></li>
+        <li>@Html.ActionLink("Directory", "index", "directory")</li>
+        <li>@Html.ActionLink("Drug And Alcohol Treatment Centers", "drug_alcohol", "facilities")</li>
+        <li>@Model.city</li>
+    </ul>
+    <div class="page-contents-s">
+        <h1 class="main-title-s">Drug And Alcohol Treatment Centers In @address & Halfway Houses Close To You</h1>
+
+        <div style="float: left; width: 100%;">
+            @Html.Partial("_AdResponsive")
+        </div>
+
+        <div style="float: left;">
+            <h2>This are the 3 closest sober living facilities:</h2>
+
+            <ul>
+                @foreach (var item in Model.SoberLivingFacilities.Take(3))
+                {
+                    <li>
+                        <div><strong>@item.name1</strong></div>
+                        <div>@item.location_street1</div>
+                        <div>@item.location_city@Html.Raw(",") @item.location_state & @item.location_zip</div>
+                    </li>                   
+                    
+                }
+            </ul>
+        </div>
+
+        <div style="margin-left:50px; float: left;">
+            <h2>@Model.state drug rehab and alcohol rehab centers</h2>
+
+            <ul>
+                @foreach (var item in Model.TreatmentCenterFacilities.Take(3))
+                {
+                    <li>
+                        <div><strong>@item.name1</strong></div>
+                        <div>@item.location_street1</div>
+                        <div>@item.location_city@Html.Raw(",") @item.location_state & @item.location_zip</div>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <div style="float:left;">
+            @Html.Partial("_AdResponsive")
+        </div>        
+
+    </div>    
+</div>
+
+<div style="text-align: center;">
+    <ul class="search" style="float: left;">
+        <li>
+            <label>Change location</label>
+        </li>
+
+        <li>
+            <input type="text" id="Address" placeholder="(Optional) state, city or zip" value="@address" />
+        </li>
+
+        <li>
+            <input type="submit" class="btn" value="Search" onclick="Search();" />
+        </li>
+    </ul>
+</div>
+
+<input type="text" style="display:none;" id="FacilityType" />
+
+<div class="full-width">
+    @Html.Partial("_AdResponsive")
+</div>

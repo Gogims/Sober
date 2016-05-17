@@ -1,0 +1,75 @@
+﻿@model IEnumerable<SoberModel.sp_GetSpotlightFacilitiesByCategory_Result>
+@{
+    ViewBag.Title = "Halfway Houses - Find the best care right now";
+    Layout = "~/Views/Shared/_Master.cshtml";
+    ViewBag.SelectedCategory = 10;
+}
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")
+}
+@section head {
+    <meta name="description" content="Complete list of halfway houses with reviews, pictures, and cost information. Find the perfect fit at Sober.com right now!">
+}
+<div class="search-header">
+    <div class="container">
+        @Html.Partial("_facilitysearcharea")
+    </div>
+</div>
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li>@Html.ActionLink("Directory", "index", "directory")</li>
+            <li class="active">Halfway Houses</li>
+        </ol>
+        <div class="row">
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Halfway Houses</h2>
+                    </div>
+                </div>
+
+                @Html.Partial("_SpotLightFacilities", Model)
+            </div>
+
+            <div class="col-md-2">
+                <h5>Sponsored ads</h5>
+                <ul class="link-list">
+                    <li>@Html.Partial("_Ads2")</li>
+                    <li>@Html.Partial("_Ads3")</li>
+                </ul>
+                @Html.Partial("_StateLinksSeo")
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="faq">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h4>Halfway Houses - FAQs</h4></div>
+                </div>
+                <ul class="row faq-list">
+                    <li class="com-md-12">
+                        <h6>What is a halfway house (also spelled half way house)?</h6>
+                        <p>A halfway house is a facility that accommodates individuals battling alcoholism, drug addiction, mental illness and similar disorders. Some half way houses may specialize in different areas, such as alcoholism, drug addiction, mental illness, or released prisoners. The court may order residency in a halfway house for individuals on parole, probation or those who are recently released. Some prisoners need to condition themselves in a supervised setting before going back to the normal world outside the prison.</p>
+                        <p>A halfway house imposes strict regulations for its residents in order to mitigate the chances of relapse. Residents are required to sign the house rules contract that includes the policy against bringing alcoholic drinks and prohibited drugs, and requires the adherence to curfew and similar rules. Noncompliance to the house rules subjects a resident to removal from the halfway house.</p>
+                    </li>
+                    <li class="com-md-12">
+                        <h6>What is the difference between a halfway house and a sober house?</h6>
+                        <p>A sober house is an inexpensive drug and alcohol- free environment where the alcoholic or drug addict can obtain support from peer groups. In general, the rules at a halfway house are stricter than the rules at a sober house (sometimes called a 3/4 house).It provides a positive environment for recovering addicts and alcoholics to receive the emotional support they need from residents going through the same experiences. Experts agree that both halfway houses and sober houses (also referred to together as recovery housing or transitional living) are very important tools to use in one's lifelong recovery journey.</p>
+                        <p>A halfway house imposes strict regulations for its residents in order to mitigate the chances of relapse. Residents are required to sign the house rules contract that includes the policy against bringing alcoholic drinks and prohibited drugs, and requires the adherence to curfew and similar rules. Noncompliance to the house rules subjects a resident to removal from the halfway house.</p>
+                        <p>Figure 1. Traits of residents in a halfway house.</p>
+                        <img src="~/Images/faqu.png" />
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.Partial("_AdResponsive")
+        </div>
+    </div>
+</div>

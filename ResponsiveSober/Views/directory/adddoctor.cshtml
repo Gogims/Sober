@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "adddoctor";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li>@Html.ActionLink("Add your free listing", "addlisting", "directory")</li>
+            <li class="active">Add doctors</li>
+        </ol>
+        <div class="row">
+            <h1>Add Doctors</h1>
+            <p>Fields marked <span style="color:red;">*</span> are mandatory</p>
+
+            <div class="col-md-12">
+                <div class="col-md-6 form-group required">
+                    <label>First Name <span>*</span>:</label>
+                    <input type="text" class="form-control" />
+                    <span class="err-msg"></span>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Middle Name :</label>
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-md-6 form-group required">
+                    <label>Last Name <span>*</span>:</label>
+                    <input type="text" class="form-control" />
+                    <span class="err-msg"></span>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Suffix :</label>
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-md-6 form-group required">
+                    <label>Address Line 1 <span>*</span>:</label>
+                    <input type="text" class="form-control" />
+                    <span class="err-msg"></span>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Address Line 2 :</label>
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-md-6 form-group required">
+                    <label>City <span>*</span>:</label>
+                    <input type="text" class="form-control" />
+                    <span class="err-msg"></span>
+                </div>
+                <div class="col-md-6 form-group required">
+                    <label>State <span>*</span>:</label>
+                    <select class="selectpicker"></select>
+                    <span class="err-msg"></span>
+                </div>
+                <div class="col-md-6 form-group required">
+                    <label>Zip Code <span>*</span>:</label>
+                    <input type="text" class="form-control" />
+                    <span class="err-msg"></span>
+                </div>
+                <div class="col-md-6 form-group required">
+                    <label>Phone <span>*</span>:</label>
+                    <input type="text" class="form-control" />
+                    <span class="err-msg"></span><span>eg. - (xxx) xxx-xxxx</span>
+                </div>
+                <div class="col-md-6 form-group required">
+                    <label>Email Address <span>*</span>:</label>
+                    <input type="text" class="form-control" />
+                    <span class="err-msg"></span>
+                    <br />
+                    <br />
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

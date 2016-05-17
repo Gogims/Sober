@@ -1,0 +1,71 @@
+﻿@model SoberBLL.SamhsaAdmin
+
+@{
+    ViewBag.Title = "Modify Admin";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <h2>Admin Functions</h2>
+
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(model => model.OriginalPageName)
+            <div class="row aic">
+                <div class="col-md-12 form-group required">
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Page Name <span>*</span>:</label>
+                            @Html.TextBoxFor(model => model.PageName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.PageName)</span>
+
+                </div>
+                <div class="col-md-12 form-group required">
+                    <label>Show Website? <span>*</span></label>
+                    
+                    @if (string.IsNullOrWhiteSpace(Model.ShowWebSite))
+                    {
+                        Model.ShowWebSite = "No";
+                    }
+                    @foreach (var rdbtn in Model.rdList_ShowWebSite)
+                    {
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.ShowWebSite, rdbtn.Value)
+                                <label>@rdbtn.Text</label>
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-12 form-group required">
+                    <label>Certified Partner? <span>*</span></label>
+
+                    @if (string.IsNullOrWhiteSpace(Model.CertifiedPartner))
+                    {
+                        Model.CertifiedPartner = "No";
+                    }
+                    @foreach (var rdbtn in Model.rdList_CertifiedPartner)
+                    {
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.CertifiedPartner, rdbtn.Value)
+                                <label>@rdbtn.Text</label>
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-2">
+                    <button name="submit" class="btn btn-primary" type="submit" id="Modify">Save</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

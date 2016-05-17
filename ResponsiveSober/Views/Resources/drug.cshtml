@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Gambling Problems";
+    Layout = "~/Views/Shared/_MasterResources.cshtml";
+}
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")
+}
+<div class="section wrap-s">
+    <ul class="breadcrumbs-s">
+        <li class="first"><a href="@Url.Action("index", "home")">Home</a></li>
+        <li>@Html.ActionLink("Directory", "index", "directory")</li>
+        <li>@Html.ActionLink("Drug Rehab", "drug", "resources")</li>
+    </ul>
+    <div class="profile-page-cont-s">
+        <div class="title-cont-s">
+            <h1>Drug Rehab</h1>
+        </div>
+        <div class="cont-s">
+            <div class="d-cont">
+                <div class="carousel-s">
+                    @Html.Partial("_AdResponsive")
+                    <div class="faq">
+                        <div class="head">Treatment Centers - FAQs</div>
+                        <ul class="faqs">
+                            <li>
+                                <p class="ques">What are the things to look for when evaluating treatment centers?</p>
+                                <p>
+                                    <strong>1. Cost of care and extent of insurance coverage- </strong>Choose a treatment center
+        that you can afford. Check if it is included in your insurance plan. Inquire about
+        the total cost including the medicines and professional fees.
+         </br> </br>
+        <strong>2. Detox treatment -</strong>Ask about the detox medications, the professional health
+        care providers who will supervise the detoxification and the place where it will
+        be conducted.
+         </br> </br>
+        <strong>3. Client to staff ratio - </strong>This is to ensure that you will receive the appropriate
+        attention for speedy recovery.
+         </br> </br>
+        <strong>4. Qualifications of the staff -</strong>You will be confident in the treatment process
+        if the members of the team are certified professionals.
+         </br> </br>
+        <strong>5. Treatment programs offered - </strong>This is the most important factor to consider.
+        Your recuperation largely depends on the kind of program you will undergo.
+         </br> </br>
+        <strong>6. Twelve -step based program used - </strong>This is a highly valuable program in
+        alcohol and drug rehabilitation. You should also ask if they implement holistic
+        care.
+         </br> </br>
+        <strong>7. Individualized treatment plan -</strong> there is no perfect treatment plan applicable
+        to all. It is important that you will receive health care management suited to your
+        needs.
+         </br> </br>
+        <strong>8. Psychiatrist - </strong>Since alcoholism and drug addiction are associated with
+        depression and other psychological problems, it is important to receive the professional
+        help from a psychiatrist.
+         </br> </br>
+        <strong>9. Visitors policies - </strong>Inquire about the treatment center's policy regarding
+        your visitors as well as the family support groups available.
+         </br> </br>
+        <strong>10. Length of stay - </strong>The duration of your treatment will play a major role
+        in your transition from addiction to sobriety as well as the cost of the programs.
+         </br> </br>
+        <strong>11. Fun activities - </strong>Inquire about group and individual activities that will
+        promote socialization and sense of achievement like sports and similar leisure interest.
+         </br> </br>
+        <strong>12. Foods served -</strong> This is essential especially if you are a vegetarian or
+        your religion forbids some foods.
+         </br> </br>
+        <strong>13. Physical exercises - </strong>Exercise is important to keep you fit and mentally
+        alert.
+         </br> </br>
+        <strong>14. Spirituality - </strong>It is believed that a person will easily recover from
+        addiction with the development of spiritual consciousness.
+         </br> </br>
+        <strong>15. Success rate - </strong>This will help you evaluate if the services of the treatment
+        facility are effective.
+         </br> </br>
+        <strong>16. Case studies - </strong>Check the verity of the testimonials and ask for the opinions
+        of its former clients to ascertain if the facility can really help you recover from
+        substance dependence.
+         </br> </br>
+        <strong>17. Treatment center rules - </strong>It is better to know about the rules as early
+        as possible to avoid regrets in the end especially when it comes to financial matters.
+         </br> </br>
+        <strong>18. Disciplinary measures for violating rules - </strong>Be sure to ask about punishment/penalty
+        for violations of the rehab's rules before you enroll.
+         </br> </br>
+        <strong>19. Room accommodations - </strong>Some people prefer to be alone and some want to
+        be in a group. Check their room policies and the cost for your preference.
+         </br> </br>
+        <strong>20. Accreditation by JCAHO or CARF - </strong>These are two national organizations
+        that carry a lot of weight within the recovery industry. Treatment centers with
+        these accreditations are a big plus.
+         </br> </br>
+        <strong>21. Speciality - </strong>Ask if the treatment center specializes in a certain type
+        of addiction. Many provide care for a wide variety of addictions, but some are nationally
+        known for their leadership in selected areas.
+         </br> </br>
+                                </p>
+
+
+                            </li>
+                            <div class="title">Sponsored ads</div>
+
+
+                            <li>@Html.Partial("_AdResponsive")</li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="ads-cont-links-s">
+
+                <div class="section">
+                    <div class="title">Sponsored ads</div>
+                    <ul class="link-list">
+                        <li>@Html.Partial("_AdResponsive")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<SoberModel.tbl_SamhsaListings>
+
+@{
+    ViewBag.Title = "Approve Treatment House";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <h2>Approve Treatment House</h2>
+        @if (Model.Count() > 0)
+        {
+            foreach (var samhsaForm in Model)
+            {
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" value="@samhsaForm.name1" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>@samhsaForm.CreatedOn</label>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.ActionLink("Approve Listing", "approve_treatment_house", "directory", new { listingid = @samhsaForm.ListingId }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <label>No listings to approve</label>
+        }
+    </div>
+</div>

@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "Gambling Problems";
+    Layout = "~/Views/Shared/_MasterResources.cshtml";
+}
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")
+}
+<div class="section wrap-s">
+    <ul class="breadcrumbs-s">
+        <li class="first"><a href="@Url.Action("index", "home")">Home</a></li>
+        <li>@Html.ActionLink("Directory", "index", "directory")</li>
+        <li>@Html.ActionLink("Teen Rehab", "teen", "resources")</li>
+    </ul>
+    <div class="profile-page-cont-s">
+        <div class="title-cont-s">
+            <h1>Teen Rehab</h1>
+        </div>
+        <div class="cont-s">
+            <div class="d-cont">
+                <div class="carousel-s">
+                    @Html.Partial("_AdResponsive")
+                      <div class="faq">
+                        <div class="head">Adolescent Services FAQs</div>
+
+                        <ul class="faqs">
+                            <li>
+                                <p class="ques">What are adolescent treatment centers?</p>
+                                <p>An adolescent treatment center provides assessment and treatment to adolescents or people below 18 years of age. It can be out-patient or in-patient/residential treatment program depending on the needs of the adolescent. Some adolescent services accommodate young adults aged 23 years and below.</p>
+                            </li>
+                            <li>
+                                <p class="ques">What types of services are commonly offered to adolescents with substance abuse?</p>
+                                <p>Services offered to adolescents include the following: </p>
+                                <ul class="disc-style">
+                                    <li>Acute and sub-acute youth detoxification </li>
+                                    <li>Comprehensive Substance Abuse Evaluations</li>
+                                    <li>Family Counseling</li>
+                                    <li>Family Education and Support </li>
+                                    <li>Individual Counseling </li>
+                                    <li>In-patient treatment, working with youth with co-occurring disorders</li>
+                                    <li>Out-patient assessment</li>
+                                    <li>Psychiatric assessment and discussion</li>
+                                    <li>Recovery house services </li>
+                                    <li>Specialized Counseling Groups</li>
+                                    <li>Substance Abuse Education</li>
+                                    <li>Urine Drug Screening </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="ques">What special needs of adolescents are addressed by adolescent services?</p>
+                                <p>Adolescents have unique physical and emotional needs due to underdeveloped neuro-cognitive and psychological aspects. In most cases, teen substance abuse is associated with co-occurring mental health issues like attention-deficit hyperactivity disorder (ADHD), depressive and anxiety disorders, physical/ sexual abuse and academic problems. Social relationships are also very important for adolescents. Therefore, adolescent services focus on these issues by facilitating positive involvement of parental figures and integrating academics and athletics in the treatment programs. </p>
+                                <p>The program also includes socialization, and gender-appropriate, cultural and developmental services. In addition, adolescent services offer comprehensive treatment and case management.</p>
+                            </li>
+                            <li>
+                                <p class="ques">When should I enroll my child to an in-patient treatment program?</p>
+                                <p>Residential treatment program is offered to teens with:</p>
+                                <ul class="disc-style">
+                                    <li>Intoxication problems</li>
+                                    <li>Medical and psychiatric complications due to substance abuse</li>
+                                    <li>High-risk recovery environment (abused, homeless, close peers or family using drugs) </li>
+                                    <li>No response to short treatment</li>
+                                    <li>Juvenile Justice System case </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="ques">What is the duration of in-patient treatment for adolescents?</p>
+                                <p>For residents who will only undergo detoxification, residency may last for several days only. But residents who are not responsive to treatment can stay from 45 days to one year. The same duration applies to youth offenders and residents with unstable family situations.</p>
+                            </li>
+                             <div class="title">Sponsored ads</div>
+                            
+
+                                <li>@Html.Partial("_AdResponsive")</li>
+                        </ul>
+                    </div>
+                    <div class="faq">
+                        <div class="head">Adolescent Services Articles</div>
+                        <script type='text/javascript' src='http://www.sober.com/forums/external.php?id=20&amp;k=22a76e74d1b87f2f372118a1290f5888&amp;method=div' id='block-22a76e74d1b87f2f372118a1290f5888'></script>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="ads-cont-links-s">
+
+                <div class="section">
+                    <div class="title">Sponsored ads</div>
+                    <ul class="link-list">
+                         <li>@Html.Partial("_AdResponsive")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

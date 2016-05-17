@@ -1,0 +1,28 @@
+﻿@{
+    
+    var states = SoberModel.States.GetAllStates();
+    if (ViewBag.SelectedCategory != null)
+    {
+        int selectedCategory = ViewBag.SelectedCategory;
+        states = SoberModel.States.GetAllStates(selectedCategory);
+    }
+    string facility_type = ViewBag.FacilityType;
+}
+<h5>By State</h5>
+<ul>
+
+    @if (ViewBag.SelectedCategory != null)
+    {
+        foreach (var item in states)
+        {
+            <li>@Html.ActionLink(item.StateName +"("+item.Count+")", "listings", "directory", new { address = item.StateName.ToLower(), rehab = facility_type.ToLower() }, null)</li>
+        }
+    }
+    @if (ViewBag.SelectedCategory == null)
+    {
+        foreach (var item in states)
+        {
+            <li>@Html.ActionLink(item.StateName, "listings", "directory", new { address = item.StateName.ToLower(), rehab = facility_type.ToLower() }, null)</li>
+        }
+    }
+</ul>

@@ -1,0 +1,120 @@
+﻿@model SoberBLL.AddListings.SamhsaSoberLiving
+
+@{
+    ViewBag.Title = "editsamhsatreatmentcenter";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<script src="~/Scripts/PhoneMask.js"></script>
+<script src="~/Scripts/jquery.sortable.min.js"></script>
+<link href="~/Content/Sortable.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<div class="content white-bg">
+    <div class="container">
+        @using (Html.BeginForm())
+        {
+            <div class="row">
+                <div class="row">
+                    <div class="col-md-12 panel-group">
+                        <h4 class="panel box expander">Your details</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-cont row">
+                @Html.EditorFor(x => x.TH)
+            </div>
+
+            <div class="row">
+                @Html.EditorFor(x => x.SL)
+            </div>
+
+            <div class="row">
+                <div class="row">
+                    <div class="col-md-2">
+                        <button id="editsamhsasl" type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    function checkAtLeastOneCheckBox() {
+        var message = "";
+        var display = false;
+        var errcount = 0;
+        $(".atleastonecheckbox").each(function (i) {
+            if ($(this).find(":checked").length == 0) {
+                $(this).find("span.err-msg").first().text("Please select at least one value");
+                $(this).find('input').focus();
+                errcount++;
+            }
+            else {
+                $(this).find("span.err-msg").first().text("");
+            }
+        });
+        if (errcount > 0)
+            return false;
+        else
+            return true;
+    }
+
+    function checkMaxFiveCheckBoxes() {
+        var message = "";
+        var display = false;
+        var errcount = 0;
+        var setfocus = true;
+        $(".maxthreecheckboxes").each(function (i) {
+            if ($(this).find(":checked").length > 5) {
+                message = $(this).find("label").first().text();
+                var index = message.indexOf("*");
+                if (index > 0) {
+                    message = message.substr(0, index - 1);
+                }
+
+                $(this).find("span.err-msg").first().text(message);
+                errcount++;
+                if (setfocus) {
+                    $(this).find("input").first().focus();
+                    setfocus = false;
+                }
+            }
+            else {
+                $(this).find("span.err-msg").first().text("");
+            }
+        });
+        if (errcount > 0) {
+            return false;
+        }
+        else
+            return true;
+    }
+
+    $(document).ready(function () {
+        $('.expander').click();
+
+        $('#editsamhsasl').click(function () {
+            $('.panel-cont').show();
+        });
+
+        $("form").submit(function () {
+            if (checkAtLeastOneCheckBox()) {
+                if (checkMaxFiveCheckBoxes()) {
+                    $('#TH_List_chckBox_AssociatedCategories_11__IsSelected').removeAttr("disabled");
+
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        });
+    });
+</script>

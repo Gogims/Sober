@@ -1,0 +1,180 @@
+﻿@model SoberBLL.UserReview.UserReviewForm
+
+@using (Ajax.BeginForm("WriteUserReview", "UserReview", new AjaxOptions { UpdateTargetId = "reviewcontent", InsertionMode = InsertionMode.Replace }))
+{
+    @Html.HiddenFor(x => x.PageName)
+
+    <div class="container">
+        <div class="row required">
+            <h2 class="panel box blue-bg">Write your review here...</h2>
+
+            <label>Month and Year of Stay <span>*</span></label>
+            <span class="err-msg">@Html.ValidationMessageFor(model => model.StayYear)</span>
+
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.DropDownListFor(model => Model.StayMonth, new SelectList(
+                                    new[] { new { Text = "Select Month", Value = (string)null } }.Concat(
+                                    Enumerable.Range(1, 12)
+                                    .Select(r => new
+                                    {
+                                        Text = new DateTime(2000, r, 1).ToString("MMM"),
+                                        Value = new DateTime(2000, r, 1).ToString("MMM")
+                                    })),
+                                    "Value", "Text", Model.StayMonth), new { @class = "selectpicker" })
+                </div>
+                <div class="col-md-6">
+                    @Html.DropDownListFor(model => Model.StayYear, new SelectList(
+                                    new[] { new { Text = "Select Year", Value = (string)null } }.Concat(
+                                    Enumerable.Range(DateTime.Now.Year - 15, 16)
+                                    .Select(r => new
+                                    {
+                                        Text = new DateTime(r, 1, 1).ToString("yyyy"),
+                                        Value = r.ToString()
+                                    })),
+                                    "Value", "Text", Model.StayYear), new { @class = "selectpicker" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <label>How do you rate the place? </label>
+            </div>
+        </div>
+
+        <div class="row required">
+            <div class="col-md-6">
+                <label>Overall <span>*</span></label>
+                <span class="err-msg">@Html.ValidationMessageFor(model => model.Rating_Overall)</span>
+                <ul class="rating">
+                    @foreach (var rdbtn in Model.rdList_RatingList)
+                    {
+                        <li class="star-x">
+                            @Html.RadioButtonFor(model => model.Rating_Overall, rdbtn.Value)
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <label>Treatment <span>*</span></label>
+                <span class="err-msg">@Html.ValidationMessageFor(model => model.Rating_Treatment)</span>
+                <ul class="rating">
+                    @foreach (var rdbtn in Model.rdList_RatingList)
+                    {
+                        <li class="star-x">
+                            @Html.RadioButtonFor(model => model.Rating_Treatment, rdbtn.Value)
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="row required">
+            <div class="col-md-6">
+                <label>Accomodation <span>*</span></label>
+                <span class="err-msg">@Html.ValidationMessageFor(model => model.Rating_Accomodation)</span>
+                <ul class="rating">
+                    @foreach (var rdbtn in Model.rdList_RatingList)
+                    {
+                        <li class="star-x">
+                            @Html.RadioButtonFor(model => model.Rating_Accomodation, rdbtn.Value)
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <label>Staff <span>*</span></label>
+                <span class="err-msg">@Html.ValidationMessageFor(model => model.Rating_Staff)</span>
+                <ul class="rating">
+                    @foreach (var rdbtn in Model.rdList_RatingList)
+                    {
+                        <li class="star-x">
+                            @Html.RadioButtonFor(model => model.Rating_Staff, rdbtn.Value)
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="row required">
+            <div class="col-md-6">
+                <label>Value <span>*</span></label>
+                <span class="err-msg">@Html.ValidationMessageFor(model => model.Rating_Value)</span>
+                <ul class="rating">
+                    @foreach (var rdbtn in Model.rdList_RatingList)
+                    {
+                        <li class="star-x">
+                            @Html.RadioButtonFor(model => model.Rating_Value, rdbtn.Value)
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <label>Food <span>*</span></label>
+                <span class="err-msg">@Html.ValidationMessageFor(model => model.Rating_Food)</span>
+                <ul class="rating">
+                    @foreach (var rdbtn in Model.rdList_RatingList)
+                    {
+                        <li class="star-x">
+                            @Html.RadioButtonFor(model => model.Rating_Food, rdbtn.Value)
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="row required">
+            <label>Review Title <span>*</span></label><br />
+            @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })<br />
+            <span class="err-msg">@Html.ValidationMessageFor(model => model.Title)</span>
+        </div>
+
+        <div class="row required">
+            <label>Your Review <span>*</span></label><br />
+            @Html.TextAreaFor(model => model.Summary, new { @class = "form-control", @rows = 10 })
+            <span class="err-msg">@Html.ValidationMessageFor(model => model.Summary)</span>
+        </div>
+
+        <div class="row">
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    function addStar(e) {
+        if ($(e).hasClass("star-x")) {
+            $(e).removeClass("star-x");
+            $(e).addClass("star");
+        }
+    }
+
+    function removeStar(e) {
+        if ($(e).hasClass("star")) {
+            $(e).removeClass("star");
+            $(e).addClass("star-x");
+        }
+    }
+
+    $(document).ready(function () {
+        $(".rating li input").change(function () {
+            var li = $(this).parent();
+            addStar(li);
+
+
+            li.prevAll("li").each(function (i, e) {
+                addStar(e);
+            });
+
+            li.nextAll("li").each(function (i, e) {
+                removeStar(e);
+            });
+        });
+    });
+</script>

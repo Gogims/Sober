@@ -1,0 +1,60 @@
+﻿@{
+    string ip = Request.ServerVariables["REMOTE_ADDR"].ToString();    
+}
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Mobile-R -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4181438337538149"
+     data-ad-slot="8538474152"
+     data-ad-format="auto">
+</ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("a").click(function () {
+            if (window.XDomainRequest) {
+                // Use Microsoft XDR
+                var xdr = new XDomainRequest();
+                var pathname = window.location.pathname;
+
+                var link = $(this).attr('href');
+                var ip = "@ip";
+                var referer = "";
+                if (typeof (Storage) !== "undefined") {
+                    var referer = sessionStorage.previousSite
+                }
+
+                var url = "http://tracker.sober.com/service1.svc/GetData?ip=" + ip + "&webpage=" + pathname + "&link=" + link + "&referer=" + referer + "&domainReferer=" + document.referrer
+                xdr.open("get", url);
+                xdr.onload = function () {
+                    // XDomainRequest doesn't provide responseXml, so if you need it:
+                    var dom = new ActiveXObject("Microsoft.XMLDOM");
+                    dom.async = false;
+                    dom.loadXML(xdr.responseText);
+                };
+                xdr.send();
+            } else {
+                var pathname = window.location.pathname;
+                var link = $(this).attr('href');
+                var referer = "";
+
+                if (typeof (Storage) !== "undefined") {
+                    var referer = sessionStorage.previousSite
+                }
+                var ip = "@ip";
+                var url = "http://tracker.sober.com/service1.svc/GetData?ip=" + ip + "&webpage=" + pathname + "&link=" + link + "&referer=" + referer + "&domainReferer=" + document.referrer;
+                $.getJSON(url,
+    					function (data) {
+    					    //  alert("hello");
+    					    //  alert(data.responseText);
+    					});
+
+            }
+        });
+    });
+</script>

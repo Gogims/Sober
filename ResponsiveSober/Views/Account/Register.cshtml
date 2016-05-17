@@ -1,0 +1,17 @@
+﻿@model SoberModel.RegisterModel
+@using Recaptcha.Web.Mvc;
+
+@{
+    ViewBag.Title = "Register with Sober";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<div class="content white-bg">
+    <div class="container">
+        @Html.Partial("_Register", Model)
+    </div>
+</div>
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>

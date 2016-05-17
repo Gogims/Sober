@@ -1,0 +1,9 @@
+﻿@model SoberModel.CustomCheckBox
+
+<div>
+    <div class="chk-box-cont">
+    @Html.CheckBoxFor(x => x.IsSelected, new { @class = "chk-box" })
+    @Html.LabelFor(x => x.IsSelected, Model.Text, new { @class = "chk-box-label" })
+    @Html.HiddenFor(x => x.Value)
+    </div>
+</div>

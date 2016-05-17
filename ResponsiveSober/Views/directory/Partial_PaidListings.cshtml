@@ -1,0 +1,18 @@
+﻿@model IEnumerable<SoberModel.FreeListing>
+<script src="~/Scripts/jquery-1.8.2.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+
+
+
+    @foreach (var listing in @Model)
+    {
+  <p>
+    <h4>@listing.PageName</h4>
+       <h4>@listing.Primary_Focus</h4>
+   </p>
+    }
+           
+   

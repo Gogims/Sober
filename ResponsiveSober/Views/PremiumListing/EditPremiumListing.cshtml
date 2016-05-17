@@ -1,0 +1,240 @@
+﻿@model SoberModel.PremiumListing
+
+@{
+    ViewBag.Title = "Edit Premium Listing";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+@using (Html.BeginForm("EditPremiumListing", "premiumlisting", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(x => x.listingId)
+    @Html.HiddenFor(x => x.campaignId)
+    <div class="content white-bg">
+        <div class="container">
+            <h2 class="panel box blue-bg">Edit Premium Listing</h2>
+            
+            <div class="row required">
+                <div class="col-md-6">
+                    <label>HeadLine<span class="err-msg">*</span> : </label>
+                    @Html.TextBoxFor(model => model.headline, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.headline)</span>
+                </div>
+                <div class="col-md-6">
+                    <label>Campaign Name<span>*</span> : </label>
+                    @Html.TextBoxFor(model => model.campaignName, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.campaignName)</span>
+                </div>                
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 required">
+                    <label>Category<span class="err-msg">*</span> : </label>
+                    @Html.DropDownListFor(model => model.categoryId, new SelectList(ViewBag.Categories, "Text", "Value", Model.categoryId), new { @class = "selectpicker" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.categoryId)</span>
+                </div>
+                <div class="col-md-6">
+                    <label>Website:</label>
+                    @Html.TextBoxFor(model => model.website, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.website)</span>
+                </div>                
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Contact:</label>
+                    @Html.TextBoxFor(model => model.contact, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.contact)</span>
+                </div>                
+                <div class="col-md-6">
+                    <label>ContactEmail:</label>
+                    @Html.TextBoxFor(model => model.contactEmail, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.contactEmail)</span>
+                </div>                
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 required">
+                    <label>Address<span class="err-msg">*</span>: </label>
+                    @Html.TextBoxFor(model => model.address, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.address)</span>
+                </div>
+                <div class="col-md-6">
+                    <label>Phone:</label>
+                    @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+                    <span>eg. - (xxx) xxx-xxxx </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Alternative Phone:</label>
+                    @Html.TextBoxFor(model => model.PhoneAlt, new { @class = "form-control" })
+                    <span>eg. - (xxx) xxx-xxxx </span>
+                </div>
+                <div class="col-md-6">
+                    <label>Fax:</label>
+                    @Html.TextBoxFor(model => model.fax, new { @class = "form-control" })
+                    <span>eg. - (xxx) xxx-xxxx </span>
+                </div>                
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 required">
+                    <label>Zip<span class="err-msg">*</span> : </label>
+                    @Html.TextBoxFor(model => model.zip, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.zip)</span>
+                </div>
+                <div class="col-md-6 required aic">
+                    <label>Is Active<span class="err-msg">*</span> : </label>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="radio">
+                                <label>
+                                    @Html.RadioButtonFor(m => m.isListingActive, true)
+                                    <label class="chk-box">On</label>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="radio">
+                                <label>
+                                    @Html.RadioButtonFor(m => m.isListingActive, false)
+                                    <label class="chk-box">Off</label>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            
+            <div class="row">                
+                <div class="col-md-12">
+                    <label>Narrative:</label>
+                    @Html.TextAreaFor(model => model.Narrative, new { @class = "ckeditor" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Region1:</label>
+                    @Html.DropDownListFor(model => model.region, new SelectList(ViewBag.regions, "ID", "Name", Model.region), new { @class = "selectpicker" })
+                </div>
+                <div class="col-md-6">
+                    <label>Region2:</label>
+                    @Html.DropDownListFor(model => model.region2, new SelectList(ViewBag.regions, "ID", "Name", Model.region2), new { @class = "selectpicker" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Region3:</label>
+                    @Html.DropDownListFor(model => model.region3, new SelectList(ViewBag.regions, "ID", "Name", Model.region3), new { @class = "selectpicker" })
+                </div>
+                <div class="col-md-6">
+                    <label>Region4:</label>
+                    @Html.DropDownListFor(model => model.region4, new SelectList(ViewBag.regions, "ID", "Name", Model.region4), new { @class = "selectpicker" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Region5:</label>
+                    @Html.DropDownListFor(model => model.region5, new SelectList(ViewBag.regions, "ID", "Name", Model.region5), new { @class = "selectpicker" })
+                </div>                
+                <div class="col-md-6">
+                    <label>Logo:</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type='file' name="file" onchange="readURL(this);" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            @{
+                                string logo = string.Empty;
+
+                                if (!string.IsNullOrEmpty(@Model.logo))
+                                {
+                                    string path = Path.Combine(Server.MapPath("~/contents/premium_logo/compressed"), Model.logo);
+
+                                    if (System.IO.File.Exists(path))
+                                    {
+                                        logo = "http://www.sober.com/contents/premium_logo/compressed/" + @Model.logo;
+                                    }
+                                    else
+                                    {
+                                        logo = "http://www.sober.com/contents/premium_logo/" + @Model.logo;
+                                    }
+                                    
+                                }
+                            }
+
+                            <div class="title-logo-cont" style="float: right;">
+                                <img id="premiumlogo" src="@logo" alt="@Model.headline" />
+                            </div>
+                        </div>
+                    </div>                   
+                </div>                
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Mapped to Samhsa Listing:</label>
+                    @if (Model.mappingID > 0)
+                    {
+                        @Html.ActionLink(Model.mapSamhsaListingname, "maptosamhsalisting", new { listingId = Model.listingId, listingname = Model.campaignName, mappingId = Model.mappingID, mappingname = Model.mapSamhsaListingname }, new { target = "_blank" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("--Add Mapping--", "maptosamhsalisting", new { listingId = Model.listingId, listingname = Model.campaignName, mappingname = string.Empty }, new { target = "_blank" })
+                    }
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <button id="savePremiumListing" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#premiumlogo').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $(document).ready(function () {
+        $('form').submit(function (e) {
+
+            for (var i in CKEDITOR.instances) {
+                (function (i) {
+                    var name = '#' + CKEDITOR.instances[i].name;
+                    var maxlength = parseInt($(name).attr('maxlength'));
+                    var length = CKEDITOR.instances[i].getData().trim().length;
+
+                    if (length > maxlength) {
+                        alert(CKEDITOR.instances[i].name + " surpassed the " + maxlength);
+                        CKEDITOR.instances[i].focus();
+                        e.preventDefault();
+                    }
+
+                    $(name).val(CKEDITOR.instances[i].getData().trim());
+
+                })(i);
+            }
+        });
+    });
+</script>

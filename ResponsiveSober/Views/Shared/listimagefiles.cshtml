@@ -1,0 +1,74 @@
+﻿@model SoberModel.MediaFiles_Survey
+
+@{
+    char[] splitOptions = { '|', ',' };
+    string rules = "";
+}
+@{
+    
+    SoberBLL.Media_Files.MediaFiles mediaFiles = new SoberBLL.Media_Files.MediaFiles();
+    SoberModel.MediaFiles_Survey mediaFilesSurvey = mediaFiles.GetMediaFiles(@Model.User_Id, @Model.Category);      
+     
+}
+
+
+@if (@mediaFilesSurvey != null && @mediaFilesSurvey.Image != null)
+{
+    rules = @mediaFilesSurvey.Image;
+
+    <input type="hidden" id="category" value="@mediaFilesSurvey.Category" />
+    <input type="hidden" id="user_id" value="@mediaFilesSurvey.User_Id" />
+}
+@{
+    string[] rulesList = rules.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);                                   
+}
+
+<ul id="imageListing" class="sortable col-md-12">
+    @foreach (string rule in rulesList)
+    {
+        string picture = "http://www.sober.com/contents/pictures/" + rule;
+        picture = picture.Replace(" ", "%20");
+
+        <li title="@rule">
+            <img src="@picture" style="width:150px; height:150px" />
+            <span class="anchor delete" title="@rule">Delete</span>
+        </li>
+    }
+</ul>
+
+<input id="imageList" name="imageList" type="hidden" />
+
+<script type="text/javascript">
+    function GetImages()
+    {
+        var info = "";
+
+        $('#imageListing').children('li').each(function (i, e) {
+            info += $(e).attr('title').trim() + "|";
+        });
+
+        $('#imageList').val(info);
+    }
+
+    $(document).ready(function () {
+        GetImages();
+
+        $('span.delete').click(function () {
+            var row = $(this).parent();
+
+            $.ajax({
+                url: '@Url.Action("listimagefiles", "FileManager")',
+                type: "POST",
+                data: { userID: $('#user_id').val(), category: $('#category').val(), imageToDelete: $(this).attr('title') },
+                success: function () {
+                    $(row).remove();
+                    GetImages();
+                }
+            });
+        });
+
+        $("#imageListing").sortable().bind('sortupdate', function () {
+            GetImages();
+        });
+    });    
+</script>    

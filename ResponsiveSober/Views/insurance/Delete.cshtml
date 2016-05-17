@@ -1,0 +1,51 @@
+﻿@model SoberModel.Insurance
+
+@{
+    ViewBag.Title = "Delete Insurance Provider";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <h1>Delete Insurance Provider</h1>
+
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(x => x.Ins_AboutUs) 
+            @Html.HiddenFor(x => x.Ins_ID)
+            @Html.HiddenFor(x => x.Ins_ProviderLogo)
+            @Html.HiddenFor(x => x.Ins_ProviderName)
+            
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label>ID:</label>
+                    @Html.DisplayFor(model => model.Ins_ID)
+                </div>
+                <div class="col-md-12 form-group">
+                    <label>Provider Name:</label>
+                    @Html.DisplayFor(model => model.Ins_ProviderName)
+                </div>
+                <div class="col-md-12 form-group">
+                    <label>Provider Logo (gif,jpg,png)<span class="asterix">*</span>:</label>
+                    @{
+                        string insuranceImage = "http://www.sober.com/contents//insurance/" + Model.Ins_ProviderLogo;
+                    }
+                    <div class="row">
+                        <div class="col-md-12">
+                            <img class="originalWidth" src="@insuranceImage" />
+                        </div>
+                    </div>
+                </div>
+            </div>      
+        
+            <div class="row">
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Delete</button>                    
+                </div>
+                <div class="col-md-2">
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,37 @@
+﻿@model SoberModel.RegisterExternalLoginModel
+
+@{
+    ViewBag.Title = "External Login Confirmation";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+<div id="sign-in-cont" class="review-form">
+    <div class="sign-in-cont">
+
+        <script src="~/Scripts/jquery.validate.min.js"></script>
+        <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+        @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }))
+        {
+            <div class="sign-up-form">
+                <h2>Sober.com Association Form</h2>
+                <p>
+                    You've successfully authenticated with <strong>@ViewBag.ProviderDisplayName</strong>.
+            Please enter a user name for this site below and click the Confirm button to finish
+            logging in.
+                </p>
+                <br />
+                <ul>
+                    <li style="height:70px;">
+                        @Html.LabelFor(m => m.UserName)
+                        @Html.TextBoxFor(m => m.UserName)
+                        @Html.ValidationMessageFor(m => m.UserName)
+                    </li>
+                </ul>
+                <br />
+                @Html.HiddenFor(m => m.ExternalLoginData)
+                <input type="submit" value="Register" class="btn" />
+                <br />
+            </div>
+        }
+    </div>
+</div>

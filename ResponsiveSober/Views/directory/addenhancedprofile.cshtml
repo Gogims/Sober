@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "addlisting";
+    Layout = "~/Views/Shared/_Master.cshtml";
+    string pagename = (string)ViewBag.pagename;
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li class="active">Add Enhanced Profile</li>
+        </ol>
+        <div class="row aic">
+            <div class="col-md-12"><h2>Add Enhanced Profile</h2></div>
+            <div class="col-md-12">
+                <h6>Add your facility in two minutes for free!</h6>
+                <p>Are you a doctor, treatment center or recovery house looking for new patients? Give us two minutes of your time and we will give you qualified web visitors each and every month at no cost. Simply answer a few questions, upload your pictures and videos. It's our way of giving back.</p>
+                <p>
+                    @Html.ActionLink("Here is a Sample of a Free One Page Ad", "profile", "directory", new { rehab = "paradigm malibu", city = "malibu", state = "ca", facility_type = "tc" }, null)
+                </p>
+                <div class="row">
+                    <div class="col-md-3">
+                        @Html.ActionLink(" Add Treatment Center", "addtreatmentcenter", "directory", new { page_name = pagename.ToLower() }, new { target = "_blank", @class = "btn btn-primary" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.ActionLink(" Add Sober Living", "addsoberliving", "directory", new { page_name = pagename.ToLower() }, new { target = "_blank", @class = "btn btn-primary" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h3>You'll receive these great benefits</h3>
+                <ul class="benefits row">
+                    <li class="col-md-6">
+                        <div>
+                            <h6>Full page profile</h6>
+                            <p>An entire web page with all the important information about your organization -- Services provided, costs, pictures, maps, brochures, etc. Everything a person needs to make an informed decision.</p>
+                        </div>
+                    </li>
+                    <li class="col-md-6">
+                        <div>
+                            <h6>Qualified Traffic</h6>
+                            <p>We receive thousands of targeted visitors each month. You'll generate qualified traffic to your organization -- people looking specifically for your services in your geography.</p>
+                        </div>
+                    </li>
+                    <li class="col-md-6">
+                        <div>
+                            <h6>Reach New Patients</h6>
+                            <p>Internet marketing complements your existing marketing effort and often prove more profitable than traditional marketing and you'll reach those who only search online for services.</p>
+                        </div>
+                    </li>
+                    <li class="col-md-6">
+                        <div>
+                            <h6>Brand Awareness</h6>
+                            <p>Sober.com is the oldest major recovery website on the Internet. By associating your organization with our trusted brand, you will be more likely to convert tire kickers.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+

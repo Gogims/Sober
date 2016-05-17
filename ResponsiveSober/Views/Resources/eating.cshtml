@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Eating Disorders";
+    Layout = "~/Views/Shared/_MasterResources.cshtml";
+}
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")
+}
+<div class="section wrap-s">
+    <ul class="breadcrumbs-s">
+        <li class="first"><a href="@Url.Action("index", "home")">Home</a></li>
+        <li>@Html.ActionLink("Directory", "index", "directory")</li>
+        <li>@Html.ActionLink("Teen Rehab", "teen", "resources")</li>
+    </ul>
+    <div class="profile-page-cont-s">
+        <div class="title-cont-s">
+            <h1>Eating Disorders</h1>
+        </div>
+        <div class="cont-s">
+            <div class="d-cont">
+                <div class="carousel-s">
+                    @Html.Partial("_AdResponsive")
+                    <div class="faq">
+                        <div class="head">Eating Disorder Treatment Centers - FAQs</div>
+                        <ul class="faqs">
+                            <li>
+                                <p class="ques">What is an eating disorder?</p>
+                                <p>An eating disorder is described as an abnormal eating pattern that involves excessive or inadequate food intake that detriments a person's emotional and physical health. Eating disorders include binge eating, bulimia nervosa and anorexia.</p>
+
+                            </li>
+                            <li>
+                                <p class="ques">What are the benefits offered by eating disorder treatment centers?</p>
+                                <p>The treatment center will implement a treatment plan to control the health problems. The treatment team includes physicians, psychologists, psychiatrists, nutritionists and social worker. Eating disorder treatment centers address the symptoms of the destructive eating habits and the underlying causes.</p>
+                            </li>
+                            <li>
+                                <p class="ques">What are the services offered by eating disorder treatment centers?</p>
+                                <p>Most of the eating disorder treatment centers utilize the multidisciplinary approach tailored to meet the needs of each patient.</p>
+                                <p>Treatment program often includes the 12-Step principles of addiction treatment, closely monitored therapeutic sessions, traditional psychology, experiential therapy, alternative therapy, activities designed to build self-esteem, and so forth.</p>
+                            </li>
+                            <li>
+                                <p class="ques">How much would it cost me to enroll in eating disorder treatment centers?</p>
+                                <p>Treatment cost varies depending on the severity of symptoms, treatment modalities, facilities, location and other analogous factors. However, eating disorder treatment is covered by Medicare and Medicaid. There are also programs that defray the cost of the treatment.</p>
+                            </li>
+                             <div class="title">Sponsored ads</div>
+                            
+
+                                <li>@Html.Partial("_AdResponsive")</li>
+                        </ul>
+                    </div>
+
+                   
+                </div>
+            </div>
+            <div class="ads-cont-links-s">
+
+                <div class="section">
+                    <div class="title">Sponsored ads</div>
+                    <ul class="link-list">
+                        <li>@Html.Partial("_AdResponsive")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

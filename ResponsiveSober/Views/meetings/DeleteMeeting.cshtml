@@ -1,0 +1,94 @@
+﻿@model SoberBLL.NA.NaManager
+@using Recaptcha.Web.Mvc;
+
+@{
+    ViewBag.Title = "DeleteMeeting";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/PhoneMask.js"></script>
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+
+
+<div class="white-bg">
+    <div class="container">
+        <h1>Request to Delete Meeting</h1>
+
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(x => x.IdMeeting)
+            @Html.HiddenFor(x => x.IP)
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">User Contact Info</h4>
+                </div>
+
+                <div class="col-md-12">
+                    <p><strong>Note: We keep this information confidential. We may contact you if we have any questions about your submission but <span style="text-decoration: underline; color: green">we never share your information with outside parties</span>.</strong></p>
+                </div>
+                
+                <div class="col-md-6 form-group required">
+                    <label>Name<span>*</span>:</label>
+                    @Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.UserName)</span>
+                </div>
+                
+                <div class="col-md-6 form-group required">
+                    <label>Email<span>*</span>:</label>
+                    @Html.TextBoxFor(x => x.UserEmail, new { @class = "form-control"})
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.UserEmail)</span>
+                </div>
+
+                <div class="col-md-12 form-group required">
+                    <label>How are you associated with this meeting?<span>*</span></label>
+                    @Html.TextAreaFor(x => x.UserAssociated, new { @class = "form-control" })
+                    <span class="err-msg">@Html.ValidationMessageFor(model => model.UserAssociated)</span>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="blue-bg box panel">Reason</h4>                   
+                </div>
+
+                <div class="col-md-12 required">
+                    <label for="Reason">Why do you want to modify this NA Meeting<span>*</span></label>
+                    <textarea class="form-control" name="Reason" id="Reason">@Model.Reason</textarea>
+                    <span class="err-msg">This field is required</span>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div id="meeting_recaptcha_box" class="col-md-12"></div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('form').validate();
+        $('.err-msg').hide();
+
+        $('form').submit(function () {
+            if ($(this).valid()) {
+                $('.err-msg').hide();
+            }
+            else {
+                $('.err-msg').show();
+            }
+
+        });
+
+        Recaptcha.create("6LeKU-kSAAAAAI-fjV99Gn18MFa6n_wW9VP8Tosg", "meeting_recaptcha_box", "");
+    });
+</script>

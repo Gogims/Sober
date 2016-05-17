@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Upload AA meetings";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <h2>Upload AA Meetings</h2>
+
+        @{
+            string src = "http://dev.sober.com/home/csv";
+        }
+
+        <label>Your AA Meeting File</label>
+        <span>(csv)</span>
+        <iframe src="@src" style="width: 100%; height: 250px;"></iframe>
+    </div>
+</div>
+

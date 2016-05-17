@@ -1,0 +1,171 @@
+﻿@model List<SoberModel.tbl_SamhsaListings>
+@using SoberBLL.Directory;
+@{
+    ViewBag.Title = "maptosamhsalisting";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<div class="content white-bg">
+    <div class="container">
+        @if (TempData["listingname"] != null)
+        {
+            <h2 class="panel box blue-bg">Map Premium Listing - @TempData["listingname"] </h2>
+        }
+        else
+        {
+            <h2 class="panel box blue-bg">Map Premium Listing</h2>
+        }
+
+        <div class="row">
+            <div class="col-md-12">
+                @if (Model.Count > 0)
+                {
+                    <p><strong>Mapping already exists</strong></p>
+                    <p>The currently mapped Samhsa Listing is shown below. You can now modify the samhsa listing according to the need.</p>
+                    <p>- If you want to remove the assignment, Please click on the "Remove" hyperlink in the Available Listings below.</p>
+                    <p>- If you want to assign the Preimum Listing to a different listing, Please search by Listing name and Click on the "Assign" hyperlink against the listing you want to assign in the Available Listings below.</p>
+                }
+                else
+                {
+                    <p><strong>Mapping do not exist</strong></p>
+                    <p>If you want to assign the Preimum Listing, Please search by Listing name and Click on the "Assign" hyperlink against the listing you want to assign in the Available Listings below.</p>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            @using (Html.BeginForm("maptosamhsalisting", "premiumlisting", new { listingId = TempData["listingId"], mappingId = TempData["mappingId"], mappingname = ViewBag.MappingSamhsaListingName }))
+            {
+                <div class="col-md-2">
+                    <label>Mapping Name:</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.TextBox("mappingname", ViewBag.MappingSamhsaListingName as string, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    <button id="searchPremiumListing" value="Search" type="submit" class="btn btn-primary">Search</button>
+                </div>
+            }
+        </div>
+        
+
+        <h2 class="panel box blue-bg">Available Listing</h2>
+        <table id="availableListings" class="table table-bordered table-listing">
+            <thead>
+                <tr>
+                    <th>Page Name</th>
+                    <th>Survey Creation Date</th>
+                    <th>Date Modified On</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Samhsa Listing</th>
+                    <th>Treatment Center</th>
+                    <th>Sober Living</th>
+                    <th>Admin Operations</th>
+                    <th>Reviews</th>
+                    <th>Assign Listing</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+                    BLL_EnhancedProfile enhancedProfile = new BLL_EnhancedProfile();
+                    var soberSurvey = enhancedProfile.GetSoberLivingSurvey(item.PageName);
+                    var treatmentCenter = enhancedProfile.GetTreatmentCenterSurvey(item.PageName);
+                    BLL_SamhsaListing bllSamhsa = new BLL_SamhsaListing();
+                    DateTime? createdDate = item.CreatedOn;
+
+                    <tr>
+                        <td>
+                            @if (treatmentCenter.TreatmentCenterSurvey != null)
+                            {
+                                createdDate = bllSamhsa.GetTCCreationDate(item.PageName);
+                                @Html.ActionLink(item.PageName, "profile", "directory", new { rehab = item.PageName, facility_type = "tc" }, new { target = "_blank" })
+                            }
+
+                            @if (soberSurvey.SoberLivingSurvey != null)
+                            {
+                                createdDate = bllSamhsa.GetSLCreationDate(item.PageName);
+                                @Html.ActionLink(item.PageName, "profile", "directory", new { rehab = item.PageName, facility_type = "sl" }, new { target = "_blank" })
+                            }
+                            
+                            @if (treatmentCenter.TreatmentCenterSurvey == null && soberSurvey.SoberLivingSurvey == null)
+                            {
+                                @Html.DisplayFor(modelItem => item.PageName)
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => createdDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModifiedOn)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.location_city)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.location_state)
+                        </td>
+                        <td>
+                            @Html.ActionLink(" Edit ", "edittreatmenthouse", "directory", new { listingid = item.ListingId }, new { target = "_blank" })
+                        </td>
+                        <td>
+                            @if (treatmentCenter.TreatmentCenterSurvey != null)
+                            {
+                                @Html.ActionLink(" Edit  ", "edittreatmentcenter", "directory", new { page_name = item.PageName.ToLower() }, new { target = "_blank" })
+                            }
+                            @if (treatmentCenter.TreatmentCenterSurvey == null)
+                            {
+                                @Html.ActionLink(" Add ", "addtreatmentcenter", "directory", new { page_name = item.PageName.ToLower() }, new { target = "_blank" })
+                            }
+                        </td>
+                        <td>
+                            @if (soberSurvey.SoberLivingSurvey != null)
+                            {
+                                @Html.ActionLink(" Edit ", "editsoberliving", "directory", new { page_name = item.PageName.ToLower() }, new { target = "_blank" })
+                            }
+                            @if (soberSurvey.SoberLivingSurvey == null)
+                            {
+                                @Html.ActionLink(" Add ", "addsoberliving", "directory", new { page_name = item.PageName.ToLower() }, new { target = "_blank" })
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink(" Admin Settings ", "modify_admin", "adminreport", new { pagename = item.PageName }, new { target = "_blank" })
+                        </td>
+                        <td>
+                            @if (treatmentCenter.TreatmentCenterSurvey != null)
+                            {
+                                @Html.ActionLink(" -TC-", "options", "rehab_reviews", new { pagename = item.PageName, surveytype = "TreatmentCenterSurvey" }, new { target = "_blank" })
+                            }
+
+                            @if (soberSurvey.SoberLivingSurvey != null)
+                            {
+                                @Html.ActionLink(" -SL-", "options", "rehab_reviews", new { pagename = item.PageName, surveytype = "SoberLivingSurvey" }, new { target = "_blank" })
+                            }
+                        </td>
+                        <td>
+                            @if (Convert.ToString(TempData["listingname"]) == Convert.ToString(item.PageName))
+                            {
+                                @Html.ActionLink("Remove", "modifymapping", "premiumlisting", new { mappingname = item.PageName, mappingId = TempData["mappingId"], listingId = TempData["listingId"], isDelete = true }, new { target = "_blank" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Assign", "modifymapping", "premiumlisting", new { mappingname = item.PageName, mappingId = TempData["mappingId"], listingId = TempData["listingId"], isDelete = false }, new { target = "_blank" })
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#availableListings").tablesorter();
+    });
+</script>

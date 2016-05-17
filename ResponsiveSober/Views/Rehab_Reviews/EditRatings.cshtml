@@ -1,0 +1,84 @@
+﻿@model SoberModel.RatingList
+
+@{
+    ViewBag.Title = "Edit Rating";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<style type="text/css">
+    input[type='text'] {
+        width: 25px;
+    }
+</style>
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li><a href="@Url.Action("Options", "Rehab_Reviews", new { @pagename = ViewBag.pagename, @surveytype = ViewBag.surveytype })">Options</a></li>
+            <li class="active">Edit Ratings</li>
+        </ol>
+
+        <h1>Edit Rating for @ViewBag.pagename</h1>
+        <h2>Rate it on the scale of 1 to 5</h2>
+
+        @using (Html.BeginForm())
+        {
+            <input type="hidden" name="pagename" value="@ViewBag.pagename" />
+            <input type="hidden" name="surveytype" value="@ViewBag.surveytype" />
+
+            for (int i = 0; i < @Model.Rating.Count(); i++)
+            {
+                <ul class="row table-bordered">
+                    <li class="col-md-12">
+                        <h3>Rated by @Model.Rating[i].RatedBy</h3>
+                    </li>
+                    <li class="col-md-12">
+                        <label>Overall</label>
+                        @Html.TextBoxFor(m => m.Rating[i].Overall, new { @class ="numbersOnly" })
+
+                        <label>/ 5</label>
+                        <span class="err-msg">@Html.ValidationMessageFor(m => m.Rating[i].Overall)</span>
+                    </li>
+                    <li class="col-md-12">
+                        <label>Treatment</label>
+                        @Html.TextBoxFor(m => m.Rating[i].Treatment, new { @class = "numbersOnly" })
+                        <span class="err-msg">@Html.ValidationMessageFor(m => m.Rating[i].Treatment)</span>
+                        <label>/ 5</label>
+
+                    </li>
+                    <li class="col-md-12">
+                        <label>Accommodations</label>
+                        @Html.TextBoxFor(m => m.Rating[i].Accomodations, new { @class = "numbersOnly" })
+                        <span class="err-msg">@Html.ValidationMessageFor(m => m.Rating[i].Accomodations)</span>
+                        <label>/ 5</label>
+                    </li>
+                    <li class="col-md-12">
+                        <label>Staff</label>
+                        @Html.TextBoxFor(m => m.Rating[i].Staff, new { @class = "numbersOnly" })
+                        <span class="err-msg">@Html.ValidationMessageFor(m => m.Rating[i].Staff)</span>
+                        <label>/ 5</label>
+                    </li>
+                    <li class="col-md-12">
+                        <label>Value</label>
+                        @Html.TextBoxFor(m => m.Rating[i].Value, new { @class = "numbersOnly" })
+                        <span class="err-msg">@Html.ValidationMessageFor(m => m.Rating[i].Value)</span>
+                        <label>/ 5</label>
+                    </li>
+                    <li class="col-md-12">
+                        <label>Food</label>
+                        @Html.TextBoxFor(m => m.Rating[i].Food, new { @class = "numbersOnly" })
+                        <span class="err-msg">@Html.ValidationMessageFor(m => m.Rating[i].Food)</span>
+                        <label>/ 5</label>
+                    </li>
+                </ul>
+            }
+
+            <div class="row">
+                <div class="col-md-2">
+                    <button type="submit" value="Submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

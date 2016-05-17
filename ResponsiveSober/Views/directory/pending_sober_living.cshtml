@@ -1,0 +1,34 @@
+﻿    @model IEnumerable<SoberModel.Sober_Living_Survey>
+
+@{
+    ViewBag.Title = "Approve Sober Living";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <h2>Approve Sober Living</h2>
+
+        @if (Model != null)
+        {
+            foreach (var samhsaForm in Model)
+            {
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" value="@samhsaForm.SoberLivingCenterName" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>@samhsaForm.CreatedOn</label>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.ActionLink("Approve Enhanced Profile", "approve_sober_living", "directory", new { userId = @samhsaForm.User_Id }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>                
+            }
+        }
+        else
+        {
+            <label>No listings to approve</label>
+        }
+    </div>
+</div>

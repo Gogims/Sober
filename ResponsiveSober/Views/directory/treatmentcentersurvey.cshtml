@@ -1,0 +1,1317 @@
+﻿@model SoberModel.TreatmentCenterSurveyEnhancedProfile
+
+@{
+    ViewBag.Title = Model.SamhsaListing.name1 + " " + Model.SamhsaListing.location_city + " " + Model.SamhsaListing.location_state + " - Reviews, cost, locations, and staff";
+    Layout = "~/Views/Shared/_Master.cshtml";
+    ViewBag.AddressLocation = Model.SamhsaListing.location_street1 + "," + Model.SamhsaListing.location_city + "," + Model.SamhsaListing.location_state + ",USA";
+}
+
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li>@Html.ActionLink("Directory", "index", "directory")</li>
+        </ol>
+        <div class="row profile" itemscope itemtype="http://schema.org/LocalBusiness">
+            @{
+                string logo = "";
+                char[] splitOptions = { '|', ',' };
+                char[] splitOptionsPipeOnly = { '|' };
+                string[] logoList = null;
+
+                if (@Model.MediaFiles != null && @Model.MediaFiles.Logo != null)
+                {
+                    logoList = @Model.MediaFiles.Logo.Split(splitOptionsPipeOnly, StringSplitOptions.RemoveEmptyEntries);
+
+
+                }
+                if (logoList != null && logoList.Count() > 0)
+                {
+                    logo = logoList[0];
+                }
+            }
+
+            @if (!string.IsNullOrWhiteSpace(logo))
+            {
+                logo = "http://www.sober.com/contents/logo/" + logo;
+                <div class="col-xs-12 col-md-2">
+                    @if (@Model.SamhsaListing.ShowWebsite != null && @Model.SamhsaListing.ShowWebsite == true)
+                    {
+                        string website = "http://" + @Model.SamhsaListing.DestinationWebsite;
+                        <a href="@website" itemprop="url">
+                            <img class="title-logo-cont" src="@logo" itemprop="logo" alt="@Model.MediaFiles.Logo" />
+                        </a>
+                    }
+                    else
+                    {
+                        <img class="title-logo-cont" src="@logo" itemprop="logo" alt="@Model.MediaFiles.Logo" />
+                    }
+                </div>
+            }
+
+            <div class="col-xs-12 col-md-6">
+                <h3>
+                    @if (Model.SamhsaListing.ShowWebsite != null && Model.SamhsaListing.ShowWebsite == true)
+                    {
+                        string website = "http://" + @Model.SamhsaListing.DestinationWebsite;
+
+                        <a href="@website" itemprop="url">@Model.SamhsaListing.name1</a>
+                    }
+                    else
+                    {
+                        <span itemprop="name">@Model.SamhsaListing.name1</span>
+                    }
+                </h3>
+
+                @if (Model.reviewRating != null && @Model.reviewRating.OverallRating != null)
+                {
+                    float overall = @Model.reviewRating.OverallRating;
+                    <a href="#review">
+                        <ul class="rating">
+
+                            @for (int i = 0; i < (int)overall; i++)
+                            {
+                                <li class="star"></li>
+                            }
+                            @{
+                    int decimalPart = (int)((overall - (int)overall) * 100);
+                            }
+                            @if (decimalPart > 0 && decimalPart < 25)
+                            {
+                                <li class=""></li>
+                            }
+                            @if (decimalPart >= 25 && decimalPart < 75)
+                            {
+                                <li class="halfstar"></li>
+                            }
+                            @if (decimalPart > 75 && decimalPart < 100)
+                            {
+                                <li class="star"></li>
+                            }
+                            @for (int i = (int)Math.Ceiling(overall); i < 5; i++)
+                            {
+                                <li class=""></li>
+                            }
+
+
+                        </ul>
+                        @Model.reviewRating.Review.Ratings.Count Reviews
+                    </a>
+                }
+
+                @{
+                    string iopCostFrommonthStr = "", iopCostTomonthStr = "", iopCostFromSessionStr = "", iopCostToSessionStr = "", iopCostFromWeekStr = "", iopCostToWeekStr = "";
+
+                    if (Model.TreatmentCenterSurvey.IOP_cost_month_From.HasValue)
+                    {
+                        iopCostFrommonthStr = String.Format("{0:C0}", Model.TreatmentCenterSurvey.IOP_cost_month_From.Value);
+                    }
+
+                    if (Model.TreatmentCenterSurvey.IOP_cost_month_To.HasValue)
+                    {
+                        iopCostTomonthStr = String.Format("{0:C0}", Model.TreatmentCenterSurvey.IOP_cost_month_To.Value);
+                    }
+
+                    if (Model.TreatmentCenterSurvey.IOP_cost_session_From.HasValue)
+                    {
+                        iopCostFromSessionStr = String.Format("{0:C0}", Model.TreatmentCenterSurvey.IOP_cost_session_From.Value);
+                    }
+
+                    if (Model.TreatmentCenterSurvey.IOP_cost_session_To.HasValue)
+                    {
+                        iopCostToSessionStr = String.Format("{0:C0}", Model.TreatmentCenterSurvey.IOP_cost_session_To.Value);
+                    }
+
+                    if (Model.TreatmentCenterSurvey.IOP_cost_week_From.HasValue)
+                    {
+                        iopCostFromWeekStr = String.Format("{0:C0}", Model.TreatmentCenterSurvey.IOP_cost_week_From.Value);
+                    }
+
+                    if (Model.TreatmentCenterSurvey.IOP_cost_week_To.HasValue)
+                    {
+                        iopCostToWeekStr = String.Format("{0:C0}", Model.TreatmentCenterSurvey.IOP_cost_week_To.Value);
+                    }
+                }
+
+                @{
+                    string opCostFromStr = @Model.TreatmentCenterSurvey.OP_avg_Cost_From;
+                    decimal opCostFrom = 0;
+                    bool success = decimal.TryParse(opCostFromStr, out opCostFrom);
+                }
+                @if (success)
+                {
+                    opCostFromStr = String.Format("{0:C0}", opCostFrom);
+                }
+                @{
+                    string opCostToStr = @Model.TreatmentCenterSurvey.OP_avg_Cost_To;
+                    decimal opCostTo = 0;
+                    success = decimal.TryParse(opCostToStr, out opCostTo);
+                }
+                @if (success)
+                {
+                    opCostToStr = String.Format("{0:C0}", opCostTo);
+                }
+
+                @{
+                    string resCostFromStr = @Model.TreatmentCenterSurvey.Res_avg_Cost_From;
+                    decimal resCostFrom = 0;
+                    success = decimal.TryParse(resCostFromStr, out resCostFrom);
+                }
+                @if (success)
+                {
+                    resCostFromStr = String.Format("{0:C0}", resCostFrom);
+                }
+                @{
+                    string resCostToStr = @Model.TreatmentCenterSurvey.Res_avg_Cost_To;
+                    decimal resCostTo = 0;
+                    success = decimal.TryParse(resCostToStr, out resCostTo);
+                }
+                @if (success)
+                {
+                    resCostToStr = String.Format("{0:C0}", resCostTo);
+                }
+
+                @{
+                    string hosInpCostFromStr = @Model.TreatmentCenterSurvey.Hos_Inp_Cost_From;
+                    decimal hospInpCostFrom = 0;
+                    success = decimal.TryParse(hosInpCostFromStr, out hospInpCostFrom);
+                }
+                @if (success)
+                {
+                    hosInpCostFromStr = String.Format("{0:C0}", hospInpCostFrom);
+                }
+                @{
+                    string hosInpCostToStr = @Model.TreatmentCenterSurvey.Hos_Inp_Cost_To;
+                    decimal hospInpCostTo = 0;
+                    success = decimal.TryParse(hosInpCostToStr, out hospInpCostTo);
+                }
+                @if (success)
+                {
+                    hosInpCostToStr = String.Format("{0:C0}", hospInpCostTo);
+                }
+
+                @{
+                    string pricinginfo = "";
+
+                    if (!string.IsNullOrEmpty(resCostFromStr) || !string.IsNullOrEmpty(resCostToStr))
+                    {
+                        pricinginfo += "Per Month - " + resCostFromStr + " - " + resCostToStr + " | ";
+                    }
+
+                    if (!string.IsNullOrEmpty(iopCostFrommonthStr) || !string.IsNullOrEmpty(iopCostTomonthStr))
+                    {
+                        pricinginfo += "Intensive Outpatient (per month) - " + iopCostFrommonthStr + " - " + iopCostTomonthStr + " | ";
+                    }
+
+                    if (!string.IsNullOrEmpty(iopCostFromWeekStr) || !string.IsNullOrEmpty(iopCostToWeekStr))
+                    {
+                        pricinginfo += "Intensive Outpatient (per week) - " + iopCostFromWeekStr + " - " + iopCostToWeekStr + " | ";
+                    }
+
+                    if (!string.IsNullOrEmpty(iopCostFromSessionStr) || !string.IsNullOrEmpty(iopCostToSessionStr))
+                    {
+                        pricinginfo += "Intensive Outpatient (per session) - " + iopCostFromSessionStr + " - " + iopCostToSessionStr + " | ";
+                    }
+
+                    if (!string.IsNullOrEmpty(opCostFromStr) || !string.IsNullOrEmpty(opCostToStr))
+                    {
+                        pricinginfo += "Outpatient - " + opCostFromStr + " - " + opCostToStr + " | ";
+                    }
+
+                    if (!string.IsNullOrEmpty(hosInpCostFromStr) || !string.IsNullOrEmpty(hosInpCostToStr))
+                    {
+                        pricinginfo += "Hospital Inpatient - " + hosInpCostFromStr + " - " + hosInpCostToStr + " | ";
+                    }
+
+                    if (pricinginfo != "")
+                    {
+                        pricinginfo = pricinginfo.Remove(pricinginfo.Length - 3, 3);
+                    }
+
+                }
+
+                <div class="cost-info">
+                    <strong>Avg. cost -</strong>
+                    @pricinginfo
+                </div>
+
+                @if (Model.SamhsaListing.CertifiedPartner != null && Model.SamhsaListing.CertifiedPartner == true)
+                {
+                    <div class="sob-cer last"></div>
+                }
+            </div>
+            <div class="col-md-4">
+                @Html.Partial("_AdShareaholic", 16287609)
+            </div>
+        </div>
+
+        @*TABS*@
+        <ul class="nav nav-tabs responsive" id="myTab">
+            <li class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
+
+            @if (Model.reviewRating != null && Model.reviewRating.Status != 2)
+            {
+                <li><a href="#editorsReview" data-toggle="tab">Editor's Review</a></li>
+            }
+
+            <li><a id="contact_us" href="#contactus" data-toggle="tab">Contact Us</a></li>
+            <li><a href="#maps" data-toggle="tab">Maps</a></li>
+            <li id="write_user_review"><a href="#writeAUserReview" data-toggle="tab">Write a User Review</a></li>
+        </ul>
+
+        @*Content of each tab*@
+        <div class="tab-content responsive">
+            <div class="tab-pane active row" id="overview">
+                @Html.HiddenFor(x => x.SamhsaListing.location_street1)
+                @Html.HiddenFor(x => x.SamhsaListing.location_city)
+                @Html.HiddenFor(x => x.SamhsaListing.location_state)
+                <input type="hidden" id="Lat" value="@Model.SamhsaListing.latitude" />
+                <input type="hidden" id="Lng" value="@Model.SamhsaListing.longitude" />
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-xs-12 col-md-6">
+                            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    @{
+                                        string image = "";
+                                        int count = 0;
+                                        List<string> listvideo = new List<string>();
+                                        List<string> listimg = new List<string>();
+                                    }
+                                    @if (@Model.MediaFiles != null && @Model.MediaFiles.Image != null)
+                                    {
+                                        image = @Model.MediaFiles.Image;
+                                    }
+                                    @{
+                                        string[] imageList = image.Split(splitOptionsPipeOnly, StringSplitOptions.RemoveEmptyEntries);
+                                        string picture = "";
+                                        string Videos = "";
+                                        if (@Model.MediaFiles != null && @Model.MediaFiles.Video != null)
+                                        {
+                                            Videos = @Model.MediaFiles.Video;
+                                        }
+                                        string[] videoList = Videos.Split(splitOptionsPipeOnly, StringSplitOptions.RemoveEmptyEntries);
+                                    }
+
+                                    @foreach (var item in videoList)
+                                    {
+                                        string video = item;
+                                        string videoId = "";
+
+                                        if (video != null && !string.IsNullOrWhiteSpace(video))
+                                        {
+                                            string[] splitStr = video.Split(splitOptions, System.StringSplitOptions.RemoveEmptyEntries);
+                                            if (splitStr != null && splitStr.Count() > 0)
+                                            {
+                                                int index = splitStr[0].LastIndexOf("?v=");
+                                                if (index < 1)
+                                                {
+                                                    index = splitStr[0].LastIndexOf("&v=");
+                                                    int ampFound = -1;
+                                                    string tempStr = splitStr[0].Substring(index + 3);
+                                                    ampFound = tempStr.IndexOf("&");
+                                                    if (ampFound > 0)
+                                                    {
+                                                        tempStr = tempStr.Substring(0, ampFound);
+                                                    }
+                                                    videoId = "http://www.youtube.com/embed/" + tempStr;
+                                                }
+                                                else
+                                                {
+                                                    int ampFound = -1;
+                                                    string tempStr = splitStr[0].Substring(index + 3);
+                                                    ampFound = tempStr.IndexOf("&");
+                                                    if (ampFound > 0)
+                                                    {
+                                                        tempStr = tempStr.Substring(0, ampFound);
+                                                    }
+                                                    videoId = "http://www.youtube.com/embed/" + tempStr;
+                                                }
+                                                if (index < 1)
+                                                {
+                                                    index = splitStr[0].LastIndexOf("/");
+                                                    int ampFound = -1;
+                                                    string tempStr = splitStr[0].Substring(index + 1);
+                                                    ampFound = tempStr.IndexOf("&");
+                                                    if (ampFound > 0)
+                                                    {
+                                                        tempStr = tempStr.Substring(0, ampFound);
+                                                    }
+                                                    videoId = "http://www.youtube.com/embed/" + tempStr;
+                                                }
+
+                                                listvideo.Add(videoId);
+                                            }
+                                        }
+                                    }
+
+                                    @foreach (var item in listvideo)
+                                    {
+                                        <li data-target="#myCarousel" data-slide-to="@count"></li>
+                                        count++;
+                                    }
+
+                                    @if (string.IsNullOrWhiteSpace(image))
+                                    {
+                                        picture = "http://www.sober.com/contents/pictures/default-profile-img.jpg";
+                                        listimg.Add(picture);
+
+                                        <li data-target="#myCarousel" data-slide-to="@count"></li>
+                                        count++;
+                                    }
+                                    @{
+                                        string profile = "";
+                                    }
+
+                                    @if (@Model.MediaFiles != null)
+                                    {
+                                        profile = @Model.MediaFiles.ProfileImage;
+                                    }
+
+                                    @if (profile != null && !string.IsNullOrWhiteSpace(profile))
+                                    {
+                                        <li data-target="#myCarousel" data-slide-to="@count"></li>
+                                        count++;
+                                    }
+
+                                    @if (!string.IsNullOrWhiteSpace(image))
+                                    {
+                                        foreach (string img in imageList)
+                                        {
+                                            if (profile != null && img.Trim().Equals(profile.Trim()))
+                                            {
+                                                continue;
+                                            }
+                                            picture = "http://www.sober.com/contents/pictures/" + img;
+                                            picture = picture.Replace(" ", "%20");
+                                            listimg.Add(picture);
+
+                                            <li data-target="#myCarousel" data-slide-to="@count"></li>
+                                            count++;
+                                        }
+                                    }
+                                </ol>
+
+                                <div class="carousel-inner">
+                                    @foreach (var videoId in listvideo)
+                                    {
+                                        <div class="item">
+                                            <iframe src="@videoId" width="450" height="350" frameborder="0" allowfullscreen></iframe>
+                                        </div>
+                                    }
+
+                                    @if (profile != null && !string.IsNullOrWhiteSpace(profile))
+                                    {
+                                        picture = "http://www.sober.com/contents/pictures/" + profile;
+                                        picture = picture.Replace(" ", "%20");
+                                        listimg.Add(picture);
+
+                                        <div class="item">
+                                            <a href="@picture" data-lightbox="pictures">
+                                                <img src="@picture" itemprop="photo" alt="@profile" />
+                                            </a>
+                                        </div>
+                                    }
+
+                                    @foreach (var imgId in listimg)
+                                    {
+                                        <div class="item">
+                                            <a href="@imgId" data-lightbox="pictures">
+                                                <img src="@imgId" itemprop="photo" />
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-6">
+                            <h2>@Model.SamhsaListing.name1</h2>
+                            <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                                <h2 itemprop="streetAddress">@Model.SamhsaListing.location_street1</h2>
+                                <h2 itemprop="streetAddress">@Model.SamhsaListing.location_street2</h2>
+                                <h2>
+                                    <span itemprop="addressLocality">@Model.SamhsaListing.location_city</span>,
+                                    <span itemprop="addressRegion">@Model.SamhsaListing.location_state</span>
+                                    <span itemprop="postalCode">@Model.SamhsaListing.location_zip</span>
+                                </h2>
+                            </div>
+
+                            <label class="big-link" itemprop="telephone">@Model.SamhsaListing.phone</label><br />
+
+                            @if (@Model.SamhsaListing.ShowWebsite != null && @Model.SamhsaListing.ShowWebsite == true)
+                            {
+                                string website = "http://" + @Model.SamhsaListing.DestinationWebsite;
+                                <a href="@website" itemprop="url" class="big-link">
+                                    @Model.SamhsaListing.website
+                                </a> <br />
+                            }
+
+                            <br />
+                            <strong>Primary focus of Provider</strong>
+                            <ul>
+                                @{
+                                    string primaryFocusStr = "";
+                                    if (@Model.SamhsaListing.Primary_Focus != null)
+                                    {
+                                        primaryFocusStr = @Model.SamhsaListing.Primary_Focus;
+                                    }
+                                    string[] primaryFocusList = primaryFocusStr.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                }
+                                @foreach (string focus in primaryFocusList)
+                                {
+                                    <li>@focus</li>
+                                }
+                            </ul>
+
+                            <strong>Service Provided</strong>
+                            <ul>
+                                @{
+                                    string servicesStr = "";
+                                    if (@Model.SamhsaListing.Services_Provided != null)
+                                    {
+                                        servicesStr = @Model.SamhsaListing.Services_Provided;
+                                    }
+                                    string[] services = servicesStr.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                }
+                                @foreach (string service in services)
+                                {
+                                    <li>@service</li>
+                                }
+                            </ul>
+
+                            <strong>Type of Care</strong>
+                            <ul>
+                                @{
+                                    string typeOfCare = "None Listed";
+                                    if (@Model.SamhsaListing.Type_of_Care != null)
+                                    {
+                                        typeOfCare = @Model.SamhsaListing.Type_of_Care;
+                                    }
+
+                                    string[] careTypes = typeOfCare.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                }
+                                @foreach (string care in careTypes)
+                                {
+                                    <li>@care</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="panel box blue-bg">Description</h4>
+                        <div class="desc originalHTML" itemprop="description">@Html.Raw(@Model.TreatmentCenterSurvey.Org_OtherInfo) </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <h4 class="panel box blue-bg">Form of Payment, Insurance Accepted, and @Model.SamhsaListing.name1 Cost</h4>
+                        @{
+                            bool insuranceNotAccepted = @Model.TreatmentCenterSurvey.NoInsuranceAccepted == null ? false : (bool)@Model.TreatmentCenterSurvey.NoInsuranceAccepted;
+                        }
+                        @if (Model.TreatmentCenterSurvey.OutOfNetWorkInsurance != null && Model.TreatmentCenterSurvey.OutOfNetWorkInsurance == true)
+                        {
+                            <p class="desc">Here is a partial list of some of the major insurance providers this facility accepts. Note that this facility works with out-of-network insurance coverage as well. Please contact facility for the most up-to-date list of insurance providers.</p>
+                        }
+                        @if (insuranceNotAccepted)
+                        {
+                            <p class="desc">We do not accept insurance</p>
+                        }
+                        <ul class="insurance-img">
+                            @foreach (var insurance in Model.TreatmentCenterSurvey.Insurance_Providers)
+                            {
+                                string insuranceImage = "http://www.sober.com/contents//insurance/" + insurance.Ins_ProviderLogo;
+
+                                <li>
+                                    <img src="@insuranceImage" alt="@insurance.Ins_ProviderName" />
+                                </li>
+                            }
+                        </ul>
+                        @{
+                            string formOfPayment = "None Listed";
+                            if (@Model.SamhsaListing.Forms_of_Payment_Accepted != null)
+                            {
+                                formOfPayment = @Model.SamhsaListing.Forms_of_Payment_Accepted;
+                            }
+
+                            string[] paymentTypes = formOfPayment.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                        }
+                        <ul class="row info-list">
+                            <li class="col-md-12">
+                                <h5>Forms of payment</h5>
+                                <ul>
+                                    @foreach (string payment in paymentTypes)
+                                    {
+                                        <li>@payment</li>
+                                    }
+                                </ul>
+                            </li>
+                            <li class="col-md-12">
+                                <h5>Average Treatment Cost</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Cost From</th>
+                                                <th>Cost To</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (!string.IsNullOrEmpty(resCostFromStr) || !string.IsNullOrEmpty(resCostToStr))
+                                            {
+                                                <tr>
+                                                    <td>Per Month</td>
+                                                    <td>@resCostFromStr</td>
+                                                    <td>@resCostToStr</td>
+                                                </tr>
+                                            }
+
+                                            @if (!string.IsNullOrEmpty(iopCostFrommonthStr) || !string.IsNullOrEmpty(iopCostTomonthStr))
+                                            {
+                                                <tr>
+                                                    <td>Intensive Outpatient (per month)</td>
+                                                    <td>@iopCostFrommonthStr</td>
+                                                    <td>@iopCostTomonthStr</td>
+                                                </tr>
+                                            }
+                                            @if (!string.IsNullOrEmpty(iopCostFromWeekStr) || !string.IsNullOrEmpty(iopCostToWeekStr))
+                                            {
+                                                <tr>
+                                                    <td>Intensive Outpatient (per week)</td>
+                                                    <td>@iopCostFromWeekStr</td>
+                                                    <td>@iopCostToWeekStr</td>
+                                                </tr>
+                                            }
+
+                                            @if (!string.IsNullOrEmpty(iopCostFromSessionStr) || !string.IsNullOrEmpty(iopCostToSessionStr))
+                                            {
+                                                <tr>
+                                                    <td>Intensive Outpatient (per session)</td>
+                                                    <td>@iopCostFromSessionStr</td>
+                                                    <td>@iopCostToSessionStr</td>
+                                                </tr>
+                                            }
+
+                                            @if (!string.IsNullOrEmpty(opCostFromStr) || !string.IsNullOrEmpty(opCostToStr))
+                                            {
+                                                <tr>
+                                                    <td>Outpatient</td>
+                                                    <td>@opCostFromStr</td>
+                                                    <td>@opCostToStr</td>
+                                                </tr>
+                                            }
+
+                                            @if (!string.IsNullOrEmpty(hosInpCostFromStr) || !string.IsNullOrEmpty(hosInpCostToStr))
+                                            {
+                                                <tr>
+                                                    <td>Hospital Inpatient/ Partial Hospitalization</td>
+                                                    <td>@hosInpCostFromStr</td>
+                                                    <td>@hosInpCostToStr</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </li>
+                            @if (!string.IsNullOrEmpty(Model.TreatmentCenterSurvey.Other_costs))
+                            {
+                                <li class="col-md-12">
+                                    <h5>Other pertinent cost:</h5>
+                                    <div>@Model.TreatmentCenterSurvey.Other_costs</div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="col-md-12">
+                        <h4 class="panel box blue-bg">Other Information</h4>
+
+                        <ul class="row info-list">
+                            <li class="col-md-6">
+                                <h5>Gender</h5>
+                                <p>@Model.TreatmentCenterSurvey.Gender</p>
+                            </li>
+                            <li class="col-md-6">
+                                <h5>Pets Allowed?</h5>
+                                @if (Model.TreatmentCenterSurvey.PetsAllowed.HasValue)
+                                {
+                                    if (@Model.TreatmentCenterSurvey.PetsAllowed.Value == true)
+                                    {
+                                        <p>Yes</p>
+                                    }
+                                    else
+                                    {
+                                        <p>No</p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>Unknown</p>
+                                }
+                            </li>
+                            @if (!string.IsNullOrEmpty(Model.TreatmentCenterSurvey.Patient_Staff_Ratio))
+                            {
+                                <li class="col-md-6">
+                                    <h5>Patient to staff ratio</h5>
+                                    <p>@Model.TreatmentCenterSurvey.Patient_Staff_Ratio</p>
+                                </li>
+                            }
+                            <li class="col-md-12">
+                                <h5>Avg. length of program (in days)</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            @{
+                                                float opFromDays;
+                                                string opFromDaysStr = Model.TreatmentCenterSurvey.OP_Len_Stay_From;
+                                                success = float.TryParse(opFromDaysStr, out opFromDays);
+                                            }
+                                            @if (success)
+                                            {
+                                                opFromDaysStr = ((int)(opFromDays)).ToString();
+                                            }
+                                            @{
+                                                float opToDays;
+                                                string opToDaysStr = Model.TreatmentCenterSurvey.OP_Len_Stay_To;
+                                                success = float.TryParse(opToDaysStr, out opToDays);
+                                            }
+                                            @if (success)
+                                            {
+                                                opToDaysStr = ((int)(opToDays)).ToString();
+                                            }
+                                            @{
+                                                float iopFromDays;
+                                                string iopFromDaysStr = Model.TreatmentCenterSurvey.IOP_Len_Stay_From;
+                                                success = float.TryParse(iopFromDaysStr, out iopFromDays);
+                                            }
+                                            @if (success)
+                                            {
+                                                iopFromDaysStr = ((int)(iopFromDays)).ToString();
+                                            }
+                                            @{
+                                                float iopToDays;
+                                                string iopToDaysStr = Model.TreatmentCenterSurvey.IOP_Len_Stay_To;
+                                                success = float.TryParse(iopToDaysStr, out iopToDays);
+                                            }
+                                            @if (success)
+                                            {
+                                                iopToDaysStr = ((int)(iopToDays)).ToString();
+                                            }
+                                            @{
+                                                float resFromDays;
+                                                string resFromDaysStr = Model.TreatmentCenterSurvey.Res_Len_Stay_From;
+                                                success = float.TryParse(resFromDaysStr, out resFromDays);
+                                            }
+                                            @if (success)
+                                            {
+                                                resFromDaysStr = ((int)(resFromDays)).ToString();
+                                            }
+                                            @{
+                                                float resToDays;
+                                                string resToDaysStr = Model.TreatmentCenterSurvey.Res_Len_Stay_To;
+                                                success = float.TryParse(resToDaysStr, out resToDays);
+                                            }
+                                            @if (success)
+                                            {
+                                                resToDaysStr = ((int)(resToDays)).ToString();
+                                            }
+                                            @{
+                                                float hos_Inp_FromDays;
+                                                string hos_Inp_DaysFromStr = Model.TreatmentCenterSurvey.Hos_Inp_Stay_From;
+                                                success = float.TryParse(hos_Inp_DaysFromStr, out hos_Inp_FromDays);
+                                            }
+                                            @if (success)
+                                            {
+                                                hos_Inp_DaysFromStr = ((int)(hos_Inp_FromDays)).ToString();
+                                            }
+                                            @{
+                                                float hos_Inp_ToDays;
+                                                string hos_Inp_DaysToStr = Model.TreatmentCenterSurvey.Hos_Inp_Stay_To;
+                                                success = float.TryParse(hos_Inp_DaysToStr, out hos_Inp_ToDays);
+                                            }
+                                            @if (success)
+                                            {
+                                                hos_Inp_DaysToStr = ((int)(hos_Inp_ToDays)).ToString();
+                                            }
+                                            <tr>
+                                                @if (!string.IsNullOrEmpty(resFromDaysStr) || !string.IsNullOrEmpty(resToDaysStr))
+                                                {
+                                                    <th>Residential</th>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(opFromDaysStr) || !string.IsNullOrEmpty(opToDaysStr))
+                                                {
+                                                    <th>Outpatient</th>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(hos_Inp_DaysFromStr) || !string.IsNullOrEmpty(hos_Inp_DaysToStr))
+                                                {
+                                                    <th>Hospital Inpatient/ Partial Hospitalization</th>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(iopFromDaysStr) || !string.IsNullOrEmpty(iopToDaysStr))
+                                                {
+                                                    <th>Intensive Outpatient</th>
+                                                }
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                @if (!string.IsNullOrEmpty(resFromDaysStr) || !string.IsNullOrEmpty(resToDaysStr))
+                                                {
+                                                    <td>@resFromDaysStr-@resToDaysStr</td>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(opFromDaysStr) || !string.IsNullOrEmpty(opToDaysStr))
+                                                {
+                                                    <td>@opFromDaysStr-@opToDaysStr</td>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(hos_Inp_DaysFromStr) || !string.IsNullOrEmpty(hos_Inp_DaysToStr))
+                                                {
+                                                    <td>@hos_Inp_DaysFromStr-@hos_Inp_DaysToStr</td>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(iopFromDaysStr) || !string.IsNullOrEmpty(iopToDaysStr))
+                                                {
+                                                    <td>@iopFromDaysStr-@iopToDaysStr</td>
+                                                }
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </li>
+
+                            @if (!string.IsNullOrEmpty(Model.TreatmentCenterSurvey.Success_Reason))
+                            {
+                                <li class="col-md-12">
+                                    <h5>What success means to us</h5>
+                                    <div>@Html.Raw(@Model.TreatmentCenterSurvey.Success_Reason)</div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="col-md-12">
+                        <h4 class="panel box blue-bg">Organization & Facilities</h4>
+                        <ul class="row info-list">
+                            <li class="col-md-6">
+                                <h5>Year Started</h5>
+                                <p itemprop="foundingDate">@Model.TreatmentCenterSurvey.Org_BusiYear_started</p>
+                            </li>
+                            <li class="col-md-6">
+                                <h5>Business Status</h5>
+                                <p>@Model.TreatmentCenterSurvey.Org_Profit</p>
+                            </li>
+                            <li class="col-md-6">
+                                <h5>Number of Beds</h5>
+                                <p>@Model.TreatmentCenterSurvey.No_of_Bed</p>
+                            </li>
+                            @if (!string.IsNullOrEmpty(resFromDaysStr) || !string.IsNullOrEmpty(resToDaysStr))
+                            {
+                                <li class="col-md-6">
+                                    <h5>Average stay (Residential)</h5>
+                                    <p>Average stay in days :  @resFromDaysStr to @resToDaysStr</p>
+                                </li>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.TreatmentCenterSurvey.IOP_Len_Stay_From) || !string.IsNullOrEmpty(Model.TreatmentCenterSurvey.IOP_Len_Stay_To))
+                            {
+
+                                <li class="col-md-6">
+                                    <h5>Average stay (Intensive Outpatient)</h5>
+                                    <p>Average stay in days :  @Model.TreatmentCenterSurvey.IOP_Len_Stay_From to @Model.TreatmentCenterSurvey.IOP_Len_Stay_To</p>
+                                </li>
+                            }
+
+
+                            @if (!string.IsNullOrEmpty(Model.TreatmentCenterSurvey.OP_Len_Stay_From) || !string.IsNullOrEmpty(Model.TreatmentCenterSurvey.OP_Len_Stay_To))
+                            {
+                                <li class="col-md-6">
+                                    <h5>Average stay (Outpatient)</h5>
+                                    <p>Average stay in days :  @Model.TreatmentCenterSurvey.OP_Len_Stay_From to @Model.TreatmentCenterSurvey.OP_Len_Stay_To</p>
+                                </li>
+                            }
+                            <li class="col-md-6">
+                                <h5>Private rooms available</h5>
+                                <p>@Model.TreatmentCenterSurvey.Private_Room_Available</p>
+                            </li>
+                            @{
+                                string managementTeamStr = "";
+                                if (@Model.TreatmentCenterSurvey.Org_Key_Name != null)
+                                {
+                                    managementTeamStr = @Model.TreatmentCenterSurvey.Org_Key_Name;
+                                }
+                                string[] splitStrOptions = { "|" };
+                                string[] managementTeamStrList = managementTeamStr.Split(splitStrOptions, StringSplitOptions.RemoveEmptyEntries);
+
+                                string managementPositionStr = "";
+                                if (@Model.TreatmentCenterSurvey.Org_Title != null)
+                                {
+                                    managementPositionStr = @Model.TreatmentCenterSurvey.Org_Title;
+                                }
+
+                                string[] managementPositionStrList = managementPositionStr.Split(splitStrOptions, StringSplitOptions.RemoveEmptyEntries);
+                                int titleCounter = 0;
+
+                                if (managementTeamStrList.Length > 0)
+                                {
+                                    <li class="col-md-6">
+                                        <h5>Management Team</h5>
+                                        <ul>
+                                            @foreach (string managementTeam in managementTeamStrList)
+                                            {
+
+                                                if (managementPositionStrList.Count() > titleCounter)
+                                                {
+
+                                                    <li itemscope itemtype="http://schema.org/Person"><span itemprop="name">@managementTeam </span>- <span itemprop="jobTitle">@managementPositionStrList[titleCounter]</span></li>
+
+                                                }
+                                                else
+                                                {
+                                                    <li>@managementTeam</li>
+                                                }
+                                                titleCounter++;
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="col-md-12">
+                        <h4 class="panel box blue-bg">Pharmacotherapies</h4>
+                        <ul class="row info-list">
+                            <li class="col-md-6">
+                                <h5>Provided during treatment</h5>
+                                <ul>
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Suboxone.ToLower().Equals("yes"))
+                                    {
+                                        <li>Suboxone</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Subutex.ToLower().Equals("yes"))
+                                    {
+                                        <li>Subutex</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Treat_Antabuse.ToLower().Equals("yes"))
+                                    {
+                                        <li>Antabuse</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Treat_Campral.ToLower().Equals("yes"))
+                                    {
+                                        <li>Campral</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Treat_Disorders.ToLower().Equals("yes"))
+                                    {
+                                        <li>Medications for psychiatric Disorders</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Treat_Methodone.ToLower().Equals("yes"))
+                                    {
+                                        <li>Methodone</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Treat_Naltrexone.ToLower().Equals("yes"))
+                                    {
+                                        <li>Naltrexone</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Treat_Nicotine.ToLower().Equals("yes"))
+                                    {
+                                        <li>Nicotine replacement</li>
+                                    }
+                                </ul>
+                            </li>
+                            <li class="col-md-6">
+                                <h5>Maintenance program  </h5>
+                                <ul>
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Facility_Methadone.ToLower().Equals("yes"))
+                                    {
+                                        <li>Methadone</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Facility_Suboxone.ToLower().Equals("yes"))
+                                    {
+                                        <li>Suboxone</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Pharma_Facility_Subutex.ToLower().Equals("yes"))
+                                    {
+                                        <li>Subutex</li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4 class="panel box blue-bg">Aftercare</h4>
+                        <ul class="row info-list">
+                            <li class="col-md-12">
+                                <h5>Services offered </h5>
+                                <ul>
+                                    @if (Model.TreatmentCenterSurvey.Aftercare_Services != null && Model.TreatmentCenterSurvey.Aftercare_Services.ToLower().Equals("yes"))
+                                    {
+                                        <li>After care services offered.</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Aftercare_Free_Services != null && Model.TreatmentCenterSurvey.Aftercare_Free_Services.ToLower().Equals("yes"))
+                                    {
+                                        <li>After care services offered are free.</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Facility_Track_PostCare != null && Model.TreatmentCenterSurvey.Facility_Track_PostCare.ToLower().Equals("yes"))
+                                    {
+                                        <li>Track patients' progress post care</li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4 class="panel box blue-bg">Alumni</h4>
+                        <ul class="row info-list">
+                            <li class="col-md-12">
+                                <h5>Alumni Services</h5>
+                                <ul>
+                                    @if (Model.TreatmentCenterSurvey.Alumni_SpecialEvents != null && Model.TreatmentCenterSurvey.Alumni_SpecialEvents.ToLower().Equals("yes"))
+                                    {
+                                        <li>Alumni networking and special events</li>
+                                    }
+                                    @if (Model.TreatmentCenterSurvey.Alumni_Program != null && Model.TreatmentCenterSurvey.Alumni_Program.ToLower().Equals("yes"))
+                                    {
+                                        <li>Special programs for alumni</li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    @{
+                        string licensedByStr = "";
+                        if (Model.TreatmentCenterSurvey.FacilityInfo_LicensedBy != null)
+                        {
+                            licensedByStr = Model.TreatmentCenterSurvey.FacilityInfo_LicensedBy;
+                        }
+                        string[] licensedBy = licensedByStr.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+
+                        string licenseTypeStr = "";
+                        if (Model.TreatmentCenterSurvey.FacilityInfo_TypeOfLicense != null)
+                        {
+                            licenseTypeStr = Model.TreatmentCenterSurvey.FacilityInfo_TypeOfLicense;
+                        }
+                        string[] licenseType = licenseTypeStr.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+
+                        int licenseCounter = licensedBy.Length > licenseType.Length ? licensedBy.Length : licenseType.Length;
+                    }
+                    <div class="col-md-12">
+                        <h4 class="panel box blue-bg">Licensing/Accreditations/Memberships</h4>
+                        <ul class="row info-list">
+                            <li class="col-md-12">
+                                <h5>Licenses </h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Licensed By</th>
+                                                <th>Type Of License</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 0; i < licenseCounter; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @if (licensedBy.Length > i)
+                                                        {
+                                                            @licensedBy[i];
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (licenseType.Length > i)
+                                                        {
+                                                            @licenseType[i];
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </li>
+                            @{
+                                string accreditions = "";
+                                if (Model.TreatmentCenterSurvey.FacilityInfo_AccreditedBy != null)
+                                {
+                                    accreditions = Model.TreatmentCenterSurvey.FacilityInfo_AccreditedBy;
+                                }
+                                string accreditionsOther = "";
+                                if (Model.TreatmentCenterSurvey.Other_AccreditedBy != null)
+                                {
+                                    accreditionsOther = Model.TreatmentCenterSurvey.Other_AccreditedBy;
+                                }
+                                string membership = "";
+                                if (Model.TreatmentCenterSurvey.Membership_AccreditedBy != null)
+                                {
+                                    membership = Model.TreatmentCenterSurvey.Membership_AccreditedBy;
+                                }
+                                string[] accreditionsList = accreditions.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                string[] accreditionsListOther = accreditionsOther.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                string[] membershipList = membership.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                string membershipOther1 = Model.TreatmentCenterSurvey.Membership_Other1 != null ? Model.TreatmentCenterSurvey.Membership_Other1 : "";
+                                string membershipOther2 = Model.TreatmentCenterSurvey.Membership_Other2 != null ? Model.TreatmentCenterSurvey.Membership_Other2 : "";
+                                string[] membershipOther1List = membershipOther1.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                string[] membershipOther2List = membershipOther2.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                            }
+                            <li class="col-md-6">
+                                <h5>Accreditations</h5>
+                                <ul>
+                                    @foreach (var item in accreditionsList)
+                                    {
+                                        <li>@item</li>
+                                    }
+                                    @foreach (var item in accreditionsListOther)
+                                    {
+                                        <li>@item</li>
+                                    }
+                                </ul>
+                            </li>
+
+                            <li class="col-md-6">
+                                <h5>Membership</h5>
+                                <ul>
+                                    @foreach (var item in membershipList)
+                                    {
+                                        <li>@item</li>
+                                    }
+                                    @foreach (var item in membershipOther1List)
+                                    {
+                                        <li>@item</li>
+                                    }
+                                    @foreach (var item in membershipOther2List)
+                                    {
+                                        <li>@item</li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    @if (@Model.MediaFiles != null && !string.IsNullOrEmpty(Model.MediaFiles.Rules_Image))
+                    {
+                        <div class="col-md-12">
+                            <h4 class="panel box blue-bg">Brochures, applications, fee schedules, and rules</h4>
+                            <ul class="row info-list">
+                                @{
+                        string rules = "";
+                        rules = @Model.MediaFiles.Rules_Image;
+                        string[] rulesList = rules.Split(splitOptionsPipeOnly, StringSplitOptions.RemoveEmptyEntries);
+                                }
+
+                                @foreach (string rule in rulesList)
+                                {
+                                    picture = "http://www.sober.com/contents/rules/" + rule;
+                                    picture = picture.Replace(" ", "%20");
+
+                                    if (rule.Contains(".pdf"))
+                                    {
+                                        <li class="col-md-3"><a href="@picture" class="pdf">@rule</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="col-md-3"><a href="@picture">@rule</a></li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(Model.TreatmentCenterSurvey.AdminComments) && Model.TreatmentCenterSurvey.AdminComments.Length > 10)
+                    {
+                        <div class="col-md-12">
+                            <h4 class="panel box blue-bg">Addtional information</h4>
+                            @Html.Raw(@Model.TreatmentCenterSurvey.AdminComments)
+                        </div>
+                    }
+
+                    <div id="reviewSection" class="col-md-12">
+                        <h4 class="panel box blue-bg">@Model.SamhsaListing.name1 - Treatment Center Reviews (from Users)</h4>
+                        @{Html.RenderAction("ViewUserReview", "UserReview", new { facility = Model.SamhsaListing.PageName });}
+                    </div>
+
+                    <div class="col-md-12">
+                        @{
+                            SoberBLL.Directory.BLL_Listings bllListings = new SoberBLL.Directory.BLL_Listings();
+                            var mapsListings = bllListings.GetNearbyFreeListingsForMaps(Model.SamhsaListing);
+                            ViewBag.CurrentProfileName = Model.SamhsaListing.PageName;
+                        }
+
+                        @Html.Partial("_mapsListings", mapsListings)
+                    </div>
+
+
+                </div>
+            </div>
+
+            @if (Model.reviewRating != null)
+            {
+                <div class="tab-pane" id="editorsReview">
+                    @if (Model.reviewRating != null)
+                    {
+                        @Html.Partial("_reviewrating", Model.reviewRating)
+                    }
+                </div>
+            }
+
+            <div class="tab-pane" id="contactus">
+                @{
+                    SoberModel.InquiryForm inquiry = new SoberModel.InquiryForm();
+                    inquiry.facilityType = "TreatmentCenterSurvey";
+                    inquiry.facilityName = @Model.SamhsaListing.name1;
+                    inquiry.PageName = @Model.SamhsaListing.PageName;
+                }
+
+                @Html.Partial("create", @inquiry)
+
+                @if (ViewBag.status != null)
+                {
+                    <h3>Message Sent. Thank You</h3>
+                }
+            </div>
+
+            <div class="tab-pane" id="maps">
+                <div id="map" style="width: 100%; height: 500px"></div>
+            </div>
+
+            <div class="tab-pane" id="writeAUserReview">
+                @Html.Hidden("isAuthenticated", HttpContext.Current.User.Identity.IsAuthenticated)
+                @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                {
+                    SoberBLL.UserReview.UserReviewForm userReview = new SoberBLL.UserReview.UserReviewForm();
+                    userReview.PageName = @Model.SamhsaListing.PageName;
+                    Html.RenderPartial("~/Views/UserReview/WriteUserReview.cshtml", userReview);
+                }
+                else
+                {
+                    @Html.Action("_LoginPartial", "Account", new { returnUrl = "#reload" })
+                }
+            </div>
+        </div>
+
+        <div>
+            @Html.Partial("_AdResponsive")
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+
+<script type="text/javascript">
+    function showrecaptcha() {
+        //$('#write_user_review').click(function () {
+        //    if ($('#isAuthenticated').val().toLowerCase() != "true") {
+        //        Recaptcha.create("6LeKU-kSAAAAAI-fjV99Gn18MFa6n_wW9VP8Tosg", "register_recaptcha_box", "");
+        //    }
+        //});
+
+        $('#contact_us').click(function () {
+            Recaptcha.create("6LeKU-kSAAAAAI-fjV99Gn18MFa6n_wW9VP8Tosg", "contactus_recaptcha_box", "");
+        });
+    }
+
+    $(document).ready(function () {
+        showrecaptcha();
+        window.scrollTo(0, 0);
+        $('#myCarousel').children('ol').children('li').first().addClass("active");
+        $('#myCarousel').children('div').children('div').first().addClass("active");
+
+        var tab = window.location.hash.substr(1);
+
+        if (tab == 'contactUS') {
+            $('a[href$="#contactus"]').click();
+        }
+        else if (tab == 'userreview') {
+            $('a[href$="#writeAUserReview"]').click();
+        }
+        else if (tab == 'editorsreview') {
+            $('a[href$="#editorsReview"]').click();
+        }
+
+        $('.nav-tabs a').click(function () {
+            if ($(this).attr('href') == '#maps') {
+                $('#maps').show();
+
+                if ($('#map').text() == "") {
+                    ShowMap();
+                }
+            }
+            else {
+                $('#maps').hide();
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    function SetLatLng() {
+        var lat = document.getElementById('Lat').value;
+        var lng = document.getElementById('Lng').value;
+        if (lat == "" || lng == "") {
+            var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + document.getElementById('SamhsaListing_location_street1').value + "+" + document.getElementById('SamhsaListing_location_city').value + "+" + document.getElementById('SamhsaListing_location_state').value + "+USA" + "&sensor=false";
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: 'json',
+                success: function (result) {
+                    if (result.status != null && result.status == "OK") {
+                        var lat = result.results[0].geometry.location.lat;
+                        var lng = result.results[0].geometry.location.lng;
+                        document.getElementById('Lat').value = lat;
+                        document.getElementById('Lng').value = lng;
+                    }
+                    else {
+
+                    }
+                },
+                data: {},
+                async: false
+            });
+        }
+    }
+
+    var map = null;
+
+    function ShowMap() {
+        SetLatLng();
+        // Creating a MapOptions object with the required properties
+        var lat = document.getElementById('Lat').value;
+        var lng = document.getElementById('Lng').value;
+        var myLatlng = new google.maps.LatLng(lat, lng);
+        var options = {
+            zoom: 15,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        // Creating the map
+        map = new google.maps.Map(document.getElementById('map'), options);
+
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: 'Facility Location'
+        });
+    }
+</script>
+

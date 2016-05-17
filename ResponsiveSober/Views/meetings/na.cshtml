@@ -1,0 +1,94 @@
+﻿@model SoberModel.NaMeetingsCombined
+
+@{
+    Layout = "~/Views/Shared/_Master.cshtml";
+    ViewBag.Title = "NA Meetings Near Me";
+}
+
+@section head {
+    <meta name="description" content="List of all NA meetings in America. Search by location, day, time, or meeting format plus pictures and directions.">
+}
+
+<style type="text/css">
+    header {
+        padding-bottom: 0px;
+    }
+
+    .row:first-child .col-md-6 {
+        margin-bottom: 0px !important;
+    }
+</style>
+
+<div class="white-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <ol class="breadcrumb">
+                    <li><a href="@Url.Action("index", "home")">Home</a></li>
+                    <li class="active">NA Meetings</li>
+                </ol>
+            </div>
+
+            <div class="col-md-6">
+                @Html.Partial("_AdShareaholic", 16287771)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="na-header">
+    <div class="container">
+        @Html.Partial("_searchNA", Model)
+    </div>
+</div>
+
+<div class="white-bg">
+    <div class="container">
+        <div class="row" style="text-align: center">
+            @Html.Partial("_Ad728x90")
+        </div>
+
+        <div>
+            <p>
+                Narcotics Anonymous (NA) meetings are based on the twelve (12)  step recovery model, which was founded in 1953. NA is based on the same principles as Alcoholics Anonymous (AA), which was founded in 1935,
+                but NA is a fellowship for drug abusers and drug addicts. NA meetings are focused on topics related to drug abuse whereas AA meetings focus on alcoholism. The 12 step recovery model is the most widely
+                utilized model for recovery in the world and is employed by over 90% of all treatment centers in the United States as part of their continuum of care and treatment center alumni are encouraged to continue
+                to attend 12 step meetings for the rest of their lives to reduce the likelihood of relapse. Let's get started by selecting your geography:
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                @Html.Partial("_AdResponsive")
+            </div>
+
+            <div class="col-md-8">
+                @foreach (var item in Model.States)
+                {
+                    <div class="col-md-3">
+                        @Html.ActionLink(@item.StateFullName + " NA", "na", "meetings", new { state = item.StateFullName.ToLower() }, new { target = "_blank" })
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <p>
+                There are plenty of drug rehab and alcohol treatment options available for those still actively addicted.
+                If you are a substance abuser and need more than a meeting, please refer to our drug and alcohol treatment options.
+                The most popular states for drug rehabs (ranked by number of rehabs):
+            </p>
+        </div>
+
+        <br />
+
+        <div class="row">
+            @foreach (var item in Model.States.OrderByDescending(x => x.StateCount))
+            {
+                <div class="col-md-3">
+                    @Html.ActionLink("Drugs rehabs in " + @item.StateFullName + " (" + @item.StateCount + ")", "listings", "directory", new { address = item.StateFullName.ToLower(), rehab = "drug and alcohol treatment centers" }, new { target = "_blank" })
+                </div>
+            }
+        </div>
+    </div>
+</div>

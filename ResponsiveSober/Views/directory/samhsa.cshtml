@@ -1,0 +1,187 @@
+﻿@model SoberModel.tbl_SamhsaListings
+
+@{
+    ViewBag.Title = Model.PageName + " " + Model.location_city + " " + Model.location_state;
+    ViewBag.AddressLocation = Model.location_street1 + "," + Model.location_city + "," + Model.location_state + ",USA";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li>@Html.ActionLink("Directory", "index", "directory")</li>
+            <li class="active">Drug Detox Center</li>
+        </ol>
+
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Partial("_AdResponsive")
+            </div>
+        </div>
+        <div class="row grey-bg">
+            @{
+                char[] splitOptions = { '|', ',' };
+            }
+            <div class="col-md-12">
+                <div class="col-md-8">
+                    <h1>@Model.name1</h1>
+                </div>
+                <div class="col-md-4">
+                    @Html.ActionLink("Is this your company ?", "addenhancedprofile", "directory", new { pagename = @Model.PageName.ToLower() }, new { target = "_blank", @class = "btn btn-primary" })
+                </div>
+            </div>
+        </div>
+
+        <div id="overview" class="row">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="align-right">Address</td>
+                            <td>
+                                <ul>
+                                    <li>@Model.location_street1</li>
+                                    @if (!string.IsNullOrWhiteSpace(@Model.location_street2))
+                                    {
+                                        <li>@Model.location_street2</li>
+                                    }
+                                    <li>@Model.location_city, @Model.location_state, @Model.location_zip</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-right">Telephone</td>
+                            <td>@Model.phone</td>
+                        </tr>
+                        <tr>
+                            <td class="align-right">Primary focus Of Provider</td>
+                            <td>
+                                <ul>
+                                    @{
+                                        string primaryFocusStr = "";
+                                        if (@Model.Primary_Focus != null)
+                                        {
+                                            primaryFocusStr = @Model.Primary_Focus;
+                                        }
+                                        string[] primaryFocusList = primaryFocusStr.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                    }
+                                    @foreach (string focus in primaryFocusList)
+                                    {
+                                        <li>@focus</li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-right">Services Provided</td>
+                            <td>
+                                <ul>
+                                    @{
+                                        string servicesStr = "";
+                                        if (@Model.Services_Provided != null)
+                                        {
+                                            servicesStr = @Model.Services_Provided;
+                                        }
+                                        string[] services = servicesStr.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                    }
+                                    @foreach (string service in services)
+                                    {
+                                        <li>@service</li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-right">Type of Care</td>
+                            <td>
+                                <ul>
+                                    @{
+                                        string typeOfCare = "None Listed";
+                                        if (@Model.Type_of_Care != null)
+                                        {
+                                            typeOfCare = @Model.Type_of_Care;
+                                        }
+
+                                        string[] careTypes = typeOfCare.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                    }
+                                    @foreach (string care in careTypes)
+                                    {
+                                        <li>@care</li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-right">Specific Population Served</td>
+                            <td>
+                                <ul>
+                                    @{
+                                        string populationServed = "None Listed";
+                                        if (@Model.Special_Programs_Groups != null)
+                                        {
+                                            populationServed = @Model.Special_Programs_Groups;
+                                        }
+
+                                        string[] populationTypes = populationServed.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                    }
+                                    @foreach (string population in populationTypes)
+                                    {
+                                        <li>@population</li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-right">Form Of Payment Accepted</td>
+                            <td>
+                                <ul>
+                                    @{
+                                        string formOfPayment = "None Listed";
+                                        if (@Model.Forms_of_Payment_Accepted != null)
+                                        {
+
+                                            formOfPayment = @Model.Forms_of_Payment_Accepted;
+                                        }
+
+                                        string[] paymentTypes;
+                                        if (formOfPayment.Contains("Military insurance (e.g., VA,TRICARE)"))
+                                        {
+                                            formOfPayment = formOfPayment.Replace("Military insurance (e.g., VA,TRICARE)", "Military insurance (e.g. VA-TRICARE)");
+                                        }
+
+                                        paymentTypes = formOfPayment.Split(splitOptions, StringSplitOptions.RemoveEmptyEntries);
+                                    }
+                                    @foreach (string payment in paymentTypes)
+                                    {
+                                        <li>@payment</li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                @{
+                    SoberBLL.Directory.BLL_Listings bllListings = new SoberBLL.Directory.BLL_Listings();
+                    var mapsListings = bllListings.GetNearbyFreeListingsForMaps(Model);
+                    ViewBag.CurrentProfileName = Model.PageName;                    
+                }
+
+                <div class="col-md-12">
+                    @Html.Partial("_mapsListings", mapsListings)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+﻿@model IEnumerable<SoberModel.sp_GetSpotlightFacilitiesByCategory_Result>
+@{
+    ViewBag.Title = "Detox Centers - Find the best care right now";
+    Layout = "~/Views/Shared/_Master.cshtml";
+    ViewBag.SelectedCategory = 4;
+}
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")
+}
+@section head {
+    <meta name="description" content="Complete list of detox facilities with reviews, pictures, and cost information. Find the perfect fit at Sober.com right now!">
+}
+<div class="section wrap-s">
+    <ul class="breadcrumbs-s">
+        <li class="first"><a href="@Url.Action("index", "home")">Home</a></li>
+        <li>@Html.ActionLink("Directory", "index", "directory")</li>
+        <li>@Html.ActionLink("Detox Centers", "detox_centers", "facilities")</li>
+    </ul>
+    <div class="profile-page-cont-s">
+        <div class="title-cont-s">
+            <h1>Detox Facilities</h1>
+        </div>
+        <div class="cont-s">
+            <div class="d-cont">
+                <div class="carousel-s">
+                    @Html.Partial("_SpotLightFacilities", Model)
+                    <div class="search-bar-s">
+                        @Html.Partial("_facilitysearcharea")
+                    </div>
+                    <div class="faq">
+                        <div class="head">Alcohol & Drug Detox Centers - FAQs</div>
+                        <ul class="faqs">
+                            <li>
+                                <p class="ques">What is a drug detoxification ("detox") facility and why are they important? </p>
+                                <p>An alcohol or drug detox facility is a standalone clinic that offers detoxification procedures aimed at removing the toxins from the body of someone who has been dependent to drugs and/or alcohol. Necessary treatment is implemented to avoid or minimize the withdrawal symptoms while removing the toxic chemicals from the body. During the detox treatment, an individual may receive small doses of suboxone, methadone or other synthetic recovery drugs in gradually decreased doses until the addict or alcoholic is totally weaned from the abused substance.  </p>
+                                <p>It is important to cleanse the system of the damaging chemicals caused by addictive substances in order for an individual to be physically and mentally stable to undergo the other stages of rehabilitation such as counseling, psychological treatment and the like. </p>
+                            </li>
+                            <li>
+                                <p class="ques">What things should I look for in alcohol and drug detox facilities? </p>
+                                <p>The following are the qualities of a good detox center:</p>
+                                <p><strong>Painless detox.</strong> Medical detoxification must be a painless process in order to encourage the addict to continue the detox treatment.</p>
+                                <p><strong>High success rate.</strong> This is the proof of the effectivity of treatment. You must ask how many clients successfully completed the detox treatment and maintained sobriety afterwards.</p>
+                                <p><strong>Privacy and comfort.</strong> Detox facilities must protect the privacy of the client in order to lessen their fear of social stigma. The location must be comfortable, peaceful and tranquil.</p>
+                                <p><strong>Medical qualifications.</strong> Transitioning an addict or alcoholic away from abused substances can be life threatening if not done properly and under the supervision of qualified healthcare professionals, so be sure to inquire about the medical licenses and accreditations of the detox facility and its staff.</p>
+                            </li>
+                            <li>
+                                <p class="ques">Is detox different from rehab? </p>
+                                <p>Yes, the detoxification process is different from alcohol and drug rehabilitation. The detoxification is the first step in the process. Rehabilitation and recovery comes next after the patient has been properly detoxified and is physically and mentally capable to start rehab. </p>
+                            </li>
+                            <li>
+                                <p class="ques">Do treatment centers provide both detox and rehab services? </p>
+                                <p>Many treatment centers will provide both detoxification and alcohol and drug rehabilitation services, but not all. Some treatment centers require that an addict be detoxified elsewhere before admission, so it is important to ask if the detox facility or treatment center you are considering provides both services. </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ads-cont-links-s">
+                <div class="title">Sponsored ads</div>
+                <ul class="link-list">
+                    <li>@Html.Partial("_Ads2")</li>
+                    <li>@Html.Partial("_Ads3")</li>
+                </ul>
+                @Html.Partial("_StateLinksSeo")
+            </div>
+        </div>
+        <div>
+            @Html.Partial("_AdResponsive")
+        </div>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+﻿@model IList<SoberModel.PremiumListing>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Premium Listing";
+    Layout = "~/Views/Shared/_Master.cshtml";
+    WebGrid premiumListingGrid = new WebGrid(Model, rowsPerPage: 30);
+}
+
+
+<style>
+    th, thead {
+        background: #aaa;
+        color: #fff;
+    }
+
+    tr:nth-child(odd) {
+        background: #ccc;
+    }
+
+    tr:hover {
+        background: #aaa;
+    }
+</style>
+
+<div class="content white-bg">
+    <div class="container">
+        <h2 class="panel box blue-bg">Premium Listing</h2>
+
+        @using (Html.BeginForm("PremiumListingView", "premiumlisting", FormMethod.Get))
+        {             
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Listing Name:</label>
+                </div>
+                <div class="col-md-6">
+                    @Html.TextBox("listingnname", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+                </div>
+                <div class="col-md-4">
+                    @Html.ActionLink("Create Premium Listing", "addpremiumlisting", null, new { @class = "btn btn-primary", @style = "float: right;" })
+                </div>                
+            </div>
+            
+            <div class="row">
+                <div class="col-md-2">
+                    <label>State:</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("state", new SelectList(ViewBag.States, "StateName", "StateName"), "None", new { @class = "selectpicker" })
+                </div>
+                <div class="col-md-2">
+                    <label>Category:</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("category", new SelectList(ViewBag.Categories, "Value", "Value"), "None", new { @class = "selectpicker" })
+                </div>
+            </div>
+            
+            <div class="row aic">
+                <div class="col-md-2">
+                    <label>Status:</label>
+                </div>
+                <div class="col-md-2">
+                    <div class="radio">
+                        <label>
+                            @Html.RadioButton("status", "All")
+                            <label>All</label>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="radio">
+                        <label>
+                            @Html.RadioButton("status", "Active", true)
+                            <label>Active</label>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="radio">
+                        <label>
+                            @Html.RadioButton("status", "Inactive")
+                            <label>In-Active</label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-2">
+                    <button id="searchPremiumListing" value="Search" type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        }
+
+        <div id="gridContent" class="table-responsive">
+            @premiumListingGrid.GetHtml(columns: new[]{
+                premiumListingGrid.Column("listingId","ID"),
+                premiumListingGrid.Column("headline","Headline",format: (item) => Html.ActionLink((string)item.headline, "editpremiumlisting", new { listingId = item.listingId }, new { target = "_blank" })),
+                premiumListingGrid.Column("statusText", "Status"),
+                premiumListingGrid.Column("city","City"),
+                premiumListingGrid.Column("state","State"),
+                premiumListingGrid.Column("categoryName","Category"),
+                premiumListingGrid.Column("campaignStartDate","StartDate"),
+                premiumListingGrid.Column("campaignEndDate","EndDate"),
+                premiumListingGrid.Column("mapSamhsaListingname","Mapping", format:(item)=> Html.ActionLink(string.IsNullOrEmpty(item.mapSamhsaListingname)?"-Add Mapping-":(string)item.mapSamhsaListingname ,"maptosamhsalisting",
+                            new { listingId = item.listingId, listingname = item.campaignName, mappingId = item.mappingID , mappingname = (string)item.mapSamhsaListingname }, new { target = "_blank" })),
+                premiumListingGrid.Column(format:(item)=> @Html.ActionLink("Copy", "clonedirectorylisting", new { listingId = item.listingId},new { target = "_blank" }))
+                }, htmlAttributes: new { @class = "table table-bordered table-listing" })
+        </div>        
+    </div>
+</div>

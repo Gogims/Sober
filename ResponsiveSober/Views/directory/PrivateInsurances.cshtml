@@ -1,0 +1,139 @@
+﻿@model SoberModel.Insurance
+
+@{
+    ViewBag.Title = "Insurance Companies covering rehab for drug addiction and alcoholism";
+    Layout = "~/Views/Shared/_Master.cshtml";
+
+    SoberBLL.Directory.BLL_Listings bllListings = new SoberBLL.Directory.BLL_Listings();
+    var mapsListings = bllListings.GetListingsByInsurance();
+}
+
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li class="active">Insurance Companies</li>
+        </ol>
+        
+        <h1>Top insurance companies who cover drug abuse and alcohol addiction</h1>
+
+        <div class="row">
+            <div class="col-md-12">
+                @foreach (var item in Model.GetTopInsurance(6))
+                {
+                    string image = "http://www.sober.com/contents//insurance/" + item.Ins_ProviderLogo;
+
+                    <div class="col-md-2">
+                        <a href="@Url.Action("insurance-companies-covering-rehab", "directory", new { name = @item.Ins_ProviderName.Trim().ToLower() })">
+                            <img src=@image>
+                            @item.Ins_ProviderName (@item.total)
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="panel box blue-bg col-md-12">
+                <div class="col-md-1">
+                    <label>My Insurance</label>
+                </div>
+                <div class="col-md-6">
+                    @Html.DropDownListFor(model => model.Ins_ProviderName, new SelectList(ViewBag.Insurances, "Ins_ProviderName", "Ins_ProviderName"), new { @class = "selectpicker" })
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary" onclick="searchIns();">Go</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <br />
+                @Html.Partial("_mapsListingsInsurance", mapsListings)
+                <br />
+            </div>
+        </div>
+
+        <div class="row">
+            <h2>Number of treatment centers in America accepting insurance(s) by state:</h2>
+            <div class="col-md-12">
+                @foreach (var item in Model.GetStatesAllInsurances().OrderBy(x => x.StateName))
+                {
+                    <div class="col-md-3">
+                        @Html.ActionLink(@item.StateName + " (" + @item.Count + ")", "listings", "directory", new { address = @item.StateName.ToLower() }, null)
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="faq row">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>
+                            Insurance FAQs
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <span class="anchor" style="float: right;">Show Editor</span>
+                            }
+                        </h4>
+                    </div>
+                </div>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    using (Html.BeginForm("UpdateExtraContent", "Admin", FormMethod.Post))
+                    {
+                        string controller = ViewContext.RouteData.Values["controller"].ToString();
+                        string action = ViewContext.RouteData.Values["action"].ToString();
+                    
+                        <input type="hidden" name="controller" value="@controller" />
+                        <input type="hidden" name="action" value="@action" />
+                        
+                        <div id="editor">
+                            <textarea id="content" class="ckeditor" name="content">@ViewBag.FAQ</textarea>
+
+                            <div class="col-md-10"></div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    }
+                }
+
+
+
+                <div class="originalHTML col-md-12">
+                    @Html.Raw(ViewBag.FAQ)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function searchIns()
+    {
+        var insurance = $('#Ins_ProviderName').val();
+        location.href = "/directory/insurance-companies-covering-rehab?name=" + insurance.toLowerCase();        
+    }
+
+    $(document).ready(function () {
+        $('#editor').toggle();
+
+        $('h4 .anchor').click(function () {
+            $('#editor').toggle();
+
+            if ($(this).text() == 'Show Editor') {
+                $(this).text('Hide Editor');
+            }
+            else {
+                $(this).text('Show Editor');
+            }
+        });
+    });
+</script>

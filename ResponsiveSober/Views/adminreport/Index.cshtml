@@ -1,0 +1,270 @@
+﻿@model PagedList.IPagedList<SoberModel.sp_GetAllSamhsaListingsDate_Result>
+@using PagedList.Mvc;
+@using SoberBLL.Directory;
+
+@{
+    Layout = "~/Views/Shared/_Master.cshtml";
+    ViewBag.Title = "Listings";
+    
+    Dictionary<int, string> dateFilter = new Dictionary<int, string>();
+    dateFilter.Add(1, "Record Date");
+    dateFilter.Add(2, "Survey Creation");
+    dateFilter.Add(3, "Modification Date");
+    int i = 0;
+}
+    
+<link href="~/content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<div class="content white-bg">
+    <div class="container">
+        @using (Html.BeginForm("Index", "adminreport", FormMethod.Post, new { @class="row" }))
+        {
+            <div class="col-md-12">
+                <h2 class="panel box blue-bg">Reports Page</h2>
+                <div class="col-md-2">
+                    <label>Find by Page Name:</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+                </div>                 
+            </div>
+            <ul class="form-group col-md-12 aic">
+                <li class="col-md-3">
+                    <div class="checkbox">
+                        <label>                            
+                            @Html.CheckBox("EnhancedOnly", new { @class = "chk-box" })
+                            <label for="EnhancedOnly">Enhanced Only Both</label>
+                        </label>
+                    </div>                  
+                </li>
+                <li class="col-md-3">
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBox("SlCheckBox", new { @class = "chk-box" })
+                            <label for="SlCheckBox">Sober Living Only</label>
+                        </label>
+                    </div>
+                </li>
+                <li class="col-md-3">
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBox("TcCheckBox", new { @class = "chk-box" })
+                            <label for="TcCheckBox">Treatment Center Only</label>
+                        </label>
+                    </div>                    
+                </li>
+                <li class="col-md-3">
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBox("NotEnhanced", new { @class = "chk-box" })
+                            <label for="NotEnhanced">Exclude All Enhanced</label>
+                        </label>
+                    </div>
+                </li>
+            </ul>
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    @Html.DropDownList("dateFilter", new SelectList(dateFilter, "Key", "Value"), new { @class = "selectpicker" })
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBox("startDate", ViewBag.StartDate as string, new { @class = "datepicker form-control", @placeholder = "Any" })
+                </div>
+                <div class="col-md-1">
+                    <label> to </label>
+                </div>                
+                <div class="col-md-3">
+                    @Html.TextBox("endDate", ViewBag.EndDate as string, new { @class = "datepicker form-control", @placeholder = "Any" })
+                </div>                
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    @Html.DropDownList("States", new SelectList(ViewBag.States, "StateAbbreviation", "StateAbbreviation"), "State", new { @class = "selectpicker" })
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("Categories", new SelectList(ViewBag.Categories, "Text", "Value"), "Category", new { @class = "selectpicker" })
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        }
+
+        <div class="table-responsive">
+            <br />
+            <table id="report" class="table table-bordered table-listing">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>
+                            @Html.ActionLink("Page Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter, States = ViewBag.SelectedState, Categories = ViewBag.SelectedCategory, EnhancedOnly = ViewBag.EnhancedOnly, SlCheckBox = ViewBag.SlCheckBox, TcCheckBox = ViewBag.TcCheckBox, NotEnhanced = ViewBag.NotEnhanced, dateFilter = ViewBag.dateFilter, startDate = ViewBag.StartDate, endDate = ViewBag.EndDate })
+                        </th>
+                        <th>
+                            @Html.ActionLink("Survey Creation Date", "Index", new { sortOrder = ViewBag.CreatedDateSortParm, currentFilter = ViewBag.CurrentFilter, States = ViewBag.SelectedState, Categories = ViewBag.SelectedCategory, EnhancedOnly = ViewBag.EnhancedOnly, SlCheckBox = ViewBag.SlCheckBox, TcCheckBox = ViewBag.TcCheckBox, NotEnhanced = ViewBag.NotEnhanced, dateFilter = ViewBag.dateFilter, startDate = ViewBag.StartDate, endDate = ViewBag.EndDate })
+                        </th>
+                        <th>
+                            @Html.ActionLink("Date Modified On", "Index", new { sortOrder = ViewBag.ModifiedDateSortParm, currentFilter = ViewBag.CurrentFilter, States = ViewBag.SelectedState, Categories = ViewBag.SelectedCategory, EnhancedOnly = ViewBag.EnhancedOnly, SlCheckBox = ViewBag.SlCheckBox, TcCheckBox = ViewBag.TcCheckBox, NotEnhanced = ViewBag.NotEnhanced, dateFilter = ViewBag.dateFilter, startDate = ViewBag.StartDate, endDate = ViewBag.EndDate })
+                        </th>
+                        <th>
+                            @Html.ActionLink("City", "Index", new { sortOrder = ViewBag.CitySortParm, currentFilter = ViewBag.CurrentFilter, States = ViewBag.SelectedState, Categories = ViewBag.SelectedCategory, EnhancedOnly = ViewBag.EnhancedOnly, SlCheckBox = ViewBag.SlCheckBox, TcCheckBox = ViewBag.TcCheckBox, NotEnhanced = ViewBag.NotEnhanced, dateFilter = ViewBag.dateFilter, startDate = ViewBag.StartDate, endDate = ViewBag.EndDate })
+                        </th>
+                        <th>
+                            @Html.ActionLink("State", "Index", new { sortOrder = ViewBag.StateSortParm, currentFilter = ViewBag.CurrentFilter, States = ViewBag.SelectedState, Categories = ViewBag.SelectedCategory, EnhancedOnly = ViewBag.EnhancedOnly, SlCheckBox = ViewBag.SlCheckBox, TcCheckBox = ViewBag.TcCheckBox, NotEnhanced = ViewBag.NotEnhanced, dateFilter = ViewBag.dateFilter, startDate = ViewBag.StartDate, endDate = ViewBag.EndDate })
+                        </th>
+                        <th>
+                            Samhsa Listing
+                        </th>
+                        <th>
+                            Treatment Center
+                        </th>
+                        <th>
+                            Sober Living
+                        </th>
+                        <th>
+                            Delete Listing
+                        </th>
+                        <th>
+                            Admin Operations
+                        </th>
+                        <th>
+                            Reviews
+                        </th>
+                        <th>
+                            Alumni
+                        </th>
+                        <th>
+                            Mapping
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        i++;
+                        <tr>
+                            <td>@i</td>
+                            <td>
+                                @if (item.TypeListing == "TreatmentCenterSurvey")
+                                {
+                                    @Html.ActionLink(item.PageName, "profile", "directory", new { rehab = item.PageName, facility_type = "tc" }, new { target = "_blank" })
+                                }
+
+                                @if (item.TypeListing == "SoberLivingSurvey")
+                                {
+                                    @Html.ActionLink(item.PageName, "profile", "directory", new { rehab = item.PageName, facility_type = "sl" }, new { target = "_blank" })
+                                }
+
+                                @if (item.TypeListing == null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.name1)
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => item.CreatedOn)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ModifiedOn)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.location_city)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.location_state)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink(" Edit ", "edittreatmenthouse", "directory", new { listingid = item.ListingId }, new { target = "_blank" })
+                            </td>
+
+
+                            <td>
+                                @if (item.TypeListing == "TreatmentCenterSurvey")
+                                {
+                                    if (item.InActive.HasValue && item.InActive.Value)
+                                    {
+                                        if (item.InActive.Value)
+                                        {
+                                            @Html.ActionLink(" Make link Active ", "activate", "adminreport", new { page_name = item.PageName.ToLower(), surveytype = "TreatmentCenterSurvey", isinactive = false }, new { target = "_blank", @style = "color:red;" })
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink(" Make link InActive ", "activate", "adminreport", new { page_name = item.PageName.ToLower(), surveytype = "TreatmentCenterSurvey", isinactive = true }, new { target = "_blank" })
+                                    }
+
+                                    @Html.ActionLink(" Edit Normal ", "edittreatmentcenter", "directory", new { page_name = item.PageName.ToLower() }, new { target = "_blank" })
+                                    @Html.ActionLink(" Edit Partial ", "edittreatmentcenter", "directory", new { page_name = item.PageName.ToLower(), partial_profile = "true" }, new { target = "_blank" })
+                                    @Html.ActionLink(" Delete Treatment Center ", "deletetreatmentcenter", "adminreport", new { facility = item.PageName, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }, new { onclick = "return confirm('Are you sure you wish to delete ?');" })
+                                    @*@Html.ActionLink(" Copy Treatment Center ", "copytreatmentcenter", "directory", new { listingid = item.ListingId, page_name = item.PageName.ToLower(), copy = "true" }, new { target = "_blank" })*@
+
+                                }
+                                else
+                                {
+                                    @Html.ActionLink(" Add Normal", "addtreatmentcenter", "directory", new { page_name = item.PageName.ToLower() }, new { target = "_blank" })
+
+                                    @Html.ActionLink(" Add Partial", "addtreatmentcenter", "directory", new { page_name = item.PageName.ToLower(), partial_profile = "true" }, new { target = "_blank" })
+                                }
+                            </td>
+
+                            <td>
+                                @if (item.TypeListing == "SoberLivingSurvey")
+                                {
+                                    if (item.InActive.HasValue && item.InActive.Value)
+                                    {
+                                        @Html.ActionLink(" Make link Active ", "activate", "adminreport", new { page_name = item.PageName.ToLower(), surveytype = "SoberLivingSurvey", isinactive = false }, new { target = "_blank", @style = "color:red;" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink(" Make link InActive ", "activate", "adminreport", new { page_name = item.PageName.ToLower(), surveytype = "SoberLivingSurvey", isinactive = true }, new { target = "_blank" })
+                                    }
+
+                                    @Html.ActionLink(" Edit Normal", "editsoberliving", "directory", new { page_name = item.PageName.ToLower() }, new { target = "_blank" })
+                                    @Html.ActionLink(" Edit Partial", "editsoberliving", "directory", new { page_name = item.PageName.ToLower(), partial_profile = "true" }, new { target = "_blank" })
+                                    @Html.ActionLink(" Delete Sober Living ", "deletesoberliving", "adminreport", new { facility = item.PageName, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }, new { onclick = "return confirm('Are you sure you wish to delete ?');" })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink(" Add Normal", "addsoberliving", "directory", new { page_name = item.PageName.ToLower() }, new { target = "_blank" })
+                                    @Html.ActionLink(" Add Partial", "addsoberliving", "directory", new { page_name = item.PageName.ToLower(), partial_profile = "true" }, new { target = "_blank" })
+                                }
+                            </td>
+                            <td>
+                                @Html.ActionLink(" Delete Listing ", "deletelisting", "adminreport", new { facility = item.PageName.ToLower(), sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }, new { onclick = "return confirm('Are you sure you wish to delete ?');" })
+                            </td>
+
+                            <td>
+                                @Html.ActionLink(" Admin Settings ", "modify_admin", "adminreport", new { pagename = item.PageName.ToLower() }, new { target = "_blank" })
+                            </td>
+                            <td>
+
+
+                                @if (item.TypeListing == "TreatmentCenterSurvey")
+                                {
+                                    @Html.ActionLink(" -TC-", "options", "rehab_reviews", new { pagename = item.PageName.ToLower(), surveytype = "TreatmentCenterSurvey" }, new { target = "_blank" })
+                                }
+
+                                @if (item.TypeListing == "SoberLivingSurvey")
+                                {
+                                    @Html.ActionLink(" -SL-", "options", "rehab_reviews", new { pagename = item.PageName.ToLower(), surveytype = "SoberLivingSurvey" }, new { target = "_blank" })
+                                }
+                            </td>
+                            <td>
+                                @Html.ActionLink(" Alumni ", "alumni_assigned_to_listing", "alumni", new { pagename = item.PageName.ToLower() }, new { target = "_blank" })
+                            </td>
+                            <td>
+                                @Html.ActionLink("Map", "MapToSamhsaListing", "UserManagement", new { pagename = item.PageName.ToLower() }, new { target = "_blank" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-6">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+            </div>
+            <div class="col-md-6">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, States = ViewBag.SelectedState, Categories = ViewBag.SelectedCategory, EnhancedOnly = ViewBag.EnhancedOnly, SlCheckBox = ViewBag.SlCheckBox, TcCheckBox = ViewBag.TcCheckBox, NotEnhanced = ViewBag.NotEnhanced, dateFilter = ViewBag.dateFilter, startDate = ViewBag.StartDate, endDate = ViewBag.EndDate }))
+            </div>
+        </div>
+    </div>
+</div>

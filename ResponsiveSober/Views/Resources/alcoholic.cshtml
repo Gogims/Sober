@@ -1,0 +1,622 @@
+﻿@model MvcApplication4.Models.Alcoholic
+
+@{
+    ViewBag.Title = "Am I Alcoholic?";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li class="active">Am I an Alcoholic?</li>
+        </ol>
+
+        <div class="row aic">
+            <div class="col-md-12">
+                @Html.Partial("_AdResponsive")
+            </div>
+
+            <div class="col-md-12">
+                <h2 class="panel box blue-bg">Am I an Alcoholic?</h2>
+            </div>
+
+            <div class="col-md-12">
+                <p>Please take this Full Test (12 questions) or the Quick Test (4 questions) to see if you are at risk of being an alcoholic or would be considered an alcoholic based on your drinking habits.</p>
+            </div>
+
+            <div class="col-md-12">
+                <ul class="nav nav-tabs responsive" id="myTab">
+                    <li class="active"><a href="#FT" data-toggle="tab">Full Test Recommended</a></li>
+                    <li><a href="#QT" data-toggle="tab">Quick Test</a></li>
+                    <li style="float: right;">
+                        @Html.Partial("_AdShareaholic", 16287771)
+                    </li>
+                </ul>
+
+                <div class="tab-content responsive">
+                    <div id="FT" class="tab-pane active">
+                        <div class="form-group">
+                            <h5>1. You drink alcohol how often?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn1a" class="rad-btn-s" name="HowOftenDoYouDrinkAlcohol" value="0" />
+                                    <label for="n" class="rad-btn-label-s">Never</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn1b" class="rad-btn-s" name="HowOftenDoYouDrinkAlcohol" value="1" />
+                                    <label for="n" class="rad-btn-label-s">Monthly or less</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn1c" class="rad-btn-s" name="HowOftenDoYouDrinkAlcohol" value="2" />
+                                    <label for="24m" class="rad-btn-label-s">2 to 4 times a month </label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn1d" class="rad-btn-s" name="HowOftenDoYouDrinkAlcohol" value="3" />
+                                    <label for="23w" class="rad-btn-label-s">2 to 3 times a week</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn1e" class="rad-btn-s" name="HowOftenDoYouDrinkAlcohol" value="4" />
+                                    <label for="4w" class="rad-btn-label-s">4 or more times a week</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>2. On a typical day drinking alcohol, how many do you have?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn2a" class="rad-btn-s" name="HowManyDrinksOnATypicalDay" value="0" />
+                                    <label for="12d" class="rad-btn-label-s">1 or 2 drinks</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn2b" class="rad-btn-s" name="HowManyDrinksOnATypicalDay" value="1" />
+                                    <label for="34d" class="rad-btn-label-s">3 or 4 drinks</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn2c" class="rad-btn-s" name="HowManyDrinksOnATypicalDay" value="2" />
+                                    <label for="56d" class="rad-btn-label-s">5 or 6 drinks</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn2d" class="rad-btn-s" name="HowManyDrinksOnATypicalDay" value="3" />
+                                    <label for="789d" class="rad-btn-label-s">7, 8, or 9 drinks </label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn2e" class="rad-btn-s" name="HowManyDrinksOnATypicalDay" value="4" />
+                                    <label for="10d" class="rad-btn-label-s">10 or more drinks</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>3. How many occasions do you have 6 or more drinks?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn3a" class="rad-btn-s" name="HowManyOcassionsSixOrMoreDrinks" value="0" />
+                                    <label for="3a" class="rad-btn-label-s">Never</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn3b" class="rad-btn-s" name="HowManyOcassionsSixOrMoreDrinks" value="1" />
+                                    <label for="3b" class="rad-btn-label-s">Less than monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn3c" class="rad-btn-s" name="HowManyOcassionsSixOrMoreDrinks" value="2" />
+                                    <label for="3c" class="rad-btn-label-s">Monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn3d" class="rad-btn-s" name="HowManyOcassionsSixOrMoreDrinks" value="3" />
+                                    <label for="3d" class="rad-btn-label-s">Weekly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn3e" class="rad-btn-s" name="HowManyOcassionsSixOrMoreDrinks" value="4" />
+                                    <label for="3e" class="rad-btn-label-s">Daily or almost daily</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>4. During the past twelve months once you start drinking how often have you found that you were not able to stop drinking during those occasions?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn4a" class="rad-btn-s" name="OccasionsNotAbleToStopDrinking" value="0" />
+                                    <label for="4a" class="rad-btn-label-s">Never</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn4b" class="rad-btn-s" name="OccasionsNotAbleToStopDrinking" value="1" />
+                                    <label for="4b" class="rad-btn-label-s">Less than monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn4c" class="rad-btn-s" name="OccasionsNotAbleToStopDrinking" value="2" />
+                                    <label for="4c" class="rad-btn-label-s">Monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn4d" class="rad-btn-s" name="OccasionsNotAbleToStopDrinking" value="3" />
+                                    <label for="4d" class="rad-btn-label-s">Weekly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn4e" class="rad-btn-s" name="OccasionsNotAbleToStopDrinking" value="4" />
+                                    <label for="4e" class="rad-btn-label-s">Daily or almost daily</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>5. During the past twelve months how often have you failed because of drinking to do what was normally expected of you?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn5a" class="rad-btn-s" name="OcassionsFailedDueToDrinking" value="0" />
+                                    <label for="5a" class="rad-btn-label-s">Never</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn5b" class="rad-btn-s" name="OcassionsFailedDueToDrinking" value="1" />
+                                    <label for="5b" class="rad-btn-label-s">Less than monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn5c" class="rad-btn-s" name="OcassionsFailedDueToDrinking" value="2" />
+                                    <label for="5c" class="rad-btn-label-s">Monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn5d" class="rad-btn-s" name="OcassionsFailedDueToDrinking" value="3" />
+                                    <label for="5d" class="rad-btn-label-s">Weekly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn5e" class="rad-btn-s" name="OcassionsFailedDueToDrinking" value="4" />
+                                    <label for="5e" class="rad-btn-label-s">Daily or almost daily</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>6. During the past twelve months how often have you been unable to remember what happened the previous night because due to drinking?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn6a" class="rad-btn-s" name="OcassionsUnableToRemember" value="0" />
+                                    <label for="6a" class="rad-btn-label-s">Never</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn6b" class="rad-btn-s" name="OcassionsUnableToRemember" value="1" />
+                                    <label for="6b" class="rad-btn-label-s">Less than monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn6c" class="rad-btn-s" name="OcassionsUnableToRemember" value="2" />
+                                    <label for="6c" class="rad-btn-label-s">Monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn6d" class="rad-btn-s" name="OcassionsUnableToRemember" value="3" />
+                                    <label for="6d" class="rad-btn-label-s">Weekly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn6e" class="rad-btn-s" name="OcassionsUnableToRemember" value="4" />
+                                    <label for="6e" class="rad-btn-label-s">Daily or almost daily</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>7. During the past twelve months often have you needed a morning drink to get yourself going after heavy drinking the previous night?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn7a" class="rad-btn-s" name="OcassionsNeededAMorningDrink" value="0" />
+                                    <label for="7a" class="rad-btn-label-s">Never</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn7b" class="rad-btn-s" name="OcassionsNeededAMorningDrink" value="1" />
+                                    <label for="7b" class="rad-btn-label-s">Less than monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn7c" class="rad-btn-s" name="OcassionsNeededAMorningDrink" value="2" />
+                                    <label for="7c" class="rad-btn-label-s">Monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn7d" class="rad-btn-s" name="OcassionsNeededAMorningDrink" value="3" />
+                                    <label for="7d" class="rad-btn-label-s">Weekly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn7e" class="rad-btn-s" name="OcassionsNeededAMorningDrink" value="4" />
+                                    <label for="7e" class="rad-btn-label-s">Daily or almost daily</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>8. During the past twelve months how often have you had a feeling of remorse or guilt after drinking?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn8a" class="rad-btn-s" name="OcassionsFeelingRemorseOrGuilt" value="0" />
+                                    <label for="8a" class="rad-btn-label-s">Never</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn8b" class="rad-btn-s" name="OcassionsFeelingRemorseOrGuilt" value="1" />
+                                    <label for="8b" class="rad-btn-label-s">Less than monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn8c" class="rad-btn-s" name="OcassionsFeelingRemorseOrGuilt" value="2" />
+                                    <label for="8c" class="rad-btn-label-s">Monthly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn8d" class="rad-btn-s" name="OcassionsFeelingRemorseOrGuilt" value="3" />
+                                    <label for="8d" class="rad-btn-label-s">Weekly</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn8e" class="rad-btn-s" name="OcassionsFeelingRemorseOrGuilt" value="4" />
+                                    <label for="8e" class="rad-btn-label-s">Daily or almost daily</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>9. Has your drinking caused injury to you or someone?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn9a" class="rad-btn-s" name="DrinkingCausedInjuryToSomeone" value="0" />
+                                    <label for="9a" class="rad-btn-label-s">No</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn9b" class="rad-btn-s" name="DrinkingCausedInjuryToSomeone" value="2" />
+                                    <label for="9b" class="rad-btn-label-s">Yes, but not in the past twelve months</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn9c" class="rad-btn-s" name="DrinkingCausedInjuryToSomeone" value="4" />
+                                    <label for="9c" class="rad-btn-label-s">Yes, during the past twelve months</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>10. Have friends, family, or healthcare professionals communicate their concerns about your drinking or recommend that you cut back or quit?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn10a" class="rad-btn-s" name="FriendsCommunicateConcerns" value="0" />
+                                    <label for="10a" class="rad-btn-label-s">No</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn10b" class="rad-btn-s" name="FriendsCommunicateConcerns" value="2" />
+                                    <label for="10b" class="rad-btn-label-s">Yes, but not in the past twelve months</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn10c" class="rad-btn-s" name="FriendsCommunicateConcerns" value="4" />
+                                    <label for="10c" class="rad-btn-label-s">Yes, during the past twelve months</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>11. What is your gender:</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn11a" class="rad-btn-s" name="Gender" value="Male" />
+                                    <label for="11a" class="rad-btn-label-s">Male</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="RdBtn11b" class="rad-btn-s" name="Gender" value="Female" />
+                                    <label for="11b" class="rad-btn-label-s">Female</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>12. How many drinks do you consume during the average week?</h5>
+
+                            <select id="NofDrinksInAverageWeek" class="selectpicker">
+                                <option value="0">0</option>
+                                <option value="3">1-5</option>
+                                <option value="7">6-10</option>
+                                <option value="15">11-20</option>
+                                <option value="20">21-30</option>
+                                <option value="35">31-40</option>
+                                <option value="45">41-50</option>
+                                <option value="55">51-60</option>
+                                <option value="70">61-80</option>
+                                <option value="90">81-99</option>
+                                <option value="100">100+</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="button" class="col-md-2 btn btn-primary" value="Submit" onclick="AlcoholicFullTest();" />
+                            <a id="top" class="col-md-1 btn">Go to top</a>
+                        </div>
+                    </div>
+
+                    <div id="QT" class="tab-pane">
+                        <div class="form-group">
+                            <h5>1. How many drinks do you consume during the average week?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="1a" class="rad-btn-s" name="NofAverageDrinksInWeek" value="0" />
+                                    <label for="1a" class="rad-btn-label-s">1</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="1b" class="rad-btn-s" name="NofAverageDrinksInWeek" value="2" />
+                                    <label for="1b" class="rad-btn-label-s">2</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="1c" class="rad-btn-s" name="NofAverageDrinksInWeek" value="3" />
+                                    <label for="1c" class="rad-btn-label-s">3</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="1d" class="rad-btn-s" name="NofAverageDrinksInWeek" value="4" />
+                                    <label for="1d" class="rad-btn-label-s">4</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="1e" class="rad-btn-s" name="NofAverageDrinksInWeek" value="5" />
+                                    <label for="1e" class="rad-btn-label-s">5</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="1f" class="rad-btn-s" name="NofAverageDrinksInWeek" value="6" />
+                                    <label for="1f" class="rad-btn-label-s">6 or more</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>2. Have people annoyed you by criticizing your drinking?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="2a" class="rad-btn-s" name="CriticizeDrinking" value="10" />
+                                    <label for="2a" class="rad-btn-label-s">Yes</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="2b" class="rad-btn-s" name="CriticizeDrinking" value="0" />
+                                    <label for="2b" class="rad-btn-label-s">No</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>3. Have you ever felt you ought to cut down on your drinking?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="3a" class="rad-btn-s" name="CutDownDrinking" value="10" />
+                                    <label for="3a" class="rad-btn-label-s">Yes</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="3b" class="rad-btn-s" name="CutDownDrinking" value="0" />
+                                    <label for="3b" class="rad-btn-label-s">No</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>4. Have you ever had a drink first thing in the morning to steady your nerves or get rid of a hangover?</h5>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="4a" class="rad-btn-s" name="HangoverDrink" value="10" />
+                                    <label for="4a" class="rad-btn-label-s">Yes</label>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" id="4b" class="rad-btn-s" name="HangoverDrink" value="0" />
+                                    <label for="4b" class="rad-btn-label-s">No</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" value="Submit" onclick="AlcoholicQuickTest();" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    @Html.Partial("_AdResponsive")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $('#top').click(function () {
+        $('a[href="#FT"]').focus();
+    });
+
+    function AlcoholicFullTest() {
+        var howOftenDoYouDrinkAlcohol = parseInt($('input[name=HowOftenDoYouDrinkAlcohol]:checked').val());
+        if (isNaN(howOftenDoYouDrinkAlcohol)) {
+            alert("Please enter How often do you drink");
+            $('#RdBtn1a').focus();
+            return false;
+        }
+        var howManyDrinksOnATypicalDay = parseInt($('input[name=HowManyDrinksOnATypicalDay]:checked').val());
+        if (isNaN(howManyDrinksOnATypicalDay)) {
+            alert("Please enter drinks on a typical day");
+            $('#RdBtn2a').focus();
+            return false;
+        }
+        var howManyOcassionsSixOrMoreDrinks = parseInt($('input[name=HowManyOcassionsSixOrMoreDrinks]:checked').val());
+        if (isNaN(howManyOcassionsSixOrMoreDrinks)) {
+            alert("Please enter occasions six or more drinks");
+            $('#RdBtn3a').focus();
+            return false;
+        }
+        var occasionsNotAbleToStopDrinking = parseInt($('input[name=OccasionsNotAbleToStopDrinking]:checked').val());
+        if (isNaN(occasionsNotAbleToStopDrinking)) {
+            alert("Please enter occasions not able to stop drinking");
+            $('#RdBtn4a').focus();
+            return false;
+        }
+        var ocassionsFailedDueToDrinking = parseInt($('input[name=OcassionsFailedDueToDrinking]:checked').val());
+        if (isNaN(ocassionsFailedDueToDrinking)) {
+            alert("Please enter occasions failed due to drinking");
+            $('#RdBtn5a').focus();
+            return false;
+        }
+        var ocassionsUnableToRemember = parseInt($('input[name=OcassionsUnableToRemember]:checked').val());
+        if (isNaN(ocassionsUnableToRemember)) {
+            alert("Please enter occasions unable to remember");
+            $('#RdBtn6a').focus();
+            return false;
+        }
+        var ocassionsNeededAMorningDrink = parseInt($('input[name=OcassionsNeededAMorningDrink]:checked').val());
+        if (isNaN(ocassionsNeededAMorningDrink)) {
+            alert("Please enter occasions needed morning drink");
+            $('#RdBtn7a').focus();
+            return false;
+        }
+        var ocassionsFeelingRemorseOrGuilt = parseInt($('input[name=OcassionsFeelingRemorseOrGuilt]:checked').val());
+        if (isNaN(ocassionsFeelingRemorseOrGuilt)) {
+            alert("Please enter occassions feeling remorse");
+            $('#RdBtn8a').focus();
+            return false;
+        }
+        var drinkingCausedInjuryToSomeone = parseInt($('input[name=DrinkingCausedInjuryToSomeone]:checked').val());
+        if (isNaN(drinkingCausedInjuryToSomeone)) {
+            alert("Please enter How often do you drink");
+            $('#RdBtn9a').focus();
+            return false;
+        }
+        var friendsCommunicateConcerns = parseInt($('input[name=FriendsCommunicateConcerns]:checked').val());
+        if (isNaN(friendsCommunicateConcerns)) {
+            alert("Please enter friends and familys concerns");
+            $('#RdBtn10a').focus();
+            return false;
+        }
+        var gender = $('input[name=Gender]:checked').val();
+
+        var nofDrinksInAverageWeek = parseInt($('#NofDrinksInAverageWeek').val());
+        if (isNaN(nofDrinksInAverageWeek)) {
+            alert("Please enter number of drinks in average week");
+            $('#NofDrinksInAverageWeek').focus();
+            return false;
+        }
+        var score = howOftenDoYouDrinkAlcohol + howManyDrinksOnATypicalDay + howManyOcassionsSixOrMoreDrinks + occasionsNotAbleToStopDrinking + ocassionsFailedDueToDrinking + ocassionsUnableToRemember + ocassionsNeededAMorningDrink + ocassionsFeelingRemorseOrGuilt + drinkingCausedInjuryToSomeone + friendsCommunicateConcerns + nofDrinksInAverageWeek;
+        location.href = '@Url.Action("alcoholic_results", "resources", new { score = "_score_", type = "FullTest" })'.replace('_score_', score);
+    }
+
+    function AlcoholicQuickTest() {
+        var NofAverageDrinksInWeek = parseInt($('input[name=NofAverageDrinksInWeek]:checked').val());
+        if (isNaN(NofAverageDrinksInWeek)) {
+            alert("Please enter number of drinks in average week");
+            $('#1a').focus();
+            return false;
+        }
+        var CriticizeDrinking = parseInt($('input[name=CriticizeDrinking]:checked').val());
+        if (isNaN(CriticizeDrinking)) {
+            alert("Please enter drinking criticized");
+            $('#2a').focus();
+            return false;
+        }
+        var CutDownDrinking = parseInt($('input[name=CutDownDrinking]:checked').val());
+        if (isNaN(CutDownDrinking)) {
+            alert("Please enter drinking cut down");
+            $('#3a').focus();
+            return false;
+        }
+        var HangoverDrink = parseInt($('input[name=HangoverDrink]:checked').val());
+        if (isNaN(HangoverDrink)) {
+            alert("Please enter How often do you drink for hangover");
+            $('#4a').focus();
+            return false;
+        }
+        var score = NofAverageDrinksInWeek + CriticizeDrinking + CutDownDrinking + HangoverDrink;
+        location.href = '@Url.Action("alcoholic_results", "resources", new { score = "_score_", type = "QuickTest" })'.replace('_score_', score);
+    }
+</script>
+
+

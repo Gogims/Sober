@@ -1,0 +1,178 @@
+﻿@model SoberBLL.AddListings.SamhsaTreatmentCenter
+
+@{
+    ViewBag.Title = "editsamhsatreatmentcenter";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<link href="~/content/CustomStyle.css" rel="stylesheet" />
+<script src="~/Scripts/PhoneMask.js"></script>
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+<script src="~/Scripts/jquery.sortable.min.js"></script>
+<link href="~/Content/Sortable.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<div class="content white-bg">
+    <div class="container">
+        @using(Html.BeginForm())
+        {
+            <div class="row">
+                <div class="row">
+                    <div class="col-md-12 panel-group">
+                        <h4 class="panel box expander">Your details</h4>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-cont row">
+                @Html.EditorFor(x => x.TH)
+            </div>
+            
+            <div class="row">
+                @Html.EditorFor(x => x.TC)
+            </div>
+            
+            <div class="row">
+                <div class="row">
+                    <div class="col-md-2">
+                        <button id="editsamhsatc" type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    function checkMaxFiveCheckBoxes() {
+        var message = "";
+        var display = false;
+        var errcount = 0;
+        var setfocus = true;
+
+        $(".maxthreecheckboxes").each(function (i) {
+            if ($(this).find(":checked").length > 5) {
+                message = $(this).find("label").first().text();
+                var index = message.indexOf("*");
+                if (index > 0) {
+                    message = message.substr(0, index - 1);
+                }
+
+                $(this).find("span.err-msg").first().text(message);
+                errcount++;
+                if (setfocus) {
+                    $(this).find("input").first().focus();
+                    setfocus = false;
+                }
+            }
+            else {
+                $(this).find("span.err-msg").first().text("");
+            }
+        });
+        if (errcount > 0) {
+            return false;
+        }
+        else
+            return true;
+    }
+
+    function TCcheckAtLeastOneCheckBox() {
+        var message = "";
+        var display = false;
+        var errcount = 0;
+
+        $(".atleastonecheckbox").each(function (i) {
+            if ($(this).find(":checked").length == 0) {
+                message = "Please select at least one " + $(this).find("label").first().text();
+                var index = message.indexOf("*");
+                if (index > 0) {
+                    message = message.substr(0, index - 1);
+                }
+
+                $(this).find("span.err-msg").first().text(message);
+                errcount++;
+                if (setfocus) {
+                    $(this).find("input").first().focus();
+                    setfocus = false;
+                }
+
+            }
+            else {
+                $(this).find("span.err-msg").first().text("");
+            }
+        });
+
+        if (($("#TC_Res_Len_Stay_From").val() != "" && $("#TC_Res_Len_Stay_To").val() != "") || ($("#TC_OP_Len_Stay_From").val() != "" && $("#TC_OP_Len_Stay_To").val() != "") || ($("#TC_Hos_Inp_Stay_From").val() != "" && $("#TC_Hos_Inp_Stay_To").val() != "") ||
+            ($("#TC_IOP_Len_Stay_From").val() != "" && $("#TC_IOP_Len_Stay_To").val() != "")) {
+            $("#AverageLengthOfStay").find("span.err-msg").first().text("");
+        }
+        else {
+            $("#AverageLengthOfStay").find("span.err-msg").first().text("Please select at least one pair of values");
+            $("#AverageLengthOfStay").find("input").focus();
+            errcount++;
+        }
+
+        if (($("#TC_Res_avg_Cost_From").val() != "" && $("#TC_Res_avg_Cost_To").val() != "") || ($("#TC_OP_avg_Cost_From").val() != "" && $("#TC_OP_avg_Cost_To").val() != "") || ($("#TC_Hos_Inp_Cost_From").val() != "" && $("#TC_Hos_Inp_Cost_To").val() != "") ||
+            ($("#TC_IOP_cost_session_From").val() != "" && $("#TC_IOP_cost_session_To").val() != "") || ($("#TC_IOP_cost_week_From").val() != "" && $("#TC_IOP_cost_week_To").val() != "") || ($("#TC_IOP_cost_month_From").val() != "" && $("#TC_IOP_cost_month_To").val() != "")) {
+            $("#AverageCostOfStay").find("span.err-msg").first().text("");
+        }
+        else {
+            $("#AverageCostOfStay").find("span.err-msg").first().text("Please select at least one pair of values");
+            $("#AverageCostOfStay").find("input").focus();
+            errcount++;
+        }
+
+        if (errcount > 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    $(document).ready(function () {
+        $('.expander').click();
+
+        $('#editsamhsatc').click(function () {
+            $('.panel-cont').show();
+        });
+
+        $('form').submit(function (e) {
+            if (!TCcheckAtLeastOneCheckBox()) {
+                e.preventDefault();
+                return;
+            }            
+
+            if ($("#TC_NoInsuranceAccepted").is(":checked")) {
+                $("#rightvalues").empty();
+            }
+            else {
+                $("#rightvalues option").prop('selected', true);
+            }
+
+            for (var i in CKEDITOR.instances) {
+                (function (i) {
+                    var name = '#' + CKEDITOR.instances[i].name;
+                    var maxlength = parseInt($(name).attr('maxlength'));
+                    var length = CKEDITOR.instances[i].getData().trim().length;
+
+                    if (length > maxlength) {
+                        alert(CKEDITOR.instances[i].name + " surpassed the " + maxlength);
+                        CKEDITOR.instances[i].focus();
+                        e.preventDefault();
+                    }
+
+                    $(name).val(CKEDITOR.instances[i].getData().trim());
+                })(i);
+            }
+
+            if (checkMaxFiveCheckBoxes()) {
+                $('#TH_List_chckBox_AssociatedCategories_11__IsSelected').removeAttr("disabled");
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+    });
+</script>

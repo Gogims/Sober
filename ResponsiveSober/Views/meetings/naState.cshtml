@@ -1,0 +1,75 @@
+﻿@model SoberModel.NaMeetingsCombined
+
+@{
+    Layout = "~/Views/Shared/_Master.cshtml";
+        
+    string stateCapitalization = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Model.MyNaMeeting.statename.ToLower());
+    
+    ViewBag.Title = "NA Meetings in " + Model.States[0].State + " - " + stateCapitalization;
+    
+    string header2 = "NA meetings in " + stateCapitalization;
+    int total = 0;
+
+    foreach (var item in Model.States[0].Cities)
+    {
+        total += item.CityCount;
+    }
+}
+
+@section head {
+    <meta name="description" content="List of all @total NA meetings in @stateCapitalization right here! Search by location, day, time, or meeting format plus pictures and directions.">
+}
+
+<div class="white-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <ol class="breadcrumb">
+                    <li><a href="@Url.Action("index", "home")">Home</a></li>
+                    <li><a href="@Url.Action("na", "meetings")">NA Meetings</a></li>
+                    <li class="active">@stateCapitalization</li>
+                </ol>
+            </div>
+
+            <div class="col-md-6">
+                @Html.Partial("_AdShareaholic", 16287771)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="na-header">
+    <div class="container">
+        @Html.Partial("_searchNA", Model)
+    </div>
+</div>
+
+<div class="white-bg">
+    <div class="container">
+        <div class="row" style="text-align: center">
+            @Html.Partial("_Ad728x90")
+        </div>
+
+        <h1>@header2</h1>
+
+        <div class="row">
+            @foreach (var states in @Model.States)
+            {
+                if (states.Cities == null || !states.State.ToLower().Equals(Model.MyNaMeeting.state.ToLower()))
+                {
+                    continue;
+                }
+                foreach (var city in states.Cities)
+                {
+                    <div class="col-md-3">
+                        @Html.ActionLink(city.CityName + " NA Meetings " + "(" + city.CityCount + ")", "na", "meetings", new { city = city.CityName.ToLower(), state = states.StateFullName.ToLower(), timeStart24Hour = @Model.MyNaMeeting.timeStart24Hour, timeEnd24Hour = @Model.MyNaMeeting.timeEnd24Hour, distance = @Model.MyNaMeeting.miles, format = @Model.MyNaMeeting.FormatMeeting }, new { target = "_blank" })
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="row">
+            @Html.Partial("_AdResponsive")
+        </div>
+    </div>
+</div>

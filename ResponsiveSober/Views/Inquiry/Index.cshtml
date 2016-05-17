@@ -1,0 +1,58 @@
+﻿@model IEnumerable<SoberModel.InquiryForm>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+
+        <h2 class="panel box blue-bg">Inquiry</h2>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-listing">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Preffered Contact</th>
+                        <th>Facility Name</th>
+                        <th>Facility Type</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Phone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PreferredContact)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.facilityName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.facilityType)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Details", "Details", new { id = item.InquiryID })
+                                @Html.ActionLink("Delete", "Delete", new { id = item.InquiryID })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

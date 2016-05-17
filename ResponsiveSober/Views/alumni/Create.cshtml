@@ -1,0 +1,30 @@
+﻿@model SoberModel.FamousAlumni
+
+@using (Html.BeginForm("create", "alumni", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <h2>Add an Alumni:</h2>
+        <div class="row">
+            <div class="col-md-12 form-group required">
+                <label>Alumni Name<span>*</span>:</label>
+                @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+            </div>
+            <div class="col-md-12 form-group required">
+                <label>Alumni Image (gif,jpg,png)<span>*</span>:</label>
+                <input type="file" name="logo" accept="image/gif, image/jpeg, image/png" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <button id="addinsr" class="btn btn-primary">Submit</button>
+            </div>
+
+            @if (TempData["gobacktreatmentcenterid"] != null)
+            {
+                <div class="col-md-4">
+                    @Html.ActionLink("Back To Approval", "approve_treatment_center", "directory", new { userId = Convert.ToInt32(TempData["gobacktreatmentcenterid"]) }, new { @id = "asd", @class = "btn btn-primary" })
+                </div>
+            }
+        </div>
+    </div>
+}

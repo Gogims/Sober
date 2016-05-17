@@ -1,0 +1,96 @@
+﻿@model MvcApplication4.Models.IAlcoholicResults
+
+@{
+    ViewBag.Title = "Am I Alcoholic?";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+<div class="content white-bg">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Partial("_AdResponsive")
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                    Am I an alcoholic? Test Results @DateTime.Now.ToShortDateString()
+                    <span style="float: right;">
+                        @Html.Partial("_AdShareaholic", 16287771)
+                    </span>
+                </h2>
+            </div>
+        </div>
+
+        <div class="row">
+
+            @{
+                int num = @Model.Score;
+                int rounded = 0;
+            }
+            @if (num <= 50)
+            {
+                rounded = 20;
+            }
+            @if (num > 25 && num <= 35)
+            {
+                rounded = 30;
+            }
+            @if (num > 35 && num <= 45)
+            {
+                rounded = 40;
+            }
+            @if (num > 45 && num <= 55)
+            {
+                rounded = 50;
+            }
+            @if (num > 55 && num <= 65)
+            {
+                rounded = 60;
+            }
+            @if (num > 65 && num <= 75)
+            {
+                rounded = 70;
+            }
+            @if (num > 75 && num <= 85)
+            {
+                rounded = 80;
+            }
+            @if (num > 85)
+            {
+                rounded = 90;
+            }
+            @{
+                string levelImage = "http://www.sober.com/contents//resources/level" + @Model.Level + ".jpg";
+                string scoreImage = "http://www.sober.com/contents//resources/" + @rounded + "percent.jpg";                
+            }
+
+            <div class="col-md-8">
+                <img src="@levelImage" />
+                <img src="@scoreImage" />
+            </div>
+            <div class="col-md-4">
+                @foreach (var x in @Model.ResultDescription)
+                {
+                    <p>@x</p>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            @Html.Partial("_AdResponsive")
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var wid = window.screen.availWidth;
+
+        if (wid > 1200) {
+            $('img').addClass("originalWidth");
+        }
+    });
+</script>

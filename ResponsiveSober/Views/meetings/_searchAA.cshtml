@@ -1,0 +1,70 @@
+﻿@model SoberModel.AAMeetingsCombined
+
+@using (Html.BeginForm("aa", "meetings", FormMethod.Post, new { enctype = "multipart/form-data", @class = "row" }))
+{
+    <div class="col-md-3 form-group">
+        <label>Keyword</label>
+        @Html.TextBoxFor(model => model.MyAAMeeting.name, new { @class = "form-control", @placeholder = "keyword" })
+    </div>
+    <div class="col-md-4 form-group">
+        <label>Location</label>
+        @Html.TextBoxFor(model => model.MyAAMeeting.address, new { @class = "form-control", @placeholder = "City, State, or Zip" })
+    </div>
+    <div class="col-md-2 form-group">
+        <label>Distance</label>
+        @Html.DropDownListFor(model => model.MyAAMeeting.miles, new SelectList(Model.GetDistances(), "Key", "Value", Model.MyAAMeeting.miles), new { @class = "selectpicker" })
+    </div>
+    <div class="col-md-3 form-group">
+        <label>Format</label>
+        @Html.DropDownListFor(model => model.MyAAMeeting.FormatMeeting, new SelectList(Model.GetFormats(false, Model.MyAAMeeting.type), "Key", "Value", Model.MyAAMeeting.FormatMeeting), "Any", new { @class = "selectpicker" })
+    </div>
+    <div class="col-md-2 form-group">
+        <label>Day</label>
+        @Html.DropDownListFor(model => model.MyAAMeeting.day, new SelectList(Model.GetDays(), "Key", "Value", Model.MyAAMeeting.day), "Any", new { @class = "selectpicker" })
+    </div>
+    <div class="col-md-3">
+        <label>Meetings Start Time</label>
+        <div class="row  new-grid">
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.MyAAMeeting.timeStart24Hour, new SelectList(Model.GetTimes(), "Key", "Value", Model.MyAAMeeting.timeStart24Hour), "From", new { @class = "selectpicker" })
+            </div>
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.MyAAMeeting.timeEnd24Hour, new SelectList(Model.GetTimes(), "Key", "Value", Model.MyAAMeeting.timeEnd24Hour), "To", new { @class = "selectpicker" })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 form-group">
+        <label>Open to Public</label>
+        @Html.DropDownListFor(model => model.MyAAMeeting.ClosedToPublic, new SelectList(Model.GetMeetingStyles(), "Key", "Value"), "Any", new { @class = "selectpicker" })
+    </div>
+    <div class="col-md-2 form-group">
+        <label>Other Criteria</label>
+        @Html.DropDownListFor(model => model.MyAAMeeting.FormatMeeting, new SelectList(Model.GetFormats(true, Model.MyAAMeeting.type), "Key", "Value", Model.MyAAMeeting.FormatMeeting), new { @class = "selectpicker", @multiple = true })
+    </div>
+    <div class="col-md-2 form-group">
+        <br />
+        <button type="submit" class="btn btn-primary" style="background: rgb(97, 7, 7); border: 1px solid rgb(97, 7, 7); margin-top: 5px;">Search</button>
+    </div>
+}
+
+@*For autocomplete*@
+<script type="text/javascript">
+    function autocomplete() {
+        var autocomplete;
+        var input = document.getElementById('MyAAMeeting_address');
+        var options = {
+            componentRestrictions: { country: 'us' }
+        };
+        autocomplete = new google.maps.places.Autocomplete(input, options);
+    }
+
+    function loadScript() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places&callback=autocomplete';
+        document.body.appendChild(script);
+    }
+
+    window.onload = loadScript;
+
+</script>

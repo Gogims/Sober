@@ -1,0 +1,11 @@
+﻿@model SoberBLL.AdvancedSearchListings
+@{
+    ViewBag.Title = "Advanced Search";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="content white-bg">
+    <div class="container">
+        @Html.Partial("_AdvancedSearch", @Model)
+    </div>
+</div>

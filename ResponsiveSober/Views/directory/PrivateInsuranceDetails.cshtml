@@ -1,0 +1,49 @@
+﻿@model SoberModel.Insurance
+
+@{
+    ViewBag.Title = "Rehabs accepting " + Model.Ins_ProviderName;
+    Layout = "~/Views/Shared/_Master.cshtml";
+
+    SoberBLL.Directory.BLL_Listings bllListings = new SoberBLL.Directory.BLL_Listings();
+    var mapsListings = bllListings.GetListingsByInsurance(Model.Ins_ProviderName);
+}
+
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li><a href="@Url.Action("insurance-companies-covering-rehab", "directory")">Insurance Companies</a></li>
+            <li class="active">@Model.Ins_ProviderName</li>
+        </ol>
+
+        <h1 class="main-title-s">Rehab centers accepting @Model.Ins_ProviderName</h1>
+
+        <div class="col-md-12">
+            @Html.Partial("_mapsListingsInsurance", mapsListings)
+            <br />
+        </div>
+
+        <h2>Number of treatment centers in America accepting @Model.Ins_ProviderName</h2>
+
+        <div class="col-md-12">
+            @foreach (var item in Model.GetStatesWithInsurance().OrderBy(x => x.StateName))
+            {
+                <div class="col-md-3">
+                    @Html.ActionLink(@item.StateName + " (" + @item.Count + ")", "listings", "directory", new { address = @item.StateName.ToLower(), insurance = @Model.Ins_ProviderName.ToLower() }, null)
+                </div>
+            }
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Ins_AboutUs))
+        {
+            <h2>About @Model.Ins_ProviderName</h2>
+
+            <div class="originalHTML col-md-12">
+                @Html.Raw(Model.Ins_AboutUs)
+            </div>
+        }
+
+    </div>
+</div>
+

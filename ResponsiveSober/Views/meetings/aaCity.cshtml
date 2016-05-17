@@ -1,0 +1,219 @@
+﻿@model SoberModel.AAMeetingsCombined
+
+@{
+    Layout = "~/Views/Shared/_Master.cshtml";
+    
+    string cityCapitalization = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Model.MyAAMeeting.city.ToLower());
+    string stateCapitalization = "";
+
+    ViewBag.Title = "AA Meetings in " + cityCapitalization;
+
+    if (!string.IsNullOrEmpty(Model.MyAAMeeting.statename))
+    {
+        stateCapitalization = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Model.MyAAMeeting.statename.ToLower());
+        ViewBag.Title = "AA Meetings in " + cityCapitalization + " " + stateCapitalization + " - AA Meetings near me in " + stateCapitalization;
+    }    
+}
+
+<style type="text/css">
+    header {
+        padding-bottom: 0px;
+    }
+
+    .row:first-child .col-md-6 {
+        margin-bottom: 0px !important;
+    }
+</style>
+
+@section head {
+    <meta name="description" content="List of all @Model.MeetingsResultList.Count AA meetings in @cityCapitalization @stateCapitalization right here! Search by location, day, time, or meeting format plus pictures and directions.">
+}
+
+<script src="~/Scripts/responsive-tabs.js"></script>
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/jquery.dataTablesBootstrap.js"></script>
+<link href="~/Content/jquery.dataTablesBootstrap.css" rel="stylesheet" />
+
+<div class="white-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <ol class="breadcrumb">
+                    <li><a href="@Url.Action("index", "home")">Home</a></li>
+                    <li><a href="@Url.Action("aa", "meetings")">AA Meetings</a></li>
+                    <li>
+                        <a href="@Url.Action("aa", "meetings", new {state=Model.MyAAMeeting.statename.ToLower()})">@stateCapitalization</a>
+                    </li>
+                    <li class="active">@cityCapitalization</li>
+                </ol>
+            </div>
+
+            <div class="col-md-6">
+                @Html.Partial("_AdShareaholic", 16287771)
+            </div>
+        </div>        
+    </div>
+</div>
+
+<div class="na-header">
+    <div class="container">
+        @Html.Partial("_searchAA", Model)
+    </div>
+</div>
+
+<div class="content white-bg">
+    <div class="container">
+        <div class="row" style="text-align: center">
+            @Html.Partial("_Ad728x90")
+        </div>
+
+        <h2>AA meetings in @cityCapitalization @stateCapitalization</h2>
+
+        <p>
+            There are a total of @ViewBag.TotalCity
+            @Html.ActionLink(cityCapitalization + " AA meetings", "aa", "meetings", new { city = Model.MyAAMeeting.city.ToLower(), state = Model.MyAAMeeting.statename.ToLower() }, null) and @ViewBag.TotalByRange meetings
+            within 25 miles of @cityCapitalization, @stateCapitalization@Html.Raw("&#46") In addition, there are @ViewBag.RehabCity
+            <a href="@Url.Action("listings", "directory", new { @address = Model.MyAAMeeting.city.ToLower(), @rehab = "drug and alcohol treatment centers" })">treatment centers</a> within 25 miles of @cityCapitalization
+            and @ViewBag.RehabState
+            <a href="@Url.Action("listings", "directory", new { @address = @ViewBag.StateName.ToLower(), @rehab = "drug and alcohol treatment centers" })">@stateCapitalization drug and alcohol treatment centers</a>.
+        </p>
+        
+        @*TABS*@
+        <ul class="nav nav-tabs responsive" id="myTab">
+            <li class="active"><a href="#table" data-toggle="tab">Table View</a></li>
+            <li><a href="#map" data-toggle="tab">Map View</a></li>
+        </ul>
+
+        @*CONTENT*@
+        <div class="tab-content responsive">
+
+            <div class="tab-pane active" id="table">
+                <div class="table-responsive">
+                    <table id="meetings">
+                        <thead>
+                            <tr>
+                                <th>Where</th>
+                                <th>Address</th>
+                                <th>Day</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.MeetingsResultList)
+                            {
+                                string address = item.City + ", " + item.State;
+
+                                if (item.Zip.HasValue)
+                                {
+                                    address += ", " + item.Zip.Value.ToString();
+                                }
+                                <tr>
+                                    <td>@Html.ActionLink(@item.MeetingTitle, "aa_meetings", "meetings", new { place = @item.MeetingTitle.ToLower(), location = @address.ToLower(), zipcode = @item.Zip, day = @item.Day.ToLower(), meetingid = item.Id }, new { target = "_blank" }) </td>
+                                    <td>@address</td>
+                                    <td>@item.Day</td>
+                                    <td>@item.MeetingTime</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="map">
+            </div>
+        </div>
+        <br />
+
+        @if (Model.citiesNear.Count > 0)
+        {
+            <h2>Other cities close to @cityCapitalization @stateCapitalization with AA meetings</h2>
+            <div class="table-responsive">
+                <table id="meetings" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Distance</th>
+                            <th>City</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in @Model.citiesNear)
+                        {
+                            string urlquery = "city=" + item.CityName.ToLower() + "&state=" + item.state.ToLower();
+
+                            if (Model.MyAAMeeting.timeStart24Hour.HasValue)
+                            {
+                                urlquery += "&timeStart24Hour=" + Model.MyAAMeeting.timeStart24Hour.Value;                          
+                            }
+
+                            if (Model.MyAAMeeting.timeEnd24Hour.HasValue)
+                            {
+                                urlquery += "&timeEnd24Hour=" + Model.MyAAMeeting.timeEnd24Hour.Value;
+                            }
+
+                            if (Model.MyAAMeeting.FormatMeeting != null)
+                            {
+                                foreach (var format in Model.MyAAMeeting.FormatMeeting)
+                                {
+                                    urlquery += "&format=" + format;
+                                }
+                            }
+                              
+                            <tr>
+                                <td>@item.distance miles</td>
+                                <td><a href="/meetings/aa?@urlquery">@item.CityName (@item.CityCount)</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        }
+
+        <br />
+        <br />
+        @*<div class="row">
+            @{
+                var Listings = Model.MyAAMeeting.GetNearbyFreeListings();
+                ViewBag.State = Model.MyAAMeeting.state;
+            }
+
+            @if (Listings.Count > 0)
+            {
+                @Html.Partial("_rehabListings", Listings)
+            }
+        </div>*@
+
+        <div class="row">
+            @Html.Partial("_articlesAA");
+        </div>
+
+        <div class="row">
+            @Html.Partial("_AdResponsive")
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#meetings').dataTable().addClass('table table-striped table-bordered');
+
+        $('a[href="#map"]').click(function () {
+            if ($('#map').text().trim() == "") {
+                var model = '@Html.Raw(Json.Encode(Model))';
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("MeetingsMap", "meetings")',
+                    data: { meeting: model, type: '@Model.MyAAMeeting.type' },
+                    async: false,
+                    success: function (result) {
+                        $('#map').html(result);
+                    }
+                });
+            }
+        });
+    });
+</script>

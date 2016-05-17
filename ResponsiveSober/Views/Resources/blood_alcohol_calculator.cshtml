@@ -1,0 +1,662 @@
+﻿@model SoberModel.BACCalculator
+
+@{
+    ViewBag.Title = "Bloold Alcohol Content (BAC) Calculator";
+    Layout = "~/Views/Shared/_Master.cshtml";
+
+    Dictionary<int, string> gender = new Dictionary<int, string>();
+    gender.Add(1, "Male");
+    gender.Add(2, "Female");
+
+    Dictionary<int, string> _drinkingHistory = new Dictionary<int, string>();
+    _drinkingHistory.Add(1, "Below Average");
+    _drinkingHistory.Add(2, "Average");
+    _drinkingHistory.Add(3, "Above Average");
+
+    Dictionary<int, string> _TypeWeight = new Dictionary<int, string>();
+    _TypeWeight.Add(1, "Pounds");
+    _TypeWeight.Add(2, "Kilograms");
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+
+<div class="content white-bg">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("index", "home")">Home</a></li>
+            <li class="active">Blood Alchohol Calculator</li>            
+        </ol>
+
+        <div class="row aic">
+            <div class="col-md-8">
+                <h2>Blood Alchohol Calculator</h2>
+            </div>
+            <div style="bottom:30px;" class="col-md-4">                
+                @Html.Partial("_AdShareaholic", 16287771)
+            </div>
+        </div>
+
+        <div class="col-md-8 grey-bg">
+            <h4 class="text-center">Determine your Tolerance</h4>
+
+            <form id="BAC" method="post">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Weight</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(x => x.Weight, new { @class = "form-control numbersOnly" })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.DropDownListFor(x => x.TypeWeight, new SelectList(_TypeWeight, "Key", "Value", Model.TypeWeight), new { @class = "selectpicker" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Hours of drinking</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(x => x.hoursDrinking, new { @class = "form-control numbersOnly" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="anchor" data-toggle="modal" data-target="#HistoryModal">Drinking History</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DropDownListFor(x => x.DrinkingHistory, new SelectList(_drinkingHistory, "Key", "Value", Model.DrinkingHistory), new { @class = "selectpicker" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Gender</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DropDownListFor(x => x.Gender, new SelectList(gender, "Key", "Value", Model.Gender), new { @class = "selectpicker" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <h4 class="text-center">Determine your Consumed Alcohol </h4>
+
+            <form id="alcohol" class="row">
+                <input id="DrinkType" name="DrinkType" type="text" style="display: none;" />
+                <input id="Calories" name="Calories" type="text" style="display: none;" />
+
+                <div class="col-md-12 form-group">
+                    <label>Type of Drink</label>
+                    <div class="btn-group btn-group-justified" data-toggle="buttons" role="group" aria-label="...">
+                        <label class="btn btn-secondary btn-group active">
+                            <input type="radio" name="AlcoholType" class="btn" value="Beer" checked /><span>Beer</span>
+                        </label>
+
+                        <label class="btn btn-secondary btn-group">
+                            <input type="radio" name="AlcoholType" class="btn" value="Wine" /><span>Wine</span>
+                        </label>
+
+                        <label class="btn btn-secondary btn-group">
+                            <input type="radio" name="AlcoholType" class="btn" value="Spirits" /><span>Spirits</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <label id="SpecifyDrink" class="anchor" data-toggle="modal" data-target="#DrinkModal">Specific Drink Look Up (optional)</label>
+                    <p id="Brand"></p>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>Total Servings </label>
+                    <input name="TotalServings" type="text" class="form-control numbersOnly" />
+                </div>
+                <div class="col-md-4 form-group">
+                    <label class="anchor" data-toggle="modal" data-target="#ServingSizeModal">Serving Size</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input id="ServingSize" name="ServingSize" type="text" class="form-control numbersOnly" />
+                        </div>
+                        <div class="col-md-6 form-group aic">
+                            <div class="col-md-6">
+                                <div class="radio">
+                                    <label class="rdbtn">
+                                        <input type="radio" name="ServingType" value="oz" />oz
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="radio">
+                                    <label class="rdbtn">
+                                        <input type="radio" name="ServingType" value="ml" />ml
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>Percent Alcohol (0-100%)</label>
+                    <input id="PercentAlcohol" name="PercentAlcohol" type="text" class="form-control numbersOnly" />
+                </div>
+            </form>
+
+            <div class="row">
+                <div class="col-md-4"><button id="addAlcohol" type="button" class="btn btn-primary">Add Alcohol</button></div>
+                <div class="col-md-5"><button id="clearHistory" type="button" class="btn btn-primary">Clear Alcohol History</button></div>
+            </div>
+
+
+            <div class="results">
+                <h4 class="text-center">Alcohol History</h4>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table id="History" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Drink Type</th>
+                                    <th>Total Servings</th>
+                                    <th>Serving Size</th>
+                                    <th>% Alcohol</th>
+                                    <th>Calories</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <button id="calculate" class="btn btn-primary" style="font-size: 20px;">Calculate</button>
+            </div>
+
+            <div class="results">
+                <h4 class="text-center">Results</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Est. Blood Alcohol Concentration</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label id="BACResult" style="color: red;">@Model.BAC</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Est. hours to legally drive (U.S.)</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label id="DrivingResult">@Model.DrivingHour Hours</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label class="anchor" data-toggle="modal" data-target="#RiskModal">Increased Risk of Death</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label id="RiskResult">@Model.Risk</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Est. hours until sober </label>
+                            </div>
+                            <div class="col-md-6">
+                                <label id="SoberTimeResult">@Model.SoberTime Hours</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Calories consumed </label>
+                            </div>
+                            <div class="col-md-6">
+                                <label id="CaloriesResult">@Model.CaloriesConsumed</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        @{string soberImage = "/Images/BAC/Sober" + Model.SoberLevel.ToString() + ".jpg"; }
+                        <img id="SoberImage" src="@soberImage" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <label class="anchor" data-toggle="modal" data-target="#DisclaimerModal">Important Disclaimer</label>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            @if (User.IsInRole("Admin"))
+            {
+                <button type="button" id="editorbtn" class="btn btn-primary">Show Editor</button>
+                <br />
+                <br />
+
+                using (Html.BeginForm("UpdateExtraContent", "Admin", FormMethod.Post))
+                {
+                    string controller = ViewContext.RouteData.Values["controller"].ToString();
+                    string action = ViewContext.RouteData.Values["action"].ToString();
+                    
+                    <input type="hidden" name="controller" value="@controller" />
+                    <input type="hidden" name="action" value="@action" />
+                    
+                    <div id="editor">
+                        <textarea id="content" class="ckeditor" name="content">@ViewBag.Info</textarea>
+
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+
+                    <br />                    
+                }
+            }
+            
+            @Html.Raw(ViewBag.Info)
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="HistoryModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Metabolism Is Based On Your Recent Drinking History</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        Above Average:
+                    </div>
+                    <div class="col-md-6">
+                        Drinks 60+ drinks a month
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        Average:
+                    </div>
+                    <div class="col-md-6">
+                        Drinks 4-59 drinks a month
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        Above Average:
+                    </div>
+                    <div class="col-md-6">
+                        Drinks under 4 drinks a month
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="RiskModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">How Alcohol Relates to Risks</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>Estimates increased risk that someone involved in your accident - either you or someone else - dies as a result of your driving at this BAC level.</p>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DisclaimerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Department of Transportation</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>
+                    A person's actual blood alcohol content ("BAC") is dependent on many factors, including their body composition, health, metabolism rates, 
+                    gender, age, weight, drinking history, recent food and drug consumption, elapsed time, and other factors. We are only providing an estimate 
+                    of BAC levels based on the limited assumptions we utilized. Actual BAC levels may differ and those differences may be significant based on 
+                    the plethora of factors that have an impact on one's BAC. The information provided on the Sober.com website is not purported to be anything 
+                    other than an estimate. No BAC calculator is 100% accurate. Do not consider drinking and driving or drinking and engaging in any activity in 
+                    which impairment could lead to physical, mental, emotional, or financial harm to you or others based on the information provided herein.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DrinkModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+
+            <div class="modal-body">
+                
+            </div>
+
+            <div class="modal-footer">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ServingSizeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Standard Serving Size</h4>
+            </div>
+
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Beer</th>
+                            <th>Wine</th>
+                            <th>Spirits</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>oz</td>
+                            <td>12</td>
+                            <td>5</td>
+                            <td>1.5</td>
+                        </tr>
+                        <tr>
+                            <td>ml</td>
+                            <td>355</td>
+                            <td>148</td>
+                            <td>44</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*Functions and validations*@
+<script type="text/javascript">
+    $.fn.serializeObject = function () {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+
+    function CheckServingSize() {
+        var alcohol = $('input[name="AlcoholType"]:checked').val();
+        var serving = $('input[name="ServingType"]:checked').val()
+        var amount = 0;
+
+        if (alcohol == "Beer") {
+            amount = 12;
+        }
+        else if (alcohol == "Wine") {
+            amount = 5;
+        }
+        else if (alcohol == "Spirits") {
+            amount = 1.5;
+        }
+
+        if (serving == "ml") {
+            amount *= 29.5735;
+            amount = Math.round(amount);
+        }
+
+        $('#ServingSize').val(amount);
+    }
+
+    $(document).ready(function () {
+        $('#BAC').validate({
+            rules: {
+                Weight: {
+                    required: true,
+                    min: 1
+                },
+                hoursDrinking: {
+                    required: true,
+                    min: 1
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+
+        $("#alcohol").validate({
+            rules: {
+                TotalServings: {
+                    required: true,
+                    min: 1
+                },
+                ServingSize: {
+                    required: true,
+                    min: 1
+                },
+                PercentAlcohol: {
+                    required: true,
+                    min: 0
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var listAlcohol = [];
+
+        $('#addAlcohol').click(function () {
+            if ($('#BAC').valid() && $('#alcohol').valid()) {
+                var alcohol = $('#alcohol').serializeObject();
+                listAlcohol.push(alcohol);
+
+                var alcoholType = "";
+
+                var row = "<tr><td>" + alcohol.DrinkType + "</td>" +
+                                "<td>" + alcohol.TotalServings + "</td>" +
+                                "<td>" + alcohol.ServingSize + " " + alcohol.ServingType + "</td>" +
+                                "<td>" + alcohol.PercentAlcohol + "%</td>" +
+                                "<td>" + alcohol.Calories + "</td>" +
+                                "<td class='anchor removal'>X</td>";
+
+                $('table tbody').append(row);
+            }
+        });
+
+        $('.close').click(function () {
+            $(this).parents('.fade').modal('hide');
+        });
+
+        $('#calculate').click(function () {
+
+            if ($('#History tbody tr').length > 0) {
+                var bac = $('#BAC').serializeObject();
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("blood_alcohol_calculator", "Resources")',
+                    datatype: "JSON",
+                    data: { bac: JSON.stringify(bac), AlcoholHistory: JSON.stringify(listAlcohol) },
+                    success: function (data) {
+                        $("#BACResult").text(data.BAC);
+                        $("#DrivingResult").text(data.DrivingHour + " Hours");
+                        $("#RiskResult").text(data.Risk);
+                        $('#SoberTimeResult').text(data.SoberTime + " Hours");
+                        $('#CaloriesResult').text(data.CaloriesConsumed);
+                        $('#SoberImage').attr('src', '/Images/BAC/Sober' + data.SoberLevel + '.jpg');
+                    },
+                    error: function (ts) { alert(ts.responseText) }
+                });
+            }
+            else {
+                alert("Please add at least one alcohol");
+            }
+        });
+
+        $('#SpecifyDrink').click(function () {            
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("_DrinkLookUp", "Resources")',                
+                data: { drink: $('input[name="AlcoholType"]:checked').val() },
+                success: function (data) {
+                    $('#DrinkModal .modal-title').text("Brands of " + $('input[name="AlcoholType"]:checked').val() );
+                    $('#DrinkModal .modal-body').html(data);
+                },
+                error: function (ts) { alert(ts.responseText) }
+            });            
+        });
+
+        $('input[name="AlcoholType"]').change(function () {
+            if ($(this).val() == "Beer") {
+                $('#ServingSize').val(12);
+                $('#PercentAlcohol').val(4.5);
+                $('#Calories').val(140);
+            }
+            else if ($(this).val() == "Wine") {
+                $('#ServingSize').val(5);
+                $('#PercentAlcohol').val(12.5);
+                $('#Calories').val(120);
+            }
+            else {
+                $('#ServingSize').val(1.5);
+                $('#PercentAlcohol').val(40);
+                $('#Calories').val(90);
+            }
+
+            CheckServingSize();
+            $('#DrinkType').val($(this).val());
+            $('#Brand').text('');
+        });
+
+        $('.rdbtn').click(function () {
+            CheckServingSize();
+        });
+
+        $('#DrinkModal .modal-body').on('click', 'tr', function () {
+            var rowData = $('#DrinkTable').DataTable().row(this).data();
+            $('#DrinkType').val(rowData[0]);
+            $('#Brand').text("Brand chosen: " + rowData[1]);
+            $('#PercentAlcohol').val(rowData[2]);
+            $('#Calories').val(rowData[3]);
+            $('#DrinkModal').modal('hide');
+        });
+
+        $('#clearHistory').click(function () {
+            listAlcohol = [];
+            $('table tbody').empty();
+        });
+
+        $('#History').on('click', '.removal', function () {            
+            console.log(listAlcohol);
+            listAlcohol.splice($(this).parent('tr').index(), 1)            
+            console.log(listAlcohol);
+
+            $(this).parent('tr').remove();
+        });
+
+        $('input[value="Beer"').trigger('change');
+        $('input[value="oz"').prop("checked", true);
+
+        $('#editor').toggle();
+
+        $('#editorbtn').click(function () {
+            $('#editor').toggle();
+
+            if ($(this).text() == 'Show Editor') {
+                $(this).text('Hide Editor');
+            }
+            else {
+                $(this).text('Show Editor');
+            }
+        });
+
+    });
+</script>

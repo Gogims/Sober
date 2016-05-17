@@ -1,0 +1,93 @@
+﻿@model IEnumerable<SoberModel.sp_GetSpotlightFacilitiesByCategory_Result>
+@{
+    ViewBag.Title = "Drugs & Alcohol Treatment - Find the best care right now";
+    Layout = "~/Views/Shared/_MasterResources.cshtml";
+}
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")
+}
+<div class="section wrap-s">
+    <ul class="breadcrumbs-s">
+        <li class="first"><a href="@Url.Action("index", "home")">Home</a></li>
+        <li>@Html.ActionLink("Directory", "index", "directory")</li>
+        <li>@Html.ActionLink("Other Addictions", "other_addictions", "resources")</li>
+    </ul>
+    <div class="profile-page-cont-s">
+        <div class="title-cont-s">
+            <h1>Other Addictions</h1>
+        </div>
+        <div class="cont-s">
+            <div class="d-cont">
+                <div class="carousel-s">
+
+                    <div class="search-bar-s">
+                        @Html.Partial("_facilitysearcharea")
+                    </div>
+                    <div class="faq">
+                        <div class="head">Other Addictions</div>
+                        <ul class="faqs">
+                            <li>
+                                <p>
+                                    Although these addictions don't get the press coverage as drug and alcohol related addictions, they can be very dangerous and impact one's mind, body, and financial standing.
+                                </p>
+                                <p>
+                                    @Html.ActionLink("Gambling Addiction", "gambling", "resources", new { searchk = "gambling addiction", code = 92 }, null) - Causes and symptoms of gambling addiction 
+                                </p>
+                                <p>
+                                    @Html.ActionLink("Sex Addiction", "sex", "resources", new { searchk = "sex addiction", code = 92 }, null) - Tips on how to overcome sex addiction
+                                </p>
+                             
+                                <p>
+                                    @Html.ActionLink("Work Addiction", "work", "resources", new { searchk = "work addiction", code = 92 }, null) - How to identify and remedy work addiction
+                                </p>
+                             
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="faq">
+                        <div class="head">Treatment Options</div>
+                        <ul class="faqs">
+                            <li>
+
+                                <p>
+                                    @Html.ActionLink("Alcohol Rehab", "alcohol", "resources", new { searchk = "alcohol rehab", code = 92 }, null)
+                                </p>
+                                <p>
+                                    @Html.ActionLink("Alternative Rehab", "alternative", "resources", new { searchk = "alternative rehab", code = 92 }, null)
+                                </p>
+                                <p>
+                                    @Html.ActionLink("Drug Rehab", "drug", "resources", new { searchk = "drug rehab", code = 92 }, null)
+                                </p>
+                                <p>
+                                    @Html.ActionLink("Teen Rehab", "teen", "resources", new { searchk = "teen rehab", code = 92 }, null)
+                                </p>
+                                 <p>
+                                    @Html.ActionLink("Detox Centers", "detox", "resources", new { searchk = "detox centers", code = 92 }, null)
+                                </p>
+                                <p>
+                                    @Html.ActionLink("Eating Disorders Treatment", "eating", "resources", new { searchk = "eating disorders", code = 92 }, null)
+                                </p>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                     <div class="title">Sponsored ads</div>
+                            
+
+                                <div>@Html.Partial("_AdResponsive")</div>
+                </div>
+            </div>
+            <div class="ads-cont-links-s">
+
+                <div class="section">
+                    <div class="title">Sponsored ads</div>
+                    <ul class="link-list">
+                         <li>@Html.Partial("_AdResponsive")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

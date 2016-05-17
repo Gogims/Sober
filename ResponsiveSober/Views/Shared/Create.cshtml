@@ -1,0 +1,67 @@
+﻿@model SoberModel.InquiryForm
+@using Recaptcha.Web.Mvc;
+
+<div class="row padding-15">
+    <h3>Inquiries about @Model.facilityName</h3>
+
+    @using (Ajax.BeginForm("create", "inquiry", new AjaxOptions { UpdateTargetId = "productList", InsertionMode = InsertionMode.Replace }))
+    {
+        <div class="col-md-6 form-group required">
+            <label>Your Name <span>*</span></label>
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+        <div class="col-md-6 form-group">
+            <label>Your Telephone Number</label>
+            @Html.TextBoxFor(model => model.Phone, new { @class = "form-control numbersOnly" })
+            @Html.ValidationMessageFor(model => model.Phone)
+        </div>
+        <div class="col-md-6 form-group required">
+            <label>Your Email <span>*</span></label>
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+        <div class="col-md-6 form-group required">
+            <label>Prefered contact method <span>*</span></label>
+            <br />
+            <div class="radio">
+                <label>
+                    @Html.RadioButtonFor(model => model.PreferredContact, "Phone") Phone
+                </label>
+                <label>
+                    @Html.RadioButtonFor(model => model.PreferredContact, "Email") Email
+                </label>
+                @Html.ValidationMessageFor(model => model.PreferredContact)
+            </div>
+        </div>
+
+        <div class="col-md-12 form-group required">
+            <label>Your Message <span>*</span></label>
+            @Html.TextAreaFor(model => model.Message, new { @class="form-control" })
+
+
+            @Html.ValidationMessageFor(model => model.Message)
+        </div>
+
+        <div id="contactus_recaptcha_box" class="col-md-12"></div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>        
+
+        @Html.HiddenFor(model => model.facilityName)
+        @Html.HiddenFor(model => model.facilityType)
+        @Html.HiddenFor(model => model.PageName)
+    }
+
+</div>
+
+
+
+<div id="productList" style="font-size: xx-large; color: red">
+    @if (ViewBag.status != null)
+    {
+        <h3>Message Sent. Thank You</h3>
+    }
+</div>
+

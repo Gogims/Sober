@@ -1,0 +1,564 @@
+﻿@model SoberModel.Listings
+
+@{
+    string facility = "";
+    string insurance = ViewBag.Insurance;
+    string title = "";
+    var insurances = new SoberModel.SoberMVCEntities().Insurance_Providers;
+    string facilitylink = ViewBag.facility_link;
+    string canonical = "";
+
+    if (insurance == null)
+    {
+        insurance = "";
+    }
+    
+    if (ViewBag.facility_type != null)
+    {
+        facility = @ViewBag.facility_type;
+        facility = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(facility);
+    }
+    string state = "";
+    if (ViewBag.StateName != null)
+    {
+        state = ViewBag.StateName;
+    }
+    string tempcity = "";
+    if (ViewBag.City != null)
+    {
+        tempcity = ViewBag.City;
+        tempcity = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(tempcity);
+    }
+    string stateFullName = state;
+    if (ViewBag.StateName != null)
+    {
+        stateFullName = ViewBag.StateName;
+        stateFullName = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(stateFullName);
+    }
+
+    if (ViewBag.selectedcity != null)
+    {
+        tempcity = ViewBag.selectedcity;
+        tempcity = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(tempcity);
+    }
+    
+    if(string.IsNullOrEmpty(insurance))
+    {
+        title = tempcity + " " + stateFullName + " " + facility;
+    }
+    else
+    {
+        title = insurance + " rehab centers in " + tempcity + " " + stateFullName + " covering drug abuse and alcoholism";
+    }    
+
+    if (facilitylink == "sober_houses")
+    {
+        canonical = "http://www.sober.com/directory/listings" + Request.Url.Query.Replace("sober%20houses", "halfway%20houses");
+    }
+    else if (facilitylink == "extended_care")
+    {
+        canonical = "http://www.sober.com/directory/listings" + Request.Url.Query.Replace("extended%20care%20facilities", "drug%20and%20alcohol%20treatment%20centers");
+    }
+    else if (facilitylink == "womens_treatment")
+    {
+        canonical = "http://www.sober.com/directory/listings" + Request.Url.Query.Replace("womens%20treatment", "drug%20and%20alcohol%20treatment%20centers");
+    }
+    else if (facilitylink == "mens_treatment")
+    {
+        canonical = "http://www.sober.com/directory/listings" + Request.Url.Query.Replace("mens%20treatment", "drug%20and%20alcohol%20treatment%20centers");
+    }
+
+    ViewBag.Title = title;
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+@section head {    
+    <meta name="description" content="Complete list of @facility facilities in @tempcity @stateFullName with reviews, pictures, and cost information. Find the perfect fit at Sober.com right now!">
+
+    @if (!string.IsNullOrEmpty(canonical))
+    {
+        <link rel="canonical" href="@canonical" />
+    }
+}
+
+<script src="~/Scripts/responsive-tabs.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+@*<script src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>*@
+@using (Html.BeginForm())
+{
+    <input name="premium" type="hidden" value="@ViewBag.Premium" />
+    
+    <div class="content white-bg">
+        <div class="container">    
+                <div class="row">
+                    <ol class="breadcrumb">
+                        <li><a href="@Url.Action("index", "home")">Home</a></li>
+                        <li>@Html.ActionLink("Directory", "index", "directory")</li>
+
+                        @if (string.IsNullOrEmpty(insurance))
+                        {
+                            if (facilitylink != null)
+                            {
+                                string facilityType = ViewBag.facility_type;
+                            
+                                <li>@Html.ActionLink(@facility, @facilitylink, "facilities")</li>
+                            }
+                            if (ViewBag.StateName != null && ViewBag.selectedcity == null)
+                            {
+                                <li class="active">@stateFullName</li>
+                            }
+                            if (ViewBag.selectedcity != null)
+                            {
+                                <li><a href="@Url.Action("listings", new { address = stateFullName.ToLower(), rehab = ViewBag.facility_type })">@stateFullName</a></li>
+                                <li class="active">@System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(@ViewBag.selectedcity)</li>
+                            }
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Insurance Companies Covering Rehab", "insurance-companies-covering-rehab")</li>
+                            <li>@Html.ActionLink(insurance, "insurance-companies-covering-rehab", new { name = insurance.ToLower() })</li>
+                        }
+                    </ol>
+
+                    <div class="col-md-2 filters">
+                        <h4>Filter Options</h4>                    
+                            @Html.HiddenFor(x => x.PageNumber)
+                            @Html.HiddenFor(x => x.PageCount)
+                            <input id="Rehab" name="Rehab" type="hidden" value="@Model.Rehab" />
+                            <input id="PaymentType" name="PaymentType" type="hidden" value="@Model.PaymentType" />
+
+                            <div class="row filter-fields">
+                                <div class="col-md-12 form-group">
+                                    @if (Model.CitiesList.Count > 0)
+                                    {
+                                        <ul class="filter-form-s">
+                                            <li>
+                                                <label class="label-s">City</label>
+                                                <ul class="cities-s">
+                                                    @*<li><a href="@Url.Action("listings", new { address = ViewBag.address, rehab = ViewBag.facility_type })">All Cities</a></li>*@
+                                                    @foreach (var item in Model.CitiesList.OrderByDescending(x => x.Count))
+                                                    {
+                                                        if (string.IsNullOrEmpty(insurance))
+                                                        {
+                                                            <li><a href="@Url.Action("listings", new { selectedcity = @item.City, address = stateFullName.ToLower(), rehab = ViewBag.facility_type })">@item.City.ToUpper() (@item.Count)</a></li>
+                                                        }
+                                                        else
+                                                        {
+                                                            <li><a href="@Url.Action("listings", new { selectedcity = @item.City, address = stateFullName.ToLower(), rehab = ViewBag.facility_type, insurance = insurance.ToLower() })">@item.City.ToUpper() (@item.Count)</a></li>                                                        
+                                                        }
+                                                    }
+                                                </ul>
+                                                <label class="btn_more anchor">More...</label>
+                                                <label class="btn_less anchor">Less...</label>
+                                            </li>
+                                        </ul>
+                                    }
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label>Location</label>
+                                    @Html.TextBoxFor(model => model.selectedzipcode, new { @class = "numbersOnly form-control", @placeholder = "Search by zipcode..." })
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <label>Distance</label>
+                                    @Html.DropDownListFor(model => model.Distance, new SelectList(@Model.rdList_DistanceList, Model.Distance), new { @class = "selectpicker" })
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <label>State</label>
+                                    <select id="State" name="State" class="selectpicker">
+                                        <option value="">Any</option>
+                                        @foreach (var item in SoberModel.States.GetAllStates())
+                                        {
+                                            if (Model.State == item.StateAbbreviation)
+                                            {
+                                                <option selected value="@item.StateAbbreviation">@item.StateName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.StateAbbreviation">@item.StateName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <label>Insurances Accepted</label>
+                                    <select id="SelectedInsurance" name="SelectedInsurance" class="selectpicker">
+                                        <option value="Any">Any</option>
+                                        @foreach (var item in insurances.ToList().OrderBy(x => x.Ins_ProviderName))
+                                        {
+                                            if (Model.SelectedInsurance == item.Ins_ProviderName)
+                                            {
+                                                <option selected value="@item.Ins_ProviderName">@item.Ins_ProviderName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Ins_ProviderName">@item.Ins_ProviderName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12 form-group aic">
+                                    <label>Cost</label>
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.selectedTreatmentCost, "Any", new { @id = "treatmentCost" })
+                                            <label>Any</label>
+                                        </label>
+                                    </div>
+
+                                    @foreach (var cost in Model.rdTreatmentCost)
+                                    {
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.selectedTreatmentCost, cost.Value)
+                                                <label>@cost.Text</label>
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div id="morecontent">
+                                    <div class="col-md-12 form-group">
+                                        <label>Type of Care</label>
+                                        @for (int i = 0; i < Model.List_chckBox_TypeOfCare.Count; i++)
+                                        {
+                                            <div class="checkbox">
+                                                <label>
+                                                    @Html.CheckBoxFor(x => x.List_chckBox_TypeOfCare[i].IsSelected)
+                                                    @Html.LabelFor(x => x.List_chckBox_TypeOfCare[i].IsSelected, Model.List_chckBox_TypeOfCare[i].Value)
+                                                    @Html.HiddenFor(x => x.List_chckBox_TypeOfCare[i].Value)
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <div class="col-md-12 form-group">
+                                        <label>Special Programs</label>
+                                        @for (int i = 0; i < Model.List_chckBox_Specialprograms.Count; i++)
+                                        {
+                                            <div class="checkbox">
+                                                <label>
+                                                    @Html.CheckBoxFor(x => x.List_chckBox_Specialprograms[i].IsSelected)
+                                                    @Html.LabelFor(x => x.List_chckBox_Specialprograms[i].IsSelected, Model.List_chckBox_Specialprograms[i].Value)
+                                                    @Html.HiddenFor(x => x.List_chckBox_Specialprograms[i].Value)
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <a id="expand" href="#">Show More...</a>
+                                </div>                            
+
+                                <div class="col-md-12"><button class="btn btn-primary" type="submit">Filter</button></div>
+                                <div class="col-md-12"><a href="@Url.Action("listings", new { address = ViewBag.address, rehab = ViewBag.facility_type })" class="btn btn-link">Clear Filter</a></div>
+                                <div class="col-md-12">
+                                    @Html.Partial("_Ads2")
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.Partial("_Ads3")
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.Partial("_AdResponsive")
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @if (string.IsNullOrEmpty(insurance))
+                                {
+                                    <h2>@facility in @tempcity @stateFullName @ViewBag.Zip</h2>
+                                }
+                                else
+                                {
+                                    <h2>Rehabs in @tempcity @stateFullName @ViewBag.Zip accepting @insurance</h2>
+                                }
+
+                            </div>
+                        </div>
+
+                        @*TABS*@
+                        <ul class="nav nav-tabs responsive" id="myTab">
+                            <li class="active"><a href="#Listing" data-toggle="tab">Listings</a></li>
+                            <li><a href="#MapView" data-toggle="tab">Map View</a></li>
+                            <li style="float: right;">@Html.Partial("_AdShareaholic", 16287771)</li>
+                        </ul>
+
+                        @*Content of each tab*@
+                        <div class="tab-content responsive">
+
+                            <div id="Listing" class="tab-pane active">
+                                @if (Model.FreeListings.Count == 0)
+                                {
+                                    SoberBLL.ListingCategories categoryTypes = new SoberBLL.ListingCategories();
+                                    var categoryList = categoryTypes.GetListingCategoryNames();
+
+                                    
+                                    <div class="col-md-12">
+                                        <p>No results were found for your search criteria. Consider modifying your search criteria with less filters. We recommend choosing <strong>Drug and Alcohol Treatment</strong>:</p>
+                                        
+                                        <div class="col-md-2">
+                                            <span class="title"><strong>Looking for...</strong></span>
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <select id="FacilityType" class="selectpicker">
+                                                @foreach (var item in categoryList.OrderBy(x => x))
+                                                {
+                                                    if (item == "Seniors/Baby Boomers")
+                                                    {
+                                                        <option value="@Html.Encode("Seniors-Baby Boomers")">@item</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item == "Drug and Alcohol Treatment Centers")
+                                                        {
+                                                            <option selected value="@Html.Encode(@item)">Drug and Alcohol Treatment</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@Html.Encode(@item)">@item</option>
+                                                        }
+
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <select id="States" name="States" class="selectpicker">
+                                                <option value="">Any</option>
+                                                @foreach (var item in SoberModel.States.GetAllStates())
+                                                {
+                                                    if (Model.State == item.StateAbbreviation)
+                                                    {
+                                                        <option selected value="@item.StateAbbreviation">@item.StateName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.StateAbbreviation">@item.StateName</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary" onclick="Search();">Search</button>
+                                        </div>
+                                        
+                                    </div>
+                                }
+
+                                <ul class="listings">
+                                    @foreach (var FreeListings in Model.FreeListings)
+                                    {
+                                        @Html.Partial("_FreeListing", @FreeListings)
+                                    }
+                                </ul>
+                            </div>
+
+                            <div id="MapView" class="tab-pane">
+
+                            </div>
+                        </div>                    
+
+                        <div id="paging-footer" class="row">
+
+                            @if (Model.FreeListings.Count != 0)
+                            {
+                                <div class="col-md-9">
+                                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                                </div>
+                                <div class="col-md-3">
+                                    @if (Request.HttpMethod == "GET")
+                                    {
+                                        int result = 0;
+                                        if (Model.HasPreviousPage)
+                                        {
+                                            <a href="@Url.Action("listings", new { selectedcity = ViewBag.selectedcity, address = ViewBag.address, rehab = ViewBag.facility_type, insurance = insurance.ToLower(), page = Model.PageNumber - 1, premium = ViewBag.Premium })"> Previous </a>
+
+                                            <a href="@Url.Action("listings", new { selectedcity = ViewBag.selectedcity, address = ViewBag.address, rehab = ViewBag.facility_type, insurance = insurance.ToLower() })">1</a>
+                                            Html.Raw(" ");
+
+
+                                            if (Model.PageNumber - 3 > 1)
+                                            {
+                                                <label> ... </label>
+                                            }
+
+                                            for (int i = 3; i > 0; i--)
+                                            {
+                                                if (Model.PageNumber - i > 1)
+                                                {
+                                                    result = Model.PageNumber - i;
+                                                    <a href="@Url.Action("listings", new { selectedcity = ViewBag.selectedcity, address = ViewBag.address, rehab = ViewBag.facility_type, insurance = insurance.ToLower(), page = result, premium = ViewBag.Premium })"> @result </a>
+                                                    Html.Raw(" ");
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <label>Previous</label>
+                                            Html.Raw(" ");
+                                        }
+
+                                        if (Model.HasNextPage)
+                                        {
+                                            for (int i = 0; i < 3; i++)
+                                            {
+                                                if (Model.PageNumber + i < Model.PageCount)
+                                                {
+                                                    result = Model.PageNumber + i;
+
+                                                    if (i == 0)
+                                                    {
+                                                        <strong> @result </strong>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@Url.Action("listings", new { selectedcity = ViewBag.selectedcity, address = ViewBag.address, rehab = ViewBag.facility_type, insurance = insurance.ToLower(), page = result, premium = ViewBag.Premium })"> @result </a>
+                                                    }
+
+                                                    @Html.Raw(" ");
+                                                }
+                                            }
+
+                                            if (Model.PageNumber + 3 < Model.PageCount)
+                                            {
+                                                <label> ... </label>
+                                            }
+
+                                            <a href="@Url.Action("listings", new { selectedcity = ViewBag.selectedcity, address = ViewBag.address, rehab = ViewBag.facility_type, insurance = insurance.ToLower(), page = Model.PageCount, premium = ViewBag.Premium })"> @Model.PageCount </a>
+
+                                            @Html.Raw(" ");
+
+                                        <a href="@Url.Action("listings", new { selectedcity = ViewBag.selectedcity, address = ViewBag.address, rehab = ViewBag.facility_type, insurance = insurance.ToLower(), page = Model.PageNumber + 1, premium = ViewBag.Premium })"> Next </a>
+                                        }
+                                        else
+                                        {
+                                            <strong>@Model.PageCount</strong>
+                                            @Html.Raw(" ")
+                                            <label> Next </label>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Model.PageCount > 0)
+                                        {
+                                            if (Model.HasPreviousPage)
+                                            {
+                                                <input name="submit" type="submit" class="btn lf" value="<<" />
+                                                @Html.Raw(" ");
+                                                <input name="submit" type="submit" class="btn lf" value="< Prev" />
+                                            }
+                                            else
+                                            {
+                                                <text><<</text>
+                                                    @Html.Raw(" ")
+                                                <text>< Prev</text>
+                                            }
+                                            if (Model.HasNextPage)
+                                            {
+                                                @Html.Raw(" ");
+                                                <input name="submit" type="submit" class="btn lf" value="Next >" />
+                                                @Html.Raw(" ");
+                                                <input name="submit" type="submit" class="btn lf" value=">>" />
+                                            }
+                                            else
+                                            {
+                                                <text>Next ></text>
+
+                                                @Html.Raw(" ")
+                                                <text>>></text>
+                                            }
+                                        }
+                                    }
+                                </div>
+                            }
+                            
+                        </div>
+                        <div class="row">
+                            @Html.Partial("_Ads4")
+                        </div>
+                    </div>                
+                </div>
+            </div>
+    </div>
+}
+
+@*@{
+    System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+}*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        window.scrollTo(0, 0);
+        $('#morecontent').hide();
+
+        $('#expand').click(function (e) {
+            if ($(this).text() == "Show More...") {
+                $('#morecontent').show();
+                $(this).text("Show Less...");
+            }
+            else {
+                $('#morecontent').hide();
+                $(this).text("Show More...");
+            }
+
+            e.preventDefault();
+        });
+
+        if ('@Request.HttpMethod' != 'POST') {
+            $('#treatmentCost').prop('checked', true);
+        }
+
+        $('a[href="#MapView"]').click(function () {
+            if ($('#MapView').text().trim() == "") {
+                var model = '@Html.Raw(Json.Encode((Model.FreeListings.Where(x => x.isLocalPaid || !x.isPaid ).Select(x => new
+                        {
+                            x.location_street1,
+                            x.location_street2,
+                            x.location_city,
+                            x.location_state,
+                            x.name1,
+                            x.PageName,
+                            x.location_zip,
+                            x.surveyType,
+                            x.surveyTypeShort,
+                            x.Latitude,
+                            x.Longitude,
+                            x.isEnhanced,
+                            x.IsProfileInactive
+                        }))))';
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("mapListing", "directory")',
+                    data: { listing: model },
+                    async: false,
+                    success: function (result) {
+                        $('#MapView').html(result);
+                    }
+                });
+            }
+        });
+
+    });
+</script>
+
+<script>
+    window.___gcfg = {
+        lang: 'en-US',
+        parsetags: 'onload'
+    };
+</script>

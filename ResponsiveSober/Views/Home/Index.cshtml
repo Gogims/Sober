@@ -1,0 +1,119 @@
+﻿@model IEnumerable<SoberModel.sp_GetSpotlightFacilities_Result>
+
+@{
+    ViewBag.Title = "Treatment Centers, Halfway & Sober Houses";
+    Layout = "~/Views/Shared/_HomeMaster.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>Featured Centers</h2>
+            <p>Discover some of our best listings</p>
+        </div>
+    </div>
+    <div class="row grid-listings">
+        @foreach (var spotLightFacility in Model)
+{
+    string[] imageList = spotLightFacility.Image.Split('|');
+    string picture = "";
+    if (imageList.Count() > 0)
+    {
+        picture = "http://www.sober.com/contents/pictures/compressed/" + imageList[0];
+    }
+    spotLightFacility.State = MvcApplication4.utilities.GetStateNameFromAbbrevation(spotLightFacility.State);
+    picture = picture.Replace(" ", "%20");
+
+    <div class="col-xs-12 col-sm-4">
+        <div class="listing">
+            <a href="@Url.Action("profile", "directory", new { rehab = @spotLightFacility.PageName.ToLower(), city = @spotLightFacility.City.ToLower(), state = @spotLightFacility.State.ToLower(), facility_type = "tc" })">
+                <img src="@picture" alt="@spotLightFacility.CenterName"/>
+                <div class="meta">
+                    <h6>@spotLightFacility.CenterName</h6>
+                    <p>@spotLightFacility.AvgCost</p>
+                </div>
+            </a>
+        </div>
+    </div>
+}
+    </div>
+</div>
+
+<div class="quick-links">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h6>Services</h6>
+                <ul>
+                    <li>@Html.ActionLink("Adolescent Services", "adolescent_treatment", "facilities")</li>
+                    <li>@Html.ActionLink("Alternative Drug Rehab Programs", "alternative_treatment", "facilities")</li>                    
+                    <li>@Html.ActionLink("Drug Detox Centers", "detox_centers", "facilities")</li>                    
+                    <li>@Html.ActionLink("Drugs & Alcohol Treatment", "drug_alcohol", "facilities")</li>
+                    <li>@Html.ActionLink("Eating Disorders", "eating_disorders", "facilities")</li>
+                    <li>@Html.ActionLink("Exclusive Rehabs", "exclusive_rehabs", "facilities")</li>
+                    <li>@Html.ActionLink("Extended Care Facilities", "extended_care", "facilities")</li>
+                    <li>@Html.ActionLink("Mens Treatment", "mens_treatment", "facilities")</li>
+                    <li>@Html.ActionLink("Seniors/Baby Boomers", "seniors_baby_boomers", "facilities")</li>
+                    <li>@Html.ActionLink("Womens Treatment", "womens_treatment", "facilities")</li>                                
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h6>Top Insurance Companies</h6>
+                <ul>
+                    <li>@Html.ActionLink("Blue Cross Blue Shield", "insurance-companies-covering-rehab", "directory", new { name = "blue cross blue shield" }, null)</li>
+                    <li>@Html.ActionLink("Aetna", "insurance-companies-covering-rehab", "directory", new { name = "aetna" }, null)</li>                    
+                    <li>@Html.ActionLink("United Healthcare", "insurance-companies-covering-rehab", "directory", new { name = "united healthcare" }, null)</li>                    
+                    <li>@Html.ActionLink("Value Options", "insurance-companies-covering-rehab", "directory", new { name = "value options" }, null)</li> 
+                </ul>
+            </div>
+            <div class="col-md-4 blue-bg">
+                <h6>Resources</h6>
+                <ul>
+                    <li>
+                        <label class="bullet">
+                            <a href="http://www.sober.com/forums/index.php?/page/articles.html/_/articles/alcohol/blood-alcohol-content-dwi-r23">
+                                Drinking Impact on you
+                            </a>
+                        </label>
+                        <p>See a visual on the impact of drinking on your health and your ability to drive.</p>
+                    </li>
+                    <li>
+                        <label class="bullet"><a href="@Url.Action("blood_alcohol_calculator", "resources")">Blood Alcohol Calculator</a></label>
+                        <p>Enter exactly what you drink by brand (beer,wine and spirits) and we'll estimate your BAC.</p>
+                    </li>
+                    <li>
+                        <label class="bullet"><a href="@Url.Action("alcoholic", "resources")">Are you an Alcoholic</a></label>
+                        <p>Worried about becoming an alcoholic or already there? Take this free assessment. </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function resize() {
+        var width = $(window).width();
+        if (width < 800) {
+            $('.premier-listings-s li:nth-child(4)').hide()
+        }
+        else {
+            $('.premier-listings-s li:nth-child(4)').show()
+        }
+        if (width < 1000) {
+            $('.premier-listings-s li:nth-child(5)').hide()
+        }
+        else {
+            $('.premier-listings-s li:nth-child(5)').show()
+        }
+    }
+    $(function () {
+        resize();
+    });
+    $(window).resize(function () {
+        resize();
+    });
+</script>
+
+

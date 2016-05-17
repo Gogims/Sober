@@ -1,0 +1,52 @@
+﻿@model IEnumerable<SoberModel.sp_GetSpotlightFacilitiesByCategory_Result>
+@{int count = 0;}
+
+<ul class="listings order-list">
+    @foreach (var spotLightFacilty in Model)
+    {
+        count++;
+        string[] imageList = spotLightFacilty.Image.Split('|');
+        string picture = "";
+        if (imageList.Count() > 0)
+        {
+            picture = "http://www.sober.com/contents/pictures/compressed/" + imageList[0];
+        }
+        picture = picture.Replace(" ", "%20");
+        if (spotLightFacilty.Survey.ToLower().Equals("treatmentcentersurvey"))
+        {
+            spotLightFacilty.Survey = "tc";
+        }
+        if (spotLightFacilty.Survey.ToLower().Equals("soberlivingsurvey"))
+        {
+            spotLightFacilty.Survey = "sl";
+        }
+        spotLightFacilty.State = MvcApplication4.utilities.GetStateNameFromAbbrevation(spotLightFacilty.State);
+        <li>
+            <div class="row">
+                <div class="col-xs-12 col-md-8 listing-info">
+                    <a href="@Url.Action("profile", "directory", new { rehab = @spotLightFacilty.PageName.ToLower(), city = @spotLightFacilty.City.ToLower(), state = @spotLightFacilty.State.ToLower(), facility_type =@spotLightFacilty.Survey.ToLower() })">
+                        <h5>@count&#46; @spotLightFacilty.CenterName</h5>
+                    </a>
+                    <ul class="meta">
+                        @*<li>
+                                <ul class="rating">
+                                    <li class="star-x"></li>
+                                    <li class="star-x"></li>
+                                    <li class="star-x"></li>
+                                    <li class="halfstar"></li>
+                                    <li class="star"></li>
+                                </ul>
+                            </li>*@
+                        <li>@spotLightFacilty.AvgCost</li>
+                        <li>@spotLightFacilty.City, @spotLightFacilty.State</li>
+                        <li>@spotLightFacilty.Phone</li>
+                    </ul>
+                    @*<p class="more" itemprop="description">@item.Description</p>*@
+                </div>
+                <div class="col-xs-12 col-md-4">
+                    <img class="img-rounded" src="@picture" height="153" />
+                </div>
+            </div>
+        </li>
+    }
+</ul>

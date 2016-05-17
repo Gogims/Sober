@@ -1,0 +1,1090 @@
+﻿@model SoberBLL.AddListings.TreatmentCenterSurvey
+
+@{
+    ViewBag.Title = "addtreatmentcenter";
+    Layout = "~/Views/Shared/_Master.cshtml";
+    if (ViewBag.partialProfile != null)
+    {
+        HtmlHelper.ClientValidationEnabled = false;
+    }
+}
+<link href="~/content/CustomStyle.css" rel="stylesheet" />
+<script src="~/Scripts/PhoneMask.js"></script>
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+@using (Html.BeginForm("addtreatmentcenter", "directory", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="content white-bg">
+        <div class="container">
+            <h1>Sober.com Treatment Facility Supplemental Questionnaire</h1>
+            <p class="form-meta">
+                Please fill this form for each facility. If all locations offer exactly the same services, than fill only one form and also provide us the addresses for each facility in an email to <a href="mailto:clients@sober.com">clients@sober.com</a>.
+                <br />
+                Fields marked <span style="color: red;">*</span> are mandatory
+            </p>
+            <div class="row">
+                @Html.HiddenFor(model => model.ImagesFolder)
+                @Html.HiddenFor(model => model.User_Id)
+                @Html.HiddenFor(model => model.CreatedOn)
+                @Html.HiddenFor(model => model.ModifiedOn)
+
+                <input type="hidden" name="pName" value="@ViewBag.tmpPageName" />
+                <input type="hidden" name="lisId" value="@ViewBag.tmpListingId" />
+
+                <div class="row">
+                    <div class="col-md-12 panel-group">
+                        <h4 class="panel box expander">Your details</h4>
+                    </div>
+                </div>
+                
+                <div class="panel-cont row">
+                    <div class="col-md-6 form-group required">
+                        <label>Treatment Center Name <span>*</span>:</label>
+                        @Html.TextBoxFor(model => model.Treatment_Center_Name, new { @class = "form-control" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Treatment_Center_Name)</span>
+                    </div>
+                    <div class="col-md-6 form-group required">
+                        <label>Street of Facility <span>*</span>:</label>
+                        @Html.TextBoxFor(model => model.Street, new { @class = "form-control" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Street)</span>
+                    </div>
+                    <div class="col-md-6 form-group required">
+                        <label>City <span>*</span>:</label>
+                        @Html.TextBoxFor(model => model.City, new { @class = "form-control" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.City)</span>
+                    </div>
+
+                    <div class="col-md-6 form-group required">
+                        <label>State <span>*</span>:</label>
+                        @Html.DropDownListFor(model => model.State, new SelectList(ViewBag.States, "StateAbbreviation", "StateName", Model.State), new { @class = "selectpicker" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.State)</span>
+                    </div>
+                    <div class="col-md-6 form-group required">
+                        <label>Zip Code <span>*</span>:</label>
+                        @Html.TextBoxFor(model => model.Zip, new { @class = "form-control" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Zip)</span>
+                    </div>
+                    <div class="col-md-6 form-group required">
+                        <label>Admissions Phone <span>*</span>:</label>
+                        @Html.TextBoxFor(model => model.Admission_Phone, new { @class = "form-control", onkeydown = "javascript:backspacerDOWN(this,event);", onkeyup = "javascript:backspacerUP(this,event);" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Admission_Phone)</span>
+                        <span>eg. - (xxx) xxx-xxxx </span>
+                    </div>
+                    <div class="col-md-6 form-group required">
+                        <label>Email <span>*</span>:</label>
+                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Email)</span>
+                    </div>
+                    <div class="col-md-6 form-group required">
+                        <label>Display Website <span>*</span>:</label>
+                        @Html.TextBoxFor(model => model.Website, new { @class = "form-control" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Website)</span>
+                    </div>
+                    <div class="col-md-6 form-group required">
+                        <label>Contact Name <span>*</span>:</label>
+                        @Html.TextBoxFor(model => model.ContactName, new { @class = "form-control" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.ContactName)</span>
+                    </div>
+                    <div class="col-md-6 form-group required">
+                        <label>Destination Website <span>*</span>:</label>
+                        @Html.TextBoxFor(model => model.DestinationWebsite, new { @class = "form-control" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.DestinationWebsite)</span>
+                    </div>
+                </div>
+
+                <div class="row aic">
+                    <div class="col-md-12">
+                        <h4 class="blue-bg box panel">Pharmacotherapies</h4>
+                    </div>
+                    <div class="col-md-12 form-group required">
+                        <label>Do you provide the following during treatment? <span>*</span></label>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Antabuse</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Treat_Antabuse))
+                                { Model.Pharma_Treat_Antabuse = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Treat_Antabuse)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Treat_Antabuse, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Naltrexone</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Treat_Naltrexone))
+                                { Model.Pharma_Treat_Naltrexone = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Treat_Naltrexone)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Treat_Naltrexone, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Campral</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Treat_Campral))
+                                { Model.Pharma_Treat_Campral = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Treat_Campral)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Treat_Campral, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Nicotine replacement</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Treat_Nicotine))
+                                { Model.Pharma_Treat_Nicotine = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Treat_Nicotine)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Treat_Nicotine, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Medications for psychiatric disorders</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Treat_Disorders))
+                                { Model.Pharma_Treat_Disorders = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Treat_Disorders)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Treat_Disorders, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Methadone</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Treat_Methodone))
+                                { Model.Pharma_Treat_Methodone = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Treat_Methodone)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Treat_Methodone, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Subutex</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Subutex))
+                                { Model.Pharma_Subutex = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Subutex)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Subutex, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Suboxone</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Suboxone))
+                                { Model.Pharma_Suboxone = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Suboxone)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Suboxone, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 form-group required">
+                        <label>Does this facility operate maintenance programs for...<span>*</span></label>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Methadone</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Facility_Methadone))
+                                { Model.Pharma_Facility_Methadone = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Facility_Methadone)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Facility_Methadone, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Subutex</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Facility_Subutex))
+                                { Model.Pharma_Facility_Subutex = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Facility_Subutex)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Facility_Subutex, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-4">Suboxone</div>
+                            <div class="col-md-6">
+                                @if (string.IsNullOrWhiteSpace(Model.Pharma_Facility_Suboxone))
+                                { Model.Pharma_Facility_Suboxone = "No"; }
+                                @foreach (var rdbtn in Model.rdList_Pharma_Facility_Suboxone)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.Pharma_Facility_Suboxone, rdbtn.Value)
+                                                <label>@rdbtn.Text</label>
+                                                @Html.HiddenFor(x => rdbtn.Value)
+                                                @Html.HiddenFor(x => rdbtn.Text)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="blue-bg box panel">Facility information</h4>
+                    </div>
+                    <div class="col-md-6 form-group required aic">
+                        <label>Are private rooms available? <span>*</span></label>
+                        <div class="col-md-12">
+                            @foreach (var rdbtn in Model.rdList_Private_Room_Available)
+                            {
+                                <div class="col-md-2">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.Private_Room_Available, rdbtn.Value)
+                                            <label>@rdbtn.Text</label>
+                                            @Html.HiddenFor(x => rdbtn.Value)
+                                            @Html.HiddenFor(x => rdbtn.Text)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Private_Room_Available)</span>
+                    </div>
+                    <div class="col-md-6 form-group required">
+                        <label>Number of beds at this facility <span>*</span></label>
+                        @Html.TextBoxFor(model => model.No_of_Bed, new { @class = "form-control" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.No_of_Bed)</span>
+                    </div>
+                    <div class="col-md-12 form-group required aic">
+                        <label>Gender<span>*</span></label>
+                        <div class="col-md-12">
+                            @foreach (var rdbtn in Model.rdList_Gender)
+                            {
+                                <div class="col-md-2">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.Gender, rdbtn.Value)
+                                            <label>@rdbtn.Text</label>
+                                            @Html.HiddenFor(x => rdbtn.Value)
+                                            @Html.HiddenFor(x => rdbtn.Text)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Gender)</span>
+                    </div>
+                    <div class="col-md-6 form-group required aic">
+                        <label>Do you offer Aftercare services?<span>*</span></label>
+                        <div class="col-md-12">
+                            @foreach (var rdbtn in Model.rdList_Aftercare_Services)
+                            {
+                                <div class="col-md-2">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.Aftercare_Services, rdbtn.Value)
+                                            <label>@rdbtn.Text</label>
+                                            @Html.HiddenFor(x => rdbtn.Value)
+                                            @Html.HiddenFor(x => rdbtn.Text)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Aftercare_Services)</span>
+                    </div>
+                    <div class="col-md-6 form-group required aic">
+                        <label>If Aftercare is offered, are those services free?<span>*</span></label>
+                        <div class="col-md-12">
+                            @foreach (var rdbtn in Model.rdList_Aftercare_Free_Services)
+                            {
+                                <div class="col-md-2">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.Aftercare_Free_Services, rdbtn.Value)
+                                            <label>@rdbtn.Text</label>
+                                            @Html.HiddenFor(x => rdbtn.Value)
+                                            @Html.HiddenFor(x => rdbtn.Text)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Aftercare_Free_Services)</span>
+                    </div>
+                    <div class="col-md-6 form-group required aic">
+                        <label>Does your facility track patients' progress post care?<span>*</span></label>
+                        <div class="col-md-12">
+                            @foreach (var rdbtn in Model.rdList_Facility_Track_PostCare)
+                            {
+                                <div class="col-md-2">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.Facility_Track_PostCare, rdbtn.Value)
+                                            <label>@rdbtn.Text</label>
+                                            @Html.HiddenFor(x => rdbtn.Value)
+                                            @Html.HiddenFor(x => rdbtn.Text)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Facility_Track_PostCare)</span>
+                    </div>
+                    <div class="col-md-6 form-group required aic">
+                        <label>Do you provide specific programs for alumni?<span>*</span></label>
+                        <div class="col-md-12">
+                            @foreach (var rdbtn in Model.rdList_Alumni_Program)
+                            {
+                                <div class="col-md-2">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.Alumni_Program, rdbtn.Value)
+                                            <label>@rdbtn.Text</label>
+                                            @Html.HiddenFor(x => rdbtn.Value)
+                                            @Html.HiddenFor(x => rdbtn.Text)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Alumni_Program)</span>
+                    </div>
+                    <div class="col-md-6 form-group required aic">
+                        <label>Do you offer alumni networking and special events?<span>*</span></label>
+                        <div class="col-md-12">
+                            @foreach (var rdbtn in Model.rdList_Alumni_SpecialEvents)
+                            {
+                                <div class="col-md-2">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.Alumni_SpecialEvents, rdbtn.Value)
+                                            <label>@rdbtn.Text</label>
+                                            @Html.HiddenFor(x => rdbtn.Value)
+                                            @Html.HiddenFor(x => rdbtn.Text)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Alumni_SpecialEvents)</span>
+                    </div>
+                    <div class="col-md-6 form-group required aic">
+                        <label>Pets Allowed?<span>*</span></label>
+                        <div class="col-md-12">
+                            @foreach (var rdbtn in Model.rdList_pets_allowed)
+                            {
+                                <div class="col-md-2">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model._PetsAllowed, rdbtn.Value)
+                                            <label>@rdbtn.Text</label>
+                                            @Html.HiddenFor(x => rdbtn.Value)
+                                            @Html.HiddenFor(x => rdbtn.Text)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model._PetsAllowed)</span>
+                    </div>
+                    <div class="col-md-12 form-group">
+                        @for (int i = 0; i < Model.List_Txt_FacilityInfo_LicensedBy.Count(); i++)
+                        {
+                            <div class="col-md-6">
+                                <label>Licensed by</label>
+                                @Html.TextBoxFor(model => model.List_Txt_FacilityInfo_LicensedBy[i], new { @class = "form-control" })
+                            </div>
+                        }
+                        @for (int i = 0; i < Model.List_Txt_FacilityInfo_LicensedBy.Count(); i++)
+                        {
+                            <div class="col-md-6">
+                                <label>Licensed by</label>
+                                @Html.TextBoxFor(model => model.List_Txt_FacilityInfo_LicensedBy[i], new { @class = "form-control" })
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-12 form-group aic">
+                        <label>Accredited By</label>
+                        <div class="col-md-12">
+                            @for (int i = 0; i < Model.List_FacilityInfo_AccreditedBy.Count(); i++)
+                            {
+                                <div class="col-md-2">
+                                    <div class="checkbox">
+                                        <label>
+                                            @Html.CheckBoxFor(x => x.List_FacilityInfo_AccreditedBy[i].IsSelected)
+                                            @Html.LabelFor(x => x.List_FacilityInfo_AccreditedBy[i].IsSelected, Model.List_FacilityInfo_AccreditedBy[i].Value)
+                                            @Html.HiddenFor(x => x.List_FacilityInfo_AccreditedBy[i].Value)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Other(Please list)</label>
+                        @Html.TextBoxFor(model => model.Other_AccreditedBy, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="blue-bg box panel">Insurance and other information</h4>
+                    </div>
+                    <div class="col-md-12 form-group required">
+                        <label>In Network Insurance Providers<span>*</span></label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.NoInsuranceAccepted)
+                                        <label for="NoInsuranceAccepted">We do not accept Insurance</label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBoxFor(model => model.OutOfNetWorkInsurance)
+                                        <label for="OutOfNetWorkInsurance">We accept out of network insurance carriers</label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="insdetails">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    @Html.ListBox("ProvidersList", new MultiSelectList(Model.Ins_ProvidersLoad, "Key", "Value"), new { @id = "leftvalues", @class = "form-control multi-select-insurance", @selected = "", @style = "height:200px;" })
+                                </div>
+                                <div class="mselect-btns-cont col-md-1">
+                                    <br />
+                                    <br />
+                                    <div class="btn btn-primary" id="right">&raquo;</div>
+                                    <br />
+                                    <br />
+                                    <div class="btn btn-primary" id="left">&laquo;</div>
+                                </div>
+                                <div class="col-md-5">
+                                    @Html.ListBoxFor(m => m.Ins_ProvidersFinal, new MultiSelectList(Model.Insurance_Providers, "Ins_ID", "Ins_ProviderName"), new { @id = "rightvalues", @class = "form-control multi-select-insurance", @style = "height:200px;" })
+                                </div>
+                                <span class="err-msg">@Html.ValidationMessageFor(model => model.Ins_Providers)</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Other Insurance Providers (Please list)</label>
+                                </div>
+
+                                @for (int i = 0; i < Model.List_Txt_Othr_Ins_Provider.Count(); i++)
+                                {
+                                    <div class="col-md-6">
+                                        @Html.TextBoxFor(model => model.List_Txt_Othr_Ins_Provider[i], new { @class = "form-control" })
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 form-group">
+                        <label>What is the patients to staff ratio?</label>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(model => model.Patient_Staff_Ratio, new { @class = "form-control" })
+                            </div>
+                            <span class="err-msg">@Html.ValidationMessageFor(model => model.Patient_Staff_Ratio)</span>
+                        </div>
+                    </div>
+                    <div class="col-md-12 form-group required">
+                        <div id="AverageLengthOfStay">
+                            <span class="err-msg"></span>
+                            <label>Average length of program (specify range in days)<span>*</span></label>
+
+                            <div class="row">
+                                <div class="col-md-3">Residential</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.Res_Len_Stay_From, new { @class = "form-control numbersOnly" })
+                                </div>
+                                <div class="col-md-1">to</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.Res_Len_Stay_To, new { @class = "form-control numbersOnly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Outpatient</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.OP_Len_Stay_From, new { @class = "form-control numbersOnly" })
+                                </div>
+                                <div class="col-md-1">to</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.OP_Len_Stay_To, new { @class = "form-control numbersOnly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Hospital Inpatient/Partial Hospitalization</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.Hos_Inp_Stay_From, new { @class = "form-control numbersOnly" })
+                                </div>
+                                <div class="col-md-1">to</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.Hos_Inp_Stay_To, new { @class = "form-control numbersOnly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Intensive Outpatient</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.IOP_Len_Stay_From, new { @class = "form-control numbersOnly" })
+                                </div>
+                                <div class="col-md-1">to</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.IOP_Len_Stay_To, new { @class = "form-control numbersOnly" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 form-group required">
+                        <div id="AverageCostOfStay">
+                            <label>Average Cost (specify range). Note: Only put $0 if absolutely free. Free treatment centers appear in a different area of site.<span>*</span></label>
+                            <span class="err-msg">@Html.ValidationMessageFor(model => model.Patient_Staff_Ratio)</span>
+
+                            <div class="row">
+                                <div class="col-md-3">Residential - per month (unless otherwise specified below)</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.Res_avg_Cost_From, new { @class = "form-control numbersOnly" })
+                                </div>
+                                <div class="col-md-1">to</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.Res_avg_Cost_To, new { @class = "form-control numbersOnly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Outpatient</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.OP_avg_Cost_From, new { @class = "form-control numbersOnly" })
+                                </div>
+                                <div class="col-md-1">to</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.OP_avg_Cost_To, new { @class = "form-control numbersOnly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Hospital Inpatient/Partial Hospitalization</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.Hos_Inp_Cost_From, new { @class = "form-control numbersOnly" })
+                                </div>
+                                <div class="col-md-1">to</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.Hos_Inp_Cost_To, new { @class = "form-control numbersOnly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Intensive Outpatient - per session</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.IOP_cost_session_From, new { @class = "form-control numbersOnly" })
+                                </div>
+                                <div class="col-md-1">to</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.IOP_cost_session_To, new { @class = "form-control numbersOnly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Intensive Outpatient - per week</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.IOP_cost_week_From, new { @class = "form-control numbersOnly" })
+                                </div>
+                                <div class="col-md-1">to</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.IOP_cost_week_To, new { @class = "form-control numbersOnly" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Intensive Outpatient - per month</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.IOP_cost_month_From, new { @class = "form-control numbersOnly" })
+                                </div>
+                                <div class="col-md-1">to</div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.IOP_cost_month_To, new { @class = "form-control numbersOnly" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Other pertinent cost information you would like to share (max 3,000 characters)</label>
+
+                        <div class="row">
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(model => model.Other_costs, new { @class = "form-control", maxlength = 3000 })
+                            </div>
+                            <div class="characterCount col-md-3">
+                                @{
+                                int count = 0;
+                                if (Model.Other_costs != null)
+                                {
+                                    count = Model.Other_costs.Length;
+                                }
+                                }
+                                <label>@count characters added</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 form-group">
+                        <label>How do you define success? What is your success rate? How is it measured? (Max 3,000 characters)</label>
+
+                        @Html.TextAreaFor(model => model.Success_Reason, new { @class = "ckeditor", maxlength = 3000 })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="blue-bg box panel">Memberships</h4>
+                    </div>
+                    <div class="col-md-12 form-group aic">
+                        <label>Member of</label>
+
+                        <div class="col-md-12">
+                            @for (int i = 0; i < Model.List_Membership_AccreditedBy.Count() - 1; i++)
+                            {
+                                <div class="col-md-2">
+                                    <div class="checkbox">
+                                        <label>
+                                            @Html.CheckBoxFor(x => x.List_Membership_AccreditedBy[i].IsSelected)
+                                            @Html.LabelFor(x => x.List_Membership_AccreditedBy[i].IsSelected, Model.List_Membership_AccreditedBy[i].Value)
+                                            @Html.HiddenFor(x => x.List_Membership_AccreditedBy[i].Value)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                            @for (int i = Model.List_Membership_AccreditedBy.Count() - 1; i < Model.List_Membership_AccreditedBy.Count(); i++)
+                            {
+                                <div class="col-md-2">
+                                    <div class="checkbox">
+                                        <label>
+                                            @Html.CheckBoxFor(x => x.List_Membership_AccreditedBy[i].IsSelected)
+                                            @Html.LabelFor(x => x.List_Membership_AccreditedBy[i].IsSelected, Model.List_Membership_AccreditedBy[i].Value)
+                                            @Html.HiddenFor(x => x.List_Membership_AccreditedBy[i].Value)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Other(Please list)</label>
+                        @Html.TextBoxFor(model => model.Membership_Other1, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Other(Please list)</label>
+                        @Html.TextBoxFor(model => model.Membership_Other2, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="blue-bg box panel">Organizational information</h4>
+                    </div>
+
+                    <div class="col-md-6 form-group required aic">
+                        <label>Organization Type:<span>*</span></label>
+
+                        <div class="col-md-12">
+                            @foreach (var rdbtn in Model.rdList_Org_Profit)
+                            {
+                                <div class="col-md-3">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.Org_Profit, rdbtn.Value)
+                                            <label>@rdbtn.Text</label>
+                                            @Html.HiddenFor(x => rdbtn.Value)
+                                            @Html.HiddenFor(x => rdbtn.Text)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Org_Profit)</span>
+                    </div>
+                    <div class="col-md-6 form-group required">
+                        <label>Year Business Started <span>*</span></label>
+                        @Html.TextBoxFor(model => model.Org_BusiYear_started, new { @class = "form-control" })
+                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Org_BusiYear_started)</span>
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Management Team/Key Personnel (limit 5):</label>
+                        <div class="row">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <div class="col-md-6">
+                                    <label>Name:</label>
+                                    @Html.TextBoxFor(model => model.List_Str_Org_Key_Name[i], new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Title:</label>
+                                    @Html.TextBoxFor(model => model.List_Str_Org_Title[i], new { @class = "form-control" })
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Please enter a detailed description of your facility (Max 3,000 characters)</label>
+                        @Html.TextAreaFor(model => model.Org_OtherInfo, new { @class = "ckeditor", maxlength = 3000 })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="blue-bg box panel">Attachments</h4>
+                    </div>
+
+                    <div class="col-md-12">
+                        <p>
+                            To enhance the exposure of your listing and to assist addicts/alcoholics and their loved ones, please attach the following items so we can include them in your 
+                            Enhanced Sober.com Profile. If you don't have these items readily available, you can always email them to us later at <a href="mailto:clients@sober.com">clients@sober.com</a>:
+                        </p>
+                    </div>
+
+                    <div class="col-md-12 form-group">
+                        <label>YouTube Video Url of your housing and/or TV commercials</label>
+                        
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="col-md-8">
+                                        <input id="urlVideo" type="text" class="form-control" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button id="addVideo" type="button" class="btn">Add Video</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Videos added: (click to remove)</label>
+                                    <ol id="listVideo" style="list-style-type: decimal;"></ol>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <input name="video" id="video" type="hidden" />
+                    </div>
+
+                    <div class="col-md-12 form-group">
+                        @{
+                            string src = "http://dev.sober.com/home/ImagePDF?folder=" + Model.ImagesFolder + "_pictures";
+                        }
+                        <label>Pictures of your housing (limit of 15) and Brochures, applications, fee schedules, and rules (Limit 5)</label>
+                        <span>(gif,jpg,png) and pdf</span>                        
+
+                        <iframe src="@src" style="width: 100%; height: 300px;"></iframe>
+                    </div>
+                    <div class="col-md-12 form-group">
+                        @{
+                            src = "http://dev.sober.com/home/logo?folder=" + Model.ImagesFolder + "_logo";
+                        }
+                        <label>Your logo</label>
+                        <span>(gif,jpg,png)</span>
+                        <iframe src="@src" style="width: 100%; height: 250px;"></iframe>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="checkbox agreetoterms required">
+                        @for (int i = 0; i < Model.List_Agree_To_Terms.Count(); i++)
+                        {
+                            <label>
+                                @Html.CheckBoxFor(x => x.List_Agree_To_Terms[i].IsSelected, new { @class = "chk-box" })
+                                @Html.LabelFor(x => x.List_Agree_To_Terms[i].IsSelected, Model.List_Agree_To_Terms[i].Text)
+                                @Html.HiddenFor(x => x.List_Agree_To_Terms[i].Value)
+                                @Html.HiddenFor(x => x.List_Agree_To_Terms[i].Text)
+                            </label>
+                        }
+                        <span class="err-msg">@Html.ValidationMessageFor(x => x.List_Agree_To_Terms)</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <button name="submit" class="btn btn-primary" type="submit" id="addTreatmentCenter" value="Save">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        function checkAtLeastOneCheckBox() {
+            @if (ViewBag.partialProfile == null)
+            {
+            <text>
+
+            var message = "";
+            var display = false;
+            var errcount = 0;
+            $(".atleastonecheckbox").each(function (i) {
+                if ($(this).find(":checked").length == 0) {
+                    message = "Please select at least one " + $(this).find("label").first().text();
+                    var index = message.indexOf("*");
+                    if (index > 0) {
+                        message = message.substr(0, index - 1);
+                    }
+
+                    $(this).find("span.err-msg").first().text(message);
+                    errcount++;
+                    if (setfocus) {
+                        $(this).find("input").first().focus();
+                        setfocus = false;
+                    }
+
+                }
+                else {
+                    $(this).find("span.err-msg").first().text("");
+                }
+            });
+
+            if ($(".agreetoterms").find(":checked").length == 0) {
+                $(".agreetoterms").find("span.err-msg").first().text("Please click on the checkbox above authorizing your consent.");
+                errcount++;
+            }
+            else {
+                $(".agreetoterms").find("span.err-msg").first().text("");
+
+            }
+            if (($("#Res_Len_Stay_From").val() != "" && $("#Res_Len_Stay_To").val() != "") || ($("#OP_Len_Stay_From").val() != "" && $("#OP_Len_Stay_To").val() != "") || ($("#Hos_Inp_Stay_From").val() != "" && $("#Hos_Inp_Stay_To").val() != "") ||
+                ($("#IOP_Len_Stay_From").val() != "" && $("#IOP_Len_Stay_To").val() != "")) {
+                $("#AverageLengthOfStay").find("span.err-msg").first().text("");
+            }
+            else {
+                $("#AverageLengthOfStay").find("span.err-msg").first().text("Please select at least one pair of values");
+                $("#AverageLengthOfStay").find("input").focus();
+                errcount++;
+            }
+
+            if (($("#Res_avg_Cost_From").val() != "" && $("#Res_avg_Cost_To").val() != "") || ($("#OP_avg_Cost_From").val() != "" && $("#OP_avg_Cost_To").val() != "") || ($("#Hos_Inp_Cost_From").val() != "" && $("#Hos_Inp_Cost_To").val() != "") ||
+                ($("#IOP_cost_session_From").val() != "" && $("#IOP_cost_session_To").val() != "") || ($("#IOP_cost_week_From").val() != "" && $("#IOP_cost_week_To").val() != "") || ($("#IOP_cost_month_From").val() != "" && $("#IOP_cost_month_To").val() != "")) {
+                $("#AverageCostOfStay").find("span.err-msg").first().text("");                
+            }
+            else {
+                $("#AverageCostOfStay").find("span.err-msg").first().text("Please select at least one pair of values");
+                $("#AverageCostOfStay").find("input").focus();
+                errcount++;                
+            }
+
+            if (errcount > 0) {                
+                return false;
+            }                
+            else {                
+                return true;
+            }
+
+            </text>
+            }
+            return true;
+        }
+
+
+        $(document).ready(function () {
+            var count = 0;
+            $(".maximize").click(function () {
+                $(".profile-detailsAdd").slideDown(500);
+                $(".maximize").css("display", "none");
+                $(".minimize").css("display", "block");
+            });
+
+            $(".minimize").click(function () {
+                $(".profile-detailsAdd").slideUp(500);
+                $(".minimize").css("display", "none");
+                $(".maximize").css("display", "block");
+            });
+
+            $('#NoInsuranceAccepted').change(function () {
+                if ($(this).is(":checked")) {
+                    $("#insdetails").slideUp(100);
+                    $('#OutOfNetWorkInsurance').hide();
+                    $('#OutOfNetWorkInsurance').siblings('label').hide();
+                }
+                else {
+                    $("#insdetails").slideDown(100);
+                    $('#OutOfNetWorkInsurance').show();
+                    $('#OutOfNetWorkInsurance').siblings('label').show();
+                }
+            });
+
+            $('#OutOfNetWorkInsurance').change(function () {
+                if ($(this).is(":checked")) {
+                    $('#NoInsuranceAccepted').hide();
+                    $('#NoInsuranceAccepted').siblings('label').hide();
+                }
+                else {
+                    $('#NoInsuranceAccepted').show();
+                    $('#NoInsuranceAccepted').siblings('label').show();
+                }
+            });
+
+            $("form").submit(function (e) {
+                if (!checkAtLeastOneCheckBox()) {
+                    e.preventDefault();
+                    return;
+                }
+
+                for (var i in CKEDITOR.instances) {
+                    (function (i) {
+                        var name = '#' + CKEDITOR.instances[i].name;
+                        var maxlength = parseInt($(name).attr('maxlength'));
+                        var length = CKEDITOR.instances[i].getData().trim().length;
+
+                        if (length > maxlength) {
+                            alert(CKEDITOR.instances[i].name + " surpassed the " + maxlength);
+                            CKEDITOR.instances[i].focus();
+                            e.preventDefault();
+                        }
+
+                        $(name).val(CKEDITOR.instances[i].getData().trim());
+
+                    })(i);
+                }
+
+                $('#DestinationWebsite').val($('#Website').val());
+
+                $('.panel-cont').show();
+
+                if ($("#NoInsuranceAccepted").is(":checked")) {
+                    $("#rightvalues").empty();
+                }
+                else {
+                    $("#rightvalues option").prop('selected', true);
+                }
+            });            
+
+            $('textarea').on('input', function () {
+                var count = $(this).val().length;
+                $(this).parent().siblings('.characterCount').children('label').text(count + " characters added");
+            });
+
+            $('#addVideo').click(function () {
+                if ($('#video').val().indexOf($('#urlVideo').val()) == -1) {
+                    var vid = $('#video').val();
+                    vid += $('#urlVideo').val() + "|";
+                    $('#video').val(vid);
+
+                    $('#listVideo').append("<li class ='anchor'>" + $('#urlVideo').val() + "</li>");
+                    $('#urlVideo').val('');
+                }
+                else {
+                    alert("This video has been added");
+                }
+            });
+
+            $('#listVideo').on('click', 'li', function () { 
+                $(this).remove();
+                var vid = $('#video').val().replace($(this).text() + '|', '');
+                $('#video').val(vid);
+            });
+
+        });
+    </script> 
+
+}

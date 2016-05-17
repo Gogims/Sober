@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "NA Control";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<div class="white-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                @Html.ActionLink("Add Meeting", "AddMeeting", "Meetings", null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+
+        <div class="row originalHTML">
+            <h2>If you want to modify/delete a NA Meeting:</h2>
+            <ol class="col-md-12">
+                <li>@Html.ActionLink("Go to the NA Meeting main site", "na", "meetings")</li>
+                <li>Look for the NA Meeting you want to modify/delete using the search or filtering by states -> city</li>
+                <li>Click on the NA Meeting</li>
+                <li>On the left choose modify or delete</li>
+            </ol>
+        </div>
+    </div>
+</div>

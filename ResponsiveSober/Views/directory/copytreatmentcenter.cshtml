@@ -1,0 +1,1125 @@
+﻿@model SoberBLL.AddListings.CopyTreatmentCenter
+
+@{
+    ViewBag.Title = "copytreatmentcenter";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<link href="~/content/CustomStyle.css" rel="stylesheet" />
+<script src="~/Scripts/PhoneMask.js"></script>
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+@section includes
+{
+    @Scripts.Render("~/bundles/profile_scripts")
+    @Styles.Render("~/content/profile_css")    
+}
+
+@using(Html.BeginForm())
+{
+    <div id="treatmentHouse">
+        <div class="createSamhsaListing">
+            @using (Html.BeginForm())
+            {
+                <div class="section wrap-s">
+                    <ul class="breadcrumbs-s">
+                        <li class="first"><a href="">Home</a></li>
+                        <li><a href="">Edit treatment house</a></li>
+                    </ul>
+                    <div class="page-contents-s">
+                        <h1 class="main-title-s">Edit Treatment Centers</h1>
+                        <p class="form-meta">Fields marked <span class="asterix">*</span> are mandatory</p>
+                        <p>@Html.ValidationSummary()</p>
+                        <div class="main-page-cont">
+                            @Html.HiddenFor(model => model.TH.ListingId)
+                            @Html.HiddenFor(model => model.TH.CreatedOn)
+                            @Html.HiddenFor(model => model.TH.ModifiedOn)
+                            @Html.HiddenFor(model => model.TH.CertifiedPartner)
+                            @Html.HiddenFor(model => model.TH.ShowWebsite)
+                            @Html.HiddenFor(model => model.TH.StatusId)
+                            @Html.HiddenFor(model => model.TH.surveyCategory)
+                            <div class="left-cont-s">
+                                <ul class="form">
+                                    <li>
+                                        <label>Organization Name <span class="asterix">*</span>:</label>
+                                        @Html.TextBoxFor(model => model.TH.name1, new { @class = "inp-box" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TH.name1)</span>
+                                    </li>
+                                    <li>
+                                        <label>DBA Name:</label>
+                                        @Html.TextBoxFor(model => model.TH.name2, new { @class = "inp-box" })
+                                    </li>
+                                    <li>
+                                        <label>Street1 <span class="asterix">*</span>:</label>
+                                        @Html.TextBoxFor(model => model.TH.location_street1, new { @class = "inp-box" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TH.location_street1)</span>
+                                    </li>
+                                    <li>
+                                        <label>Street2 :</label>
+                                        @Html.TextBoxFor(model => model.TH.location_street2, new { @class = "inp-box" })
+                                    </li>
+                                    <li>
+                                        <label>City <span class="asterix">*</span>:</label>
+                                        @Html.TextBoxFor(model => model.TH.location_city, new { @class = "inp-box" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TH.location_city)</span>
+                                    </li>
+                                    <li>
+                                        <label>State <span class="asterix">*</span>:</label>
+                                        @Html.DropDownListFor(model => model.TH.location_state, new SelectList(ViewBag.States, "StateAbbreviation", "StateAbbreviation", Model.TH.location_state), "---Select A State ---")
+
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TH.location_state)</span>
+                                    </li>
+                                    <li>
+                                        <label>Zip <span class="asterix">*</span>:</label>
+                                        @Html.TextBoxFor(model => model.TH.location_zip, new { @class = "inp-box" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TH.location_zip)</span>
+                                    </li>
+                                    <li>
+                                        <label>Contact Name (Not Published) <span class="asterix">*</span>:</label>
+                                        @Html.TextBoxFor(model => model.TH.ContactName, new { @class = "inp-box" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TH.ContactName)</span>
+                                    </li>
+                                    <li>
+                                        <label>Contact Email (Not Published) <span class="asterix">*</span>:</label>
+                                        @Html.TextBoxFor(model => model.TH.EmailAddress, new { @class = "inp-box" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TH.EmailAddress)</span>
+                                    </li>
+                                    <li>
+                                        <label>Phone <span class="asterix">*</span>:</label>
+                                        @Html.TextBoxFor(model => model.TH.phone, new { @class = "inp-box", onkeydown = "javascript:backspacerDOWN(this,event);", onkeyup = "javascript:backspacerUP(this,event);" })
+                                        @Html.ValidationMessageFor(model => model.TH.phone)
+                                        <span>eg. - (xxx) xxx-xxxx </span>
+                                        <span class="err-msg"></span>
+                                    </li>
+
+                                    <li>
+                                        <label>Display Website <span class="asterix">*</span>:</label>
+                                        @Html.TextBoxFor(model => model.TH.website, new { @class = "inp-box" })
+                                        @Html.ValidationMessageFor(model => model.TH.website)
+                                        <span class="err-msg"></span>
+                                    </li>
+
+                                    <li>
+                                        <label>Destination Website <span class="asterix">*</span>:</label>
+                                        @Html.TextBoxFor(model => model.TH.DestinationWebsite, new { @class = "inp-box" })
+                                        @Html.ValidationMessageFor(model => model.TH.DestinationWebsite)
+                                        <span class="err-msg"></span>
+                                    </li>
+
+                                    <li style="width: 100%;">
+                                        <label>Primary Focus <span class="asterix">*</span>:</label>
+                                        <div class="atleastonecheckbox">
+                                            <table>
+                                                @for (int i = 0; i < Model.TH.List_chckBox_PrimayFocus.Count; i++)
+                                                {
+                                                    <div class="chk-box-cont">
+                                                        @Html.CheckBoxFor(x => x.TH.List_chckBox_PrimayFocus[i].IsSelected, new { @class = "chk-box" })
+                                                        @Html.LabelFor(x => x.TH.List_chckBox_PrimayFocus[i].IsSelected, Model.TH.List_chckBox_PrimayFocus[i].Text, new { @class = "chk-box-label" })
+                                                        @Html.HiddenFor(x => x.TH.List_chckBox_PrimayFocus[i].Value)
+                                                    </div>
+                                                }
+
+                                            </table>
+                                            <span class="err-msg">@Html.ValidationMessageFor(x => x.TH.PrimaryFocus)</span>
+                                        </div>
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <label>Services Provided :</label>
+                                        @for (int i = 0; i < Model.TH.List_chckBox_ServicesProvided.Count; i++)
+                                        {
+                                            <div class="chk-box-cont">
+                                                @Html.CheckBoxFor(x => x.TH.List_chckBox_ServicesProvided[i].IsSelected, new { @class = "chk-box" })
+                                                @Html.LabelFor(x => x.TH.List_chckBox_ServicesProvided[i].IsSelected, Model.TH.List_chckBox_ServicesProvided[i].Text, new { @class = "chk-box-label" })
+                                                @Html.HiddenFor(x => x.TH.List_chckBox_ServicesProvided[i].Value)
+                                            </div>
+                                        }
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <label>Type of care <span class="asterix">*</span>: </label>
+                                        <div class="atleastonecheckbox">
+                                            @for (int i = 0; i < Model.TH.List_chckBox_TypeOfCare.Count; i++)
+                                            {
+                                                <div class="chk-box-cont">
+                                                    @Html.CheckBoxFor(x => x.TH.List_chckBox_TypeOfCare[i].IsSelected, new { @class = "chk-box" })
+                                                    @Html.LabelFor(x => x.TH.List_chckBox_TypeOfCare[i].IsSelected, Model.TH.List_chckBox_TypeOfCare[i].Text, new { @class = "chk-box-label" })
+                                                    @Html.HiddenFor(x => x.TH.List_chckBox_TypeOfCare[i].Value)
+                                                </div>
+                                            }
+                                            <span class="err-msg">@Html.ValidationMessageFor(x => x.TH.TypeOfCare)</span>
+                                        </div>
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <label>Special Programs :</label>
+                                        @for (int i = 0; i < Model.TH.List_chckBox_Specialprograms.Count; i++)
+                                        {
+                                            <div class="chk-box-cont">
+                                                @Html.CheckBoxFor(x => x.TH.List_chckBox_Specialprograms[i].IsSelected, new { @class = "chk-box" })
+                                                @Html.LabelFor(x => x.TH.List_chckBox_Specialprograms[i].IsSelected, Model.TH.List_chckBox_Specialprograms[i].Text, new { @class = "chk-box-label" })
+                                                @Html.HiddenFor(x => x.TH.List_chckBox_Specialprograms[i].Value)
+                                            </div>
+                                        }
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <label>Forms Of Payment Accepted <span class="asterix">*</span>: </label>
+                                        <div class="atleastonecheckbox">
+                                            @for (int i = 0; i < Model.TH.List_chckBox_FormsOfPaymentAccepted.Count; i++)
+                                            {
+                                                <div class="chk-box-cont">
+                                                    @Html.CheckBoxFor(x => x.TH.List_chckBox_FormsOfPaymentAccepted[i].IsSelected, new { @class = "chk-box" })
+                                                    @Html.LabelFor(x => x.TH.List_chckBox_FormsOfPaymentAccepted[i].IsSelected, Model.TH.List_chckBox_FormsOfPaymentAccepted[i].Text, new { @class = "chk-box-label" })
+                                                    @Html.HiddenFor(x => x.TH.List_chckBox_FormsOfPaymentAccepted[i].Value)
+                                                </div>
+                                            }
+                                            <span class="err-msg">@Html.ValidationMessageFor(x => x.TH.FormsOfPaymentAccepted)</span>
+                                        </div>
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <label>Payment Assistance :</label>
+                                        @for (int i = 0; i < Model.TH.List_chckBox_PaymentAssistance.Count; i++)
+                                        {
+                                            <div class="chk-box-cont">
+                                                @Html.CheckBoxFor(x => x.TH.List_chckBox_PaymentAssistance[i].IsSelected, new { @class = "chk-box" })
+                                                @Html.LabelFor(x => x.TH.List_chckBox_PaymentAssistance[i].IsSelected, Model.TH.List_chckBox_PaymentAssistance[i].Text, new { @class = "chk-box-label" })
+                                                @Html.HiddenFor(x => x.TH.List_chckBox_PaymentAssistance[i].Value)
+                                            </div>
+                                        }
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <label>Special Language services :</label>
+                                        @for (int i = 0; i < Model.TH.List_chckBox_LanguageServices.Count; i++)
+                                        {
+                                            <div class="chk-box-cont">
+                                                @Html.CheckBoxFor(x => x.TH.List_chckBox_LanguageServices[i].IsSelected, new { @class = "chk-box" })
+                                                @Html.LabelFor(x => x.TH.List_chckBox_LanguageServices[i].IsSelected, Model.TH.List_chckBox_LanguageServices[i].Text, new { @class = "chk-box-label" })
+                                                @Html.HiddenFor(x => x.TH.List_chckBox_LanguageServices[i].Value)
+                                            </div>
+                                        }
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <label>Which specialization(s) best describe your offering(s). Pick up to 3. All providers will be placed in the Drugs & Alcohol Treatment section of Sober.com.</label>
+                                        @for (int i = 0; i < Model.TH.List_chckBox_AssociatedCategories.Count; i++)
+                                        {
+                                            <div class="chk-box-cont">
+                                                @if (Model.TH.List_chckBox_AssociatedCategories[i].Text == "6")
+                                                {
+                                                    Model.TH.List_chckBox_AssociatedCategories[i].IsSelected = true;
+                                                    @Html.CheckBoxFor(x => x.TH.List_chckBox_AssociatedCategories[i].IsSelected, new { @class = "chk-box", disabled = "disabled" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.CheckBoxFor(x => x.TH.List_chckBox_AssociatedCategories[i].IsSelected, new { @class = "chk-box" })
+                                                }
+                                                @Html.LabelFor(x => x.TH.List_chckBox_AssociatedCategories[i].IsSelected, Model.TH.List_chckBox_AssociatedCategories[i].Value, new { @class = "chk-box-label" })
+                                                @Html.HiddenFor(x => x.TH.List_chckBox_AssociatedCategories[i].Text)
+                                            </div>
+                                        }
+                                    </li>
+                                    @*<li style="width: 100%;">
+                                        <label>Which category would you use to best describe your organization?</label>
+                                        @foreach (var option in Model.TH.List_rbBtn_CategoryList)
+                                        {
+                                            <div class="chk-box-cont">
+                                                @Html.RadioButtonFor(x => x.surveyCategory, option.Text, new { @class = "chk-box" })
+                                                @Html.LabelFor(x => x.surveyCategory, option.Text, new { @class = "chk-box-label" })
+                                            </div>
+                                        }
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TH.surveyCategory)</span>
+                                    </li>*@
+                                    <li style="width: 100%;" class="btn-cont">
+                                        <input name="submit" class="btn" type="submit" id="addTreatmentHouse" value="Save" />
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <input name="submit" class="btn" type="submit" id="approveTreatmentHouse" value="Approve" />
+                                            <input name="submit" type="submit" class="btn" id="rejectTreatmentHouse" value="Reject" />
+                                        }
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="right-cont-s">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                
+                <script type="text/javascript">
+            function checkAtLeastOneCheckBox() {
+                var message = "";
+                var display = false;
+                var errcount = 0;
+                $(".atleastonecheckbox").each(function (i) {
+                    if ($(this).find(":checked").length == 0) {
+                        //message = $(this).find("label").first().text().replace(' *:','');
+                        $(this).find("span.err-msg").first().text("Please select atleast one value");
+                        errcount++;
+                    }
+                    else {
+                        $(this).find("span.err-msg").first().text("");
+                    }
+                });
+                if (errcount > 0)
+                    return false;
+                else
+                    return true;
+            }
+
+            $(document).ready(function () {
+                $("#addTreatmentHouse").click(function () {
+                    return checkAtLeastOneCheckBox();
+                });
+
+                $('#Website').change(function () {
+                    var destination = $('#DestinationWebsite').val();
+
+                    if (destination == "") {
+                        $('#DestinationWebsite').val($(this).val());
+                        $('#DestinationWebsite').siblings('span').text('');
+                    }
+                });
+
+                $('#DestinationWebsite').change(function () {
+                    if ($(this).val() == "") {
+                        $(this).siblings('span').text('The DestinationWebsite field is required.');
+                    }
+                });
+            });
+                </script>
+            }
+        </div>
+    </div>
+    
+    <div id="treatmentcenter">
+        <div class="section wrap-s">
+            <div class="page-contents-s">
+                <h1 class="main-title-s">Sober.com Treatment Facility Supplemental Questionnaire</h1>
+                <p class="form-meta">
+                    Please fill this form for each facility. If all locations offer exactly the same services, than fill only one form and also provide us the addresses for each facility in an email to <a href="mailto:clients@sober.com">clients@sober.com</a>.
+                    <br />
+                    Fields marked <span class="asterix">*</span> are mandatory
+                </p>
+                <div class="main-page-cont">
+                    @Html.HiddenFor(model => model.TC.ImagesFolder)
+                    @Html.HiddenFor(model => model.TC.User_Id)
+                    @Html.HiddenFor(model => model.TC.CreatedOn)
+                    @Html.HiddenFor(model => model.TC.ModifiedOn)
+
+                    <div class="left-cont-s">
+                        <div class="accordion">
+                            <div class="section">
+                                <div class="head-s">Pharmacotherapies </div>
+                                <ul class="form">
+                                    <li style="width: 100%;">
+                                        <label>Do you provide the following during treatment? <span class="asterix">*</span></label>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Antabuse</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Treat_Antabuse))
+                                            { Model.TC.Pharma_Treat_Antabuse = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Treat_Antabuse)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Treat_Antabuse, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+
+                                        </div>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Naltrexone</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Treat_Naltrexone))
+                                            { Model.TC.Pharma_Treat_Naltrexone = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Treat_Naltrexone)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Treat_Naltrexone, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+                                        </div>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Campral</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Treat_Campral))
+                                            { Model.TC.Pharma_Treat_Campral = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Treat_Campral)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Treat_Campral, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+                                        </div>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Nicotine replacement</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Treat_Nicotine))
+                                            { Model.TC.Pharma_Treat_Nicotine = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Treat_Nicotine)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Treat_Nicotine, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+                                        </div>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Medications for psychiatric disorders</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Treat_Disorders))
+                                            { Model.TC.Pharma_Treat_Disorders = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Treat_Disorders)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Treat_Disorders, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+                                        </div>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Methadone</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Treat_Methodone))
+                                            { Model.TC.Pharma_Treat_Methodone = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Treat_Methodone)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Treat_Methodone, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+                                        </div>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Subutex</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Subutex))
+                                            { Model.TC.Pharma_Subutex = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Subutex)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Subutex, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+                                        </div>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Suboxone</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Suboxone))
+                                            { Model.TC.Pharma_Suboxone = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Suboxone)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Suboxone, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+                                        </div>
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <label>Does this facility operate maintenance programs for...<span class="asterix">*</span></label>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Methadone</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Facility_Methadone))
+                                            { Model.TC.Pharma_Facility_Methadone = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Facility_Methadone)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Facility_Methadone, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+                                        </div>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Subutex</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Facility_Subutex))
+                                            { Model.TC.Pharma_Facility_Subutex = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Facility_Subutex)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Facility_Subutex, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+                                        </div>
+                                        <div class="full-width float-left">
+                                            <span class="float-left width-250">Suboxone</span>
+                                            @if (string.IsNullOrWhiteSpace(Model.TC.Pharma_Facility_Suboxone))
+                                            { Model.TC.Pharma_Facility_Suboxone = "No"; }
+                                            @foreach (var rdbtn in Model.TC.rdList_Pharma_Facility_Suboxone)
+                                            {
+                                                @Html.RadioButtonFor(model => model.TC.Pharma_Facility_Suboxone, rdbtn.Value, new { @class = "chk-box" });
+                                                <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                            }
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                        <div class="accordion">
+                            <div class="section">
+                                <div class="head-s">Facility information</div>
+                                <ul class="form">
+                                    <li>
+                                        <label>Are private rooms available? <span class="asterix">*</span></label>
+                                        @foreach (var rdbtn in Model.TC.rdList_Private_Room_Available)
+                                        {
+                                            @Html.RadioButtonFor(model => model.TC.Private_Room_Available, rdbtn.Value, new { @class = "chk-box" });
+
+                                            <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                        }
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Private_Room_Available)</span>
+                                    </li>
+                                    @*<li>
+                                        <label>Average self pay cost for one month of treatment</label>
+                                        <span class="float-left">From</span><span class="asterix float-left">*</span>
+                                        @Html.TextBoxFor(model => model.Avg_SelfPayCost_From, new { @class = "float-left small inp-box" })
+                                        <span class="float-left">to</span><span class="asterix float-left">*</span>
+                                        @Html.TextBoxFor(model => model.Avg_SelfPayCost_To, new { @class = "float-left small inp-box" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Avg_SelfPayCost_To)</span>
+                                    </li>*@
+                                    @*<li style="width: 100%;">
+                                        <label>Local area attractions of interest (please only list top 5) <span class="asterix">*</span></label>
+                                        @for (int i = 0; i < Model.List_Txt_Area_of_Interest.Count(); i++)
+                                        {
+                                                        @Html.TextBoxFor(x => x.List_Txt_Area_of_Interest[i], new { @class = "inp-box margin-bottom-right-10" })
+                                        }
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Area_of_Interest)</span>
+                                    </li>*@
+                                    <li>
+                                        <label>Number of beds at this facility <span class="asterix">*</span></label>
+                                        @Html.TextBoxFor(model => model.TC.No_of_Bed, new { @class = "float-left small inp-box first" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.No_of_Bed)</span>
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <label>Gender<span class="asterix">*</span></label>
+                                        @foreach (var rdbtn in Model.TC.rdList_Gender)
+                                        {
+                                            @Html.RadioButtonFor(model => model.TC.Gender, rdbtn.Value, new { @class = "chk-box" });
+
+                                            <label class="chk-box-label">@rdbtn.Text</label>
+                                        }
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Gender)</span>
+                                    </li>
+                                    @*<li>
+                                        <label>Average stay in days <span class="asterix">*</span></label>
+                                        @Html.TextBoxFor(model => model.Avg_Stay_Day_From, new { @class = "float-left small inp-box first" })
+                                        <span class="float-left">to</span>
+                                        @Html.TextBoxFor(model => model.Avg_Stay_Day_To, new { @class = "float-left small inp-box first" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Avg_Stay_Day_To)</span>
+                                    </li>*@
+                                    <li>
+                                        <label>Do you offer Aftercare services?<span class="asterix">*</span></label>
+                                        @foreach (var rdbtn in Model.TC.rdList_Aftercare_Services)
+                                        {
+                                            @Html.RadioButtonFor(model => model.TC.Aftercare_Services, rdbtn.Value, new { @class = "chk-box" });
+
+                                            <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                        }
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Aftercare_Services)</span>
+                                    </li>
+                                    <li>
+                                        <label>If Aftercare is offered, are those services free?<span class="asterix">*</span></label>
+                                        @foreach (var rdbtn in Model.TC.rdList_Aftercare_Free_Services)
+                                        {
+                                            @Html.RadioButtonFor(model => model.TC.Aftercare_Free_Services, rdbtn.Value, new { @class = "chk-box" });
+
+                                            <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                        }
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Aftercare_Free_Services)</span>
+                                    </li>
+                                    <li>
+                                        <label>Does your facility track patients' progress post care?<span class="asterix">*</span></label>
+                                        @foreach (var rdbtn in Model.TC.rdList_Facility_Track_PostCare)
+                                        {
+                                            @Html.RadioButtonFor(model => model.TC.Facility_Track_PostCare, rdbtn.Value, new { @class = "chk-box" });
+
+                                            <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                        }
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Facility_Track_PostCare)</span>
+                                    </li>
+                                    <li>
+                                        <label>Do you provide specific programs for alumni?<span class="asterix">*</span></label>
+                                        @foreach (var rdbtn in Model.TC.rdList_Alumni_Program)
+                                        {
+                                            @Html.RadioButtonFor(model => model.TC.Alumni_Program, rdbtn.Value, new { @class = "chk-box" });
+
+                                            <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                        }
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Alumni_Program)</span>
+                                    </li>
+                                    <li>
+                                        <label>Do you offer alumni networking and special events?<span class="asterix">*</span></label>
+                                        @foreach (var rdbtn in Model.TC.rdList_Alumni_SpecialEvents)
+                                        {
+                                            @Html.RadioButtonFor(model => model.TC.Alumni_SpecialEvents, rdbtn.Value, new { @class = "chk-box" });
+
+                                            <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                        }
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Alumni_SpecialEvents)</span>
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <div class="float-left full-width">
+                                            <div class="float-left margin-bottom-right-10 ">
+                                                @for (int i = 0; i < Model.TC.List_Txt_FacilityInfo_LicensedBy.Count(); i++)
+                                                {
+
+                                                    <label>Licensed by</label>
+                                                    @Html.TextBoxFor(model => model.TC.List_Txt_FacilityInfo_LicensedBy[i], new { @class = "inp-box" })
+                                                }
+                                            </div>
+                                            <div class="float-left margin-bottom-right-10">
+                                                @for (int i = 0; i < Model.TC.List_Txt_FacilityInfo_TypeOfLicense.Count(); i++)
+                                                {
+
+                                                    <label>Licensed type</label>
+                                                    @Html.TextBoxFor(model => model.TC.List_Txt_FacilityInfo_TypeOfLicense[i], new { @class = "inp-box" })
+                                                }
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <label>Accredited By</label>
+                                        @for (int i = 0; i < Model.TC.List_FacilityInfo_AccreditedBy.Count(); i++)
+                                        {
+                                            @Html.CheckBoxFor(x => x.TC.List_FacilityInfo_AccreditedBy[i].IsSelected, new { @class = "chk-box" })
+                                            @Html.LabelFor(x => x.TC.List_FacilityInfo_AccreditedBy[i].IsSelected, Model.TC.List_FacilityInfo_AccreditedBy[i].Value, new { @class = "chk-box-label width-50" })
+                                            @Html.HiddenFor(x => x.TC.List_FacilityInfo_AccreditedBy[i].Value)
+                                        }
+                                        <div class="float-left full-width">
+                                            <span class="float-left">Other(Please list)</span>
+                                            @Html.TextBoxFor(model => model.TC.Other_AccreditedBy, new { @class = "inp-box" })
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="accordion">
+                            <div class="section">
+                                <div class="head-s">Insurance and other information</div>
+                                <ul class="form">
+                                    <li class="full-width">
+                                        <label>In Network Insurance Providers<span class="asterix">*</span></label>
+                                        <div class="full-width float-left">
+                                            @Html.CheckBoxFor(model => model.TC.NoInsuranceAccepted, new { @class = "chk-box" })
+                                            @* <input id="noinsurance" type="checkbox" class="chk-box" />*@
+                                            <label class="chk-box-label">We do not accept Insurance</label>
+                                        </div>
+                                        <div class="full-width float-left">
+                                            @Html.CheckBoxFor(model => model.TC.OutOfNetWorkInsurance, new { @class = "chk-box" })
+                                            <label class="chk-box-label">We accept out of network insurance carriers</label>
+                                            @if (User.IsInRole("Admin"))
+                                            {
+                                                <input name="submit" class="btn" type="submit" id="addInsurance" value="Add Insurance" />
+                                                //@Html.ActionLink("Add Insurance", "index", "insurance", new { userid = Model.User_Id, treatmentcenter = Model }, new { @class = "float-right" })
+                                            }
+                                        </div>
+                                        <div id="insdetails" class="float=left full-width multiselect-cont">
+                                            <div>
+                                                @Html.ListBoxFor(m => m.TC.Ins_ProvidersFinal, new MultiSelectList(Model.TC.Ins_ProvidersLoad), new { @id = "leftvalues", @class = "multi-select-insurance", @selected = "" })
+                                            </div>
+                                            <div class="mselect-btns-cont">
+                                                <div class="left-right-btn" id="right">&raquo;</div>
+                                                <br />
+                                                <div class="left-right-btn" id="left">&laquo;</div>
+                                            </div>
+                                            <div>
+                                                @Html.ListBoxFor(m => m.TC.Ins_ProvidersFinal, new MultiSelectList(Model.TC.Ins_ProvidersFinal), new { @id = "rightvalues", @class = "multi-select-insurance" })
+                                            </div>
+                                            <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Ins_Providers)</span>
+
+                                            <div class="full-width">
+                                                <label>Other Insurance Providers (Please list)</label>
+                                                <div class="full-width float-left">
+                                                    @for (int i = 0; i < Model.TC.List_Txt_Othr_Ins_Provider.Count(); i++)
+                                                    {
+                                                        @Html.TextBoxFor(model => model.TC.List_Txt_Othr_Ins_Provider[i], new { @class = "inp-box margin-bottom-right-10" })
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="full-width">
+                                        <label>What is the patients to staff ratio?</label>
+                                        @Html.TextBoxFor(model => model.TC.Patient_Staff_Ratio, new { @class = "float-left small inp-box first" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Patient_Staff_Ratio)</span>
+                                    </li>
+                                    <li class="full-width">
+                                        <div id="AverageLengthOfStay">
+                                            <span class="err-msg"></span>
+                                            <label>Average length of program (specify range in days)<span class="asterix">*</span></label>
+                                            <div class="full-width float-left">
+                                                <span class="float-left width-250">Residential</span>
+                                                @Html.TextBoxFor(model => model.TC.Res_Len_Stay_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.Res_Len_Stay_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>
+                                            <div class="full-width float-left margin-top-20">
+                                                <span class="float-left width-250">Outpatient</span>
+                                                @Html.TextBoxFor(model => model.TC.OP_Len_Stay_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.OP_Len_Stay_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>
+                                            <div class="full-width float-left margin-top-20">
+                                                <span class="float-left width-250">Hospital Inpatient/Partial Hospitalization</span>
+                                                @Html.TextBoxFor(model => model.TC.Hos_Inp_Stay_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.Hos_Inp_Stay_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>
+                                            <div class="full-width float-left margin-top-20">
+                                                <span class="float-left width-250">Intensive Outpatient</span>
+                                                @Html.TextBoxFor(model => model.TC.IOP_Len_Stay_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.IOP_Len_Stay_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                    <li class="full-width">
+                                        <div id="AverageCostOfStay">
+                                            <label>Average Cost (specify range). Note: Only put $0 if absolutely free. Free treatment centers appear in a different area of site.<span class="asterix">*</span></label>
+                                            <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Patient_Staff_Ratio)</span>
+                                            <div class="full-width float-left">
+                                                <span class="float-left width-250">Residential - per month (unless otherwise specified below)</span>
+                                                @Html.TextBoxFor(model => model.TC.Res_avg_Cost_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.Res_avg_Cost_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>
+
+                                            <div class="full-width float-left margin-top-20">
+                                                <span class="float-left width-250">Outpatient</span>
+                                                @Html.TextBoxFor(model => model.TC.OP_avg_Cost_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.OP_avg_Cost_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>
+                                            <div class="full-width float-left margin-top-20">
+                                                <span class="float-left width-250">Hospital Inpatient/Partial Hospitalization</span>
+                                                @Html.TextBoxFor(model => model.TC.Hos_Inp_Cost_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.Hos_Inp_Cost_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>
+
+                                            @*<div class="full-width float-left margin-top-20">
+                                                <span class="float-left width-250">Intensive Outpatient</span>
+                                                @Html.TextBoxFor(model => model.TC.IOP_avg_Cost_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.IOP_avg_Cost_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>*@
+
+                                            <div class="full-width float-left margin-top-20">
+                                                <span class="float-left width-250">Intensive Outpatient - per session</span>
+                                                @Html.TextBoxFor(model => model.TC.IOP_cost_session_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.IOP_cost_session_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>
+                                            <div class="full-width float-left margin-top-20">
+                                                <span class="float-left width-250">Intensive Outpatient - per week</span>
+                                                @Html.TextBoxFor(model => model.TC.IOP_cost_week_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.IOP_cost_week_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>
+                                            <div class="full-width float-left margin-top-20">
+                                                <span class="float-left width-250">Intensive Outpatient - per month</span>
+                                                @Html.TextBoxFor(model => model.TC.IOP_cost_month_From, new { @class = "float-left small inp-box first numbersOnly" })
+                                                <span class="float-left">to</span>
+                                                @Html.TextBoxFor(model => model.TC.IOP_cost_month_To, new { @class = "float-left small inp-box numbersOnly" })
+                                            </div>
+
+                                        </div>
+                                    </li>
+                                    <li style="width: 1040px;">
+                                        <label>Other pertinent cost information you would like to share (max 3,000 characters)</label>
+                                        @Html.TextAreaFor(model => model.TC.Other_costs, new { @class = "full-width-extraheight", maxlength = 3000 })
+
+                                        <div class="characterCount">
+                                            @{
+                                                    int count = 0;
+                                                    if (Model.TC.Other_costs != null)
+                                                    {
+                                                        count = Model.TC.Other_costs.Length;
+                                                    }
+                                            }
+                                            <label>@count characters added</label>
+                                        </div>
+                                    </li>
+
+                                    <li style="width: 1040px;">
+                                        <label>How do you define success? What is your success rate? How is it measured? (Max 3,000 characters)</label>
+                                        @Html.TextAreaFor(model => model.TC.Success_Reason, new { @class = "full-width-extraheight ckeditor", maxlength = 3000 })
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="accordion">
+                            <div class="section">
+                                <div class="head-s">Memberships</div>
+                                <ul class="form">
+                                    <li>
+                                        <label>Member of</label>
+                                        @for (int i = 0; i < Model.TC.List_Membership_AccreditedBy.Count() - 1; i++)
+                                        {
+                                            @Html.CheckBoxFor(x => x.TC.List_Membership_AccreditedBy[i].IsSelected, new { @class = "chk-box" })
+                                            @Html.LabelFor(x => x.TC.List_Membership_AccreditedBy[i].IsSelected, Model.TC.List_Membership_AccreditedBy[i].Value, new { @class = "chk-box-label width-50" })
+                                            @Html.HiddenFor(x => x.TC.List_Membership_AccreditedBy[i].Value)
+                                        }
+                                        @for (int i = Model.TC.List_Membership_AccreditedBy.Count() - 1; i < Model.TC.List_Membership_AccreditedBy.Count(); i++)
+                                        {
+                                            @Html.CheckBoxFor(x => x.TC.List_Membership_AccreditedBy[i].IsSelected, new { @class = "chk-box" })
+                                            @Html.LabelFor(x => x.TC.List_Membership_AccreditedBy[i].IsSelected, Model.TC.List_Membership_AccreditedBy[i].Value, new { @class = "chk-box-label" })
+                                            @Html.HiddenFor(x => x.TC.List_Membership_AccreditedBy[i].Value)
+                                        }
+                                        <div class="float-left full-width">
+                                            <span class="float-left">Other(Please list)</span>
+                                            @Html.TextBoxFor(model => model.TC.Membership_Other1, new { @class = "inp-box" })
+                                        </div>
+                                        <div class="float-left full-width">
+                                            <span class="float-left">Other(Please list)</span>
+                                            @Html.TextBoxFor(model => model.TC.Membership_Other2, new { @class = "inp-box" })
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="accordion">
+                            <div class="section">
+                                <div class="head-s">Organizational information</div>
+                                <ul class="form">
+                                    <li>
+                                        <label>Organization Type:<span class="asterix">*</span></label>
+                                        @foreach (var rdbtn in Model.TC.rdList_Org_Profit)
+                                        {
+                                            @Html.RadioButtonFor(model => model.TC.Org_Profit, rdbtn.Value, new { @class = "chk-box" });
+
+                                            <label class="chk-box-label">@rdbtn.Text</label>
+                                        }
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Org_Profit)</span>
+                                    </li>
+                                    <li>
+                                        <label>Year Business Started <span class="asterix">*</span></label>
+                                        @Html.TextBoxFor(model => model.TC.Org_BusiYear_started, new { @class = "inp-box" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.TC.Org_BusiYear_started)</span>
+                                    </li>
+                                    <li style="width: 100%;">
+                                        <label>Management Team/Key Personnel (limit 5):</label>
+                                        @* <div class="float-left full-width">
+                                            <div class="float-left margin-bottom-right-10 ">
+                                                <label>Name:</label>
+                                                @Html.TextBoxFor(model => model.Org_Key_Name, new { @class = "inp-box" })
+                                            </div>
+                                            <div class="float-left margin-bottom-right-10 ">
+                                                <label>Title:</label>
+                                                @foreach (var rdbtn in Model.rdList_Org_Title)
+                                                {
+                                                    @Html.RadioButtonFor(model => model.Org_Title, rdbtn.Value, new { @class = "chk-box" });
+
+                                                    <label class="chk-box-label width-50">@rdbtn.Text</label>
+                                                }
+                                            </div>
+                                        </div>*@
+                                        @*  @Html.HiddenFor(model => model.Org_Title);*@
+                                        @for (int i = 0; i < 5; i++)
+                                        {
+                                            <div class="float-left full-width">
+                                                <div class="float-left margin-bottom-right-10 ">
+                                                    <label>Name:</label>
+                                                    @Html.TextBoxFor(model => model.TC.List_Str_Org_Key_Name[i], new { @class = "inp-box" })
+
+                                                </div>
+                                                <div class="float-left margin-bottom-right-10">
+                                                    <label>Title:</label>
+                                                    @Html.TextBoxFor(model => model.TC.List_Str_Org_Title[i], new { @class = "inp-box" })
+                                                </div>
+                                            </div>
+                                        }
+                                    </li>
+                                    <li style="width: 1040px;">
+                                        <label>Please enter a detailed description of your facility (Max 3,000 characters)</label>
+                                        @Html.TextAreaFor(model => model.TC.Org_OtherInfo, new { @class = "full-width-extraheight ckeditor", maxlength = 3000 })
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="accordion">
+                            <div class="section">
+                                <div class="head-s">Attachments</div>
+                                <div class="enhanced float-left">
+                                    <p>To enhance the exposure of your listing and to assist addicts/alcoholics and their loved ones, please attach the following items so we can include them in your Enhanced Sober.com Profile. If you don't have these items readily available, you can always email them to us later at <a href="mailto:clients@sober.com">clients@sober.com</a>:</p>
+                                    <ul class="form">
+
+                                        <li class="full-width">
+                                            <label>Uploaded Images</label>
+                                            @{
+                                        SoberModel.MediaFiles_Survey mediaFiles = new SoberModel.MediaFiles_Survey();
+                                        mediaFiles.Category = "TreatmentCenterSurvey";
+                                        mediaFiles.User_Id = @Model.TC.User_Id;
+                                            }
+                                            @Html.Partial("listimagefiles", mediaFiles)
+                                        </li>
+                                        <li class="full-width">
+                                            <label>Uploaded Videos</label>
+
+                                            @Html.Partial("listvideofiles", mediaFiles)
+                                        </li>
+                                        <li class="full-width">
+                                            <label>Uploaded Rules, Brouchers</label>
+                                            @{
+
+                                        mediaFiles.Category = "TreatmentCenterSurvey";
+                                        mediaFiles.User_Id = @Model.TC.User_Id;
+                                            }
+                                            @Html.Partial("listpdffiles", mediaFiles)
+                                        </li>
+                                        <li class="full-width">
+                                            <label>Uploaded Logo</label>
+                                            @{
+                                        mediaFiles.Category = "TreatmentCenterSurvey";
+                                        mediaFiles.User_Id = @Model.TC.User_Id;
+                                            }
+                                            @Html.Partial("listlogos", mediaFiles)
+                                        </li>
+                                        <li>
+
+                                            @{
+    string videoSrc = Url.Action("addvideo", "filemanager", new { userID = Model.TC.User_Id, category = "TreatmentCenterSurvey" });
+                                            }
+                                            <label>You Tube Video Url of your housing and/or TV commercials</label>
+
+                                            <iframe src="@videoSrc" width="100%" height="140px"></iframe>
+                                        </li>
+                                        <li class="full-width">
+                                            <label>Select Profile Picture</label>
+                                            <ul>
+                                                @foreach (var item in Model.TC.rdList_Images)
+                                                {
+                                                    string picture = "http://www.sober.com/contents/pictures/" + item.Value;
+                                                    if (string.IsNullOrWhiteSpace(item.Value))
+                                                    {
+                                                        continue;
+                                                    }
+                                                    <li>
+                                                        @Html.RadioButtonFor(model => model.TC.ProfileImage, item.Value, new { @class = "chk-box" })
+                                                        <img src="@picture" />
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </li>
+                                        <li style="width: 100%; height: 100%">
+                                            @{
+                                                // string src = Url.Action("Index", "BackloadDemo", new { folder = Model.ImagesFolder+"_pictures" });
+                                                string src = "http://dev.sober.com/backloaddemo?folder=" + Model.TC.ImagesFolder + "_pictures";
+                                            }
+                                            <label>Pictures of your housing (limit of 15) and Brochures, applications, fee schedules, and rules (Limit 5)</label>
+
+                                            <span>(gif,jpg,png) and pdf</span>
+                                            <iframe src="@src" width="100%" height="300px"></iframe>
+                                        </li>
+                                        <li style="width: 100%; height: 100%">
+                                            @{
+                                                // src = Url.Action("Index", "BackloadDemo", new { folder = Model.ImagesFolder+"_logo" });
+                                                src = "http://dev.sober.com/backloaddemo?folder=" + Model.TC.ImagesFolder + "_logo";
+                                            }
+                                            <label>Your logo</label>
+                                            <span>(gif,jpg,png)</span>
+                                            <iframe src="@src" width="100%" height="250px"></iframe>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <ul class="form">
+                                    @*<li>
+                                        <label>
+                                            Authorized Person's Name <span class="asterix">*</span>:<label>
+                                            @Html.TextBoxFor(model => model.Person_Name, new { @class = "inp-box" })
+                                            <span class="err-msg">@Html.ValidationMessageFor(model => model.Person_Name)</span>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            Company Name <span class="asterix">*</span>:<label>
+                                                @Html.TextBoxFor(model => model.Company_Name, new { @class = "inp-box" })
+                                        <span class="err-msg">@Html.ValidationMessageFor(model => model.Company_Name)</span>
+                                    </li>
+                                    *@
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        int i = 0;
+                                        <li>
+                                            <label>
+                                                Admin Additional Details <span class="asterix">*</span>:
+                                            </label>
+                                            @Html.TextAreaFor(model => model.TC.AdminComments, new { @class = "full-width-extraheight" })
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        @Html.HiddenFor(model => model.TC.AdminComments)
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="btn-cont float-left full-width">
+                            <input name="submit" class="btn" type="submit" id="addTreatmentCenter" value="Save" />
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <input name="submit" class="btn" type="submit" id="approveTreatmentCenter" value="Approve" />
+                                <input name="submit" type="submit" class="btn" id="rejectTreatmentCenter" value="Reject" />
+                            }
+                        </div>
+
+                    </div>
+                    <div class="right-cont-s">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            function checkAtLeastOneCheckBox() {
+                @if (ViewBag.partialProfile == null)
+             {
+            <text>
+
+                var message = "";
+                var display = false;
+                var errcount = 0;
+                $(".atleastonecheckbox").each(function (i) {
+                    if ($(this).find(":checked").length == 0) {
+                        message = "Please select at least one " + $(this).find("label").first().text();
+                        var index = message.indexOf("*");
+                        if (index > 0) {
+                            message = message.substr(0, index - 1);
+                        }
+
+                        $(this).find("span.err-msg").first().text(message);
+                        errcount++;
+                        if (setfocus) {
+                            $(this).find("input").first().focus();
+                            setfocus = false;
+                        }
+
+                    }
+                    else {
+                        $(this).find("span.err-msg").first().text("");
+                    }
+                });
+                //if ($(".agreetoterms").find(":checked").length == 0) {
+                //    $(".agreetoterms").find("span.err-msg").first().text("Please click on the checkbox above authorizing your consent.");
+                //    errcount++;
+                //}
+
+                if (($("#Res_Len_Stay_From").val() != "" && $("#Res_Len_Stay_To").val() != "") || ($("#OP_Len_Stay_From").val() != "" && $("#OP_Len_Stay_To").val() != "") || ($("#Hos_Inp_Stay_From").val() != "" && $("#Hos_Inp_Stay_To").val() != "") ||
+                    ($("#IOP_Len_Stay_From").val() != "" && $("#IOP_Len_Stay_To").val() != "")) {
+                    $("#AverageLengthOfStay").find("span.err-msg").first().text("");
+                }
+                else {
+                    $("#AverageLengthOfStay").find("span.err-msg").first().text("Please select at least one pair of values");
+                    $("#AverageLengthOfStay").find("input").focus();
+                    errcount++;
+                }
+
+                if (($("#Res_avg_Cost_From").val() != "" && $("#Res_avg_Cost_To").val() != "") || ($("#OP_avg_Cost_From").val() != "" && $("#OP_avg_Cost_To").val() != "") || ($("#Hos_Inp_Cost_From").val() != "" && $("#Hos_Inp_Cost_To").val() != "") ||
+                    ($("#IOP_cost_session_From").val() != "" && $("#IOP_cost_session_To").val() != "") || ($("#IOP_cost_week_From").val() != "" && $("#IOP_cost_week_To").val() != "") || ($("#IOP_cost_month_From").val() != "" && $("#IOP_cost_month_To").val() != "")) {
+                    $("#AverageCostOfStay").find("span.err-msg").first().text("");
+                }
+                else {
+                    $("#AverageCostOfStay").find("span.err-msg").first().text("Please select at least one pair of values");
+                    $("#AverageCostOfStay").find("input").focus();
+                    errcount++;
+                }
+
+                if (errcount > 0)
+                    return false;
+                else
+                    return true;
+                </text>
+             }
+                return true;
+            }
+
+            $(document).ready(function () {
+                $(".maximize").click(function () {
+                    $(".profile-details").slideDown(500);
+                });
+
+                $(".minimize").click(function () {
+
+                    $(".profile-details").slideUp(500);
+                });
+
+                $('#NoInsuranceAccepted').change(function () {
+                    if ($(this).is(":checked")) {
+                        $("#insdetails").slideUp(100);
+                        $('#OutOfNetWorkInsurance').hide();
+                        $('#OutOfNetWorkInsurance').siblings('label,a').hide();
+                    }
+                    else {
+                        $("#insdetails").slideDown(100);
+                        $('#OutOfNetWorkInsurance').show();
+                        $('#OutOfNetWorkInsurance').siblings('label,a').show();
+                    }
+                });
+                //$("#rightvalues option").attr("selected", false);
+
+                $('#OutOfNetWorkInsurance').change(function () {
+                    if ($(this).is(":checked")) {
+                        $('#NoInsuranceAccepted').hide();
+                        $('#NoInsuranceAccepted').siblings('label').hide();
+                    }
+                    else {
+                        $('#NoInsuranceAccepted').show();
+                        $('#NoInsuranceAccepted').siblings('label').show();
+                    }
+                });
+
+                if ($('#NoInsuranceAccepted').is(":checked")) {
+                    $('#NoInsuranceAccepted').trigger('change');
+                }
+                else {
+                    $('#OutOfNetWorkInsurance').trigger('change');
+                }
+
+
+                $("#addTreatmentCenter, #approveTreatmentCenter, #rejectTreatmentCenter").click(function (e) {
+                    if (!checkAtLeastOneCheckBox()) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('.maximize').css('display') == 'block') {
+                        $('.maximize').trigger('click');
+                    }
+
+                    if ($("#NoInsuranceAccepted").is(":checked")) {
+                        $("#rightvalues").empty().append('<option selected="selected" value="NO INSURANCE ACCEPTED">NO INSURANCE ACCEPTED</option>');
+                        // $("#rightvalues option").attr("selected", "selected");
+                    }
+                    else {
+                        $("#rightvalues option").prop('selected', true);
+                    }
+                });
+
+                $('#Website').change(function () {
+                    var destination = $('#DestinationWebsite').val();
+
+                    if (destination == "") {
+                        $('#DestinationWebsite').val($(this).val());
+                        $('#DestinationWebsite').siblings('span').text('');
+                    }
+                });
+
+                $('#DestinationWebsite').change(function () {
+                    if ($(this).val() == "") {
+                        $(this).siblings('span').text('The DestinationWebsite field is required.');
+                    }
+                });
+                
+                $('textarea').on('input', function () {
+                    var count = $(this).val().length;
+                    var label = $(this).siblings('div').children('label').text(count + " characters added");
+                });
+
+                $('form').submit(function (e) {
+
+                    for (var i in CKEDITOR.instances) {
+                        (function (i) {
+                            var name = '#' + CKEDITOR.instances[i].name;
+                            var maxlength = parseInt($(name).attr('maxlength'));
+                            var length = CKEDITOR.instances[i].getData().trim().length;
+
+                            if (length > maxlength) {
+                                alert(CKEDITOR.instances[i].name + " surpassed the " + maxlength);
+                                CKEDITOR.instances[i].focus();
+                                e.preventDefault();
+                            }
+
+                            $(name).val(CKEDITOR.instances[i].getData().trim());
+
+                        })(i);
+                    }
+                });
+            });
+
+
+        </script>    
+    </div>
+}

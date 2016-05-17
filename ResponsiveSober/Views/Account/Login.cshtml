@@ -1,0 +1,18 @@
+﻿@model SoberModel.LoginModel
+
+@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<div class="content white-bg">
+    <div class="container">       
+        
+        @Html.Action("_LoginPartial")
+    </div>
+</div>
+
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>

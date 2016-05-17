@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "modifytreatmenthouseacknowledgement";
+    Layout = "~/Views/Shared/_Master.cshtml";
+}
+<div class="content white-bg">
+    <div class="container">
+
+        <h2>Enhanced Profile</h2>
+        @{
+
+            if (ViewBag.TreatmentCenter != null)
+            {
+                string pageName = ViewBag.TreatmentCenter;
+                @Html.ActionLink(" Treatment Center Profile ", "profile", "directory", new { rehab = pageName, facility_type = "tc" }, null)
+
+            }
+            if (ViewBag.SoberLivingSurvey != null)
+            {
+                string pageName = ViewBag.SoberLivingSurvey;
+                @Html.ActionLink(" Sober Living Profile ", "profile", "directory", new { rehab = pageName, facility_type = "sl" }, null)
+
+            }
+        }
+    </div>
+</div>
